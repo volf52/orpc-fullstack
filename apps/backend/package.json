@@ -1,0 +1,45 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "dev": "tsx --watch src/web/server.ts",
+    "start": "node dist/web/server.js",
+    "db:studio": "drizzle-kit studio",
+    "db:generate": "drizzle-kit migrate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "@types/pg": "^8.12.0",
+    "drizzle-kit": "^0.31.1",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "@napi-rs/uuid": "^0.2.2",
+    "@node-rs/argon2": "^2.0.2",
+    "@orpc/openapi": "^1.2.0",
+    "@orpc/server": "^1.2.0",
+    "@orpc/zod": "^1.2.0",
+    "@repo/contract": "workspace:*",
+    "better-auth": "^1.2.7",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
+    "env-var": "^7.5.0",
+    "fast-jwt": "^6.0.1",
+    "hono": "^4.7.8",
+    "pg": "^8.15.6",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.10.0",
+    "zod": "^3.24.4"
+  }
+}

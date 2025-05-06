@@ -1,0 +1,35 @@
+{
+  "name": "@repo/contract",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "files": ["src"],
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./contracts": {
+      "import": "./src/contracts/index.ts",
+      "require": "./src/contracts/index.ts",
+      "types": "./src/contracts/index.ts"
+    },
+    "./schemas": {
+      "import": "./src/schemas/index.ts",
+      "require": "./src/schemas/index.ts",
+      "types": "./src/schemas/index.ts"
+    }
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@orpc/contract": "^1.2.0",
+    "@orpc/zod": "^1.2.0",
+    "zod": "^3.24.4"
+  }
+}

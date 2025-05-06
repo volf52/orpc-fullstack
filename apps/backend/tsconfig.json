@@ -1,0 +1,21 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@infra": ["src/infra"],
+      "@infra/*": ["src/infra/*"],
+      "@application": ["src/application"],
+      "@application/*": ["src/application/*"],
+      "@domain": ["src/domain"],
+      "@domain/*": ["src/domain/*"]
+    }
+  },
+  "include": ["src"],
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
+}
