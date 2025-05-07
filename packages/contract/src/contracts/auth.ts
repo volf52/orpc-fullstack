@@ -37,7 +37,7 @@ export const signin = appPublicBase
 export const whoami = appAuthenticatedBase
   .route({
     method: "GET",
-    path: "/auth/me",
+    path: "/auth/whoami",
     summary: "Get current user",
     tags: ["auth"],
   })

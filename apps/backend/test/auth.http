@@ -1,6 +1,0 @@
-### Signup
-POST http://localhost:3000/api/auth/signup HTTP/1.1
-
-{
-
-}

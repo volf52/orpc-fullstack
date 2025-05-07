@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:8000/api
+
+
+### Signup
+
+POST {{baseUrl}}/auth/signup HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Test User",
+    "email": "test@dev.com",
+    "password": "passwords"
+}
+
+### Login
+
+# @name login
+POST {{baseUrl}}/auth/signin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "test@dev.com",
+    "password": "passwords"
+
+}
+
+### Get Current User
+
+GET {{baseUrl}}/auth/whoami HTTP/1.1
+Authorization: Bearer {{login.response.body.$.token}}
+Content-Type: application/json
+
