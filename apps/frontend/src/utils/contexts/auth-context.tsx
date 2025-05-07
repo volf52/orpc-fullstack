@@ -1,12 +1,7 @@
 "use client"
 
 import type { User } from "@repo/contract/schemas"
-import {
-  type ActionDispatch,
-  createContext,
-  useContext,
-  useReducer,
-} from "react"
+import { type ActionDispatch, createContext, use, useReducer } from "react"
 
 type AuthState = User | null
 type AuthAction = { type: "SET_USER"; payload: User } | { type: "LOGOUT" }
@@ -39,9 +34,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => use(AuthContext)
 export const useAuthDispatch = () => {
-  const dispatch = useContext(AuthDispatchContext)
+  const dispatch = use(AuthDispatchContext)
   if (dispatch === null) {
     throw new Error("useAuthDispatch must be used within an AuthProvider")
   }
