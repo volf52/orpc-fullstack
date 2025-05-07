@@ -4,11 +4,16 @@ import { AuthService } from "@/application/services/auth.service"
 
 const authServ = container.resolve(AuthService)
 
-export const signupHandler = pub.auth.signup.handler(async ({ input }) => {
-  const registeredUser = await authServ.register(input)
+export const signupHandler = pub.auth.signup.handler(
+  async ({ input, errors }) => {
+    const registeredUser = await authServ.register(input)
+    if (registeredUser === null) {
+      throw errors.AlreadyExists()
+    }
 
-  return registeredUser
-})
+    return registeredUser
+  },
+)
 
 export const signinHandler = pub.auth.signin.handler(
   async ({ input, errors }) => {
@@ -24,7 +29,9 @@ export const signinHandler = pub.auth.signin.handler(
 
     const token = authServ.encodeToken(user)
 
-    return { token }
+    const { password, ...userWithoutPassword } = user
+
+    return { token, user: userWithoutPassword }
   },
 )
 

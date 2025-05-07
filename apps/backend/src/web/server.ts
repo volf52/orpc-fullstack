@@ -14,7 +14,7 @@ addRpcHandler(app)
 serve(
   {
     fetch: app.fetch,
-    port: 3000,
+    port: 8000,
   },
   (addr) => {
     console.log(`Server is running on http://localhost:${addr.port}`)

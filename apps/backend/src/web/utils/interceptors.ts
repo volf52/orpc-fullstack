@@ -16,6 +16,7 @@ export const validationErrMap = (err: Error) => {
     throw new ORPCError("INPUT_VALIDATION_FAILED", {
       status: 422,
       cause: err.cause,
+      message: "Input validation failed",
       data: zodErr.flatten(),
     })
   }

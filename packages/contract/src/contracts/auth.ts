@@ -1,4 +1,4 @@
-import { CredentialsSchema, TokenSchema } from "../schemas/auth"
+import { CredentialsSchema, TokenWithUserSchema } from "../schemas/auth"
 import { NewUserSchema, UserSchema } from "../schemas/user"
 import { appAuthenticatedBase, appPublicBase } from "../utils/oc.base"
 
@@ -8,6 +8,12 @@ export const signup = appPublicBase
     path: "/auth/signup",
     summary: "Register new user",
     tags: ["auth"],
+  })
+  .errors({
+    AlreadyExists: {
+      status: 409,
+      message: "User already exists",
+    },
   })
   .input(NewUserSchema)
   .output(UserSchema)
@@ -20,7 +26,7 @@ export const signin = appPublicBase
     tags: ["auth"],
   })
   .input(CredentialsSchema)
-  .output(TokenSchema)
+  .output(TokenWithUserSchema)
   .errors({
     INVALID_CREDENTIALS: {
       status: 401,

@@ -37,7 +37,12 @@ export class AuthService {
     this.#hashSecret = Buffer.from(config.auth.HASH_SECRET, "ascii")
   }
 
-  async register(newUser: NewUser): Promise<User> {
+  async register(newUser: NewUser): Promise<User | null> {
+    const existingUser = await this.fetchUserByEmail(newUser.email)
+    if (existingUser) {
+      return null
+    }
+
     const user: User = {
       id: v4(),
       email: newUser.email,
