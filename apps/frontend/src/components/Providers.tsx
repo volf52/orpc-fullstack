@@ -1,7 +1,8 @@
 "use client"
 
 import { AuthProvider } from "@/utils/contexts/auth-context"
-import { orpc, ORPCCOntext, queryClient } from "@/utils/orpc"
+import { ORPCProvider } from "@/utils/contexts/orpc-context"
+import { queryClient } from "@/utils/orpc"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
@@ -12,7 +13,7 @@ const Providers = ({ children }: Props) => {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
-        <ORPCCOntext.Provider value={orpc}>{children}</ORPCCOntext.Provider>
+        <ORPCProvider>{children}</ORPCProvider>
 
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

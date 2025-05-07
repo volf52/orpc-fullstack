@@ -2,7 +2,7 @@
 
 import AuthCard from "@/components/AuthCard"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
-import { orpc } from "@/utils/orpc"
+import { useORPC } from "@/utils/contexts/orpc-context"
 import { toaster } from "@/utils/toast"
 import { useMutation } from "@tanstack/react-query"
 import { NewUserSchema } from "@repo/contract/schemas"
@@ -18,6 +18,7 @@ const formSchema = NewUserSchema
 
 const RegisterForm = () => {
   const setUser = useSetUser()
+  const orpc = useORPC()
 
   const registerMutation = useMutation(
     orpc.public.auth.signup.mutationOptions({

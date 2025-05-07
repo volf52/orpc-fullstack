@@ -3,8 +3,7 @@
 import AuthCard from "@/components/AuthCard"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
 import { useSetUser } from "@/utils/hooks/auth-hooks"
-import { orpc } from "@/utils/orpc"
-import { toaster } from "@/utils/toast"
+import { useORPC } from "@/utils/contexts/orpc-context"
 import { CredentialsSchema } from "@repo/contract/schemas"
 import { useMutation } from "@tanstack/react-query"
 
@@ -13,14 +12,12 @@ const formSchema = CredentialsSchema
 
 const LoginForm = () => {
   const setUser = useSetUser()
+  const orpc = useORPC()
 
   const loginMutation = useMutation(
     orpc.public.auth.signin.mutationOptions({
       onSuccess: ({ token, user }) => {
         setUser(user)
-      },
-      onError: (e) => {
-        toaster.error({ title: e.name, description: e.message })
       },
     }),
   )
