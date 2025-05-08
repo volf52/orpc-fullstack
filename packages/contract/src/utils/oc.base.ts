@@ -16,8 +16,8 @@ export const appAuthenticatedBase = appPublicBase.errors({
   // Could be due to Bearer token being not present or invalid or expired, or no user for the payload id.
   // The end user should not be shown the exact reason for better security
   // Internal logs should be used to properly identify the issue
-  NO_USER: {
+  NotAuthenticated: {
     status: 401,
-    message: "No associated user",
+    message: "No associated user or session",
   },
 })

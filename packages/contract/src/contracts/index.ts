@@ -1,9 +1,9 @@
-import { signin, signup, whoami } from "./auth"
+import { whoami } from "./user"
 
 export const CONTRACT = {
-  public: {
-    auth: { signin, signup },
-  },
+  // public: {
+  //   auth: { signin, signup },
+  // },
   authenticated: {
     auth: { whoami },
   },
