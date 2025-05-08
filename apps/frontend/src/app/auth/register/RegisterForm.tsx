@@ -2,11 +2,10 @@
 
 import AuthCard from "@/components/AuthCard"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
-import { useORPC } from "@/utils/contexts/orpc-context"
 import { toaster } from "@/utils/toast"
-import { useMutation } from "@tanstack/react-query"
 import { NewUserSchema } from "@repo/contract/schemas"
-import { useSetUser } from "@/utils/hooks/auth-hooks"
+import { authClient } from "@/utils/auth-client"
+import { useRouter } from "next/navigation"
 
 // const formSchema = type({
 //   name: "string > 4",
@@ -17,26 +16,32 @@ import { useSetUser } from "@/utils/hooks/auth-hooks"
 const formSchema = NewUserSchema
 
 const RegisterForm = () => {
-  const setUser = useSetUser()
-  const orpc = useORPC()
-
-  const registerMutation = useMutation(
-    orpc.public.auth.signup.mutationOptions({
-      onSuccess: (user) => {
-        setUser(user)
-      },
-      onError: (e) => {
-        toaster.error({ title: e.name, description: e.message })
-      },
-    }),
-  )
+  const router = useRouter()
+  const { isPending: authPending } = authClient.useSession()
 
   const tform = useAppForm({
     defaultValues: { name: "", email: "", password: "" },
     validators: { onSubmit: formSchema },
     onSubmit: async ({ value }) => {
-      console.log(value)
-      registerMutation.mutate(value)
+      await authClient.signUp.email(
+        {
+          email: value.email,
+          password: value.password,
+          name: value.name,
+        },
+        {
+          onSuccess: () => {
+            router.push("/")
+            toaster.success({ title: "Registration successful" })
+          },
+          onError: (err) => {
+            toaster.error({
+              title: err.error.error,
+              description: err.error.message,
+            })
+          },
+        },
+      )
     },
   })
 
@@ -44,6 +49,7 @@ const RegisterForm = () => {
     <form
       onSubmit={(e) => {
         e.preventDefault()
+        e.stopPropagation()
         tform.handleSubmit()
       }}
     >
@@ -59,7 +65,7 @@ const RegisterForm = () => {
                 placeholder="Name..."
                 type="text"
                 required
-                disabled={registerMutation.isPending}
+                disabled={authPending}
               />
             )}
           </tform.AppField>
@@ -71,7 +77,7 @@ const RegisterForm = () => {
                 placeholder="Email..."
                 type="email"
                 required
-                disabled={registerMutation.isPending}
+                disabled={authPending}
               />
             )}
           </tform.AppField>
@@ -83,7 +89,7 @@ const RegisterForm = () => {
                 placeholder="Password..."
                 type="password"
                 required
-                disabled={registerMutation.isPending}
+                disabled={authPending}
               />
             )}
           </tform.AppField>

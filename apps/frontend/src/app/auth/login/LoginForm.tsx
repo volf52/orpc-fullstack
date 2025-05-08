@@ -2,32 +2,39 @@
 
 import AuthCard from "@/components/AuthCard"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
-import { useSetUser } from "@/utils/hooks/auth-hooks"
-import { useORPC } from "@/utils/contexts/orpc-context"
-import { CredentialsSchema } from "@repo/contract/schemas"
-import { useMutation } from "@tanstack/react-query"
+import { authClient } from "@/utils/auth-client"
+import { type } from "arktype"
+import { toaster } from "@/utils/toast"
+import { useRouter } from "next/navigation"
 
-// const formSchema = type({ email: "string.email", password: "string >= 8" })
-const formSchema = CredentialsSchema
+const formSchema = type({ email: "string.email", password: "string >= 8" })
 
 const LoginForm = () => {
-  const setUser = useSetUser()
-  const orpc = useORPC()
-
-  const loginMutation = useMutation(
-    orpc.public.auth.signin.mutationOptions({
-      onSuccess: ({ token, user }) => {
-        setUser(user)
-      },
-    }),
-  )
+  const router = useRouter()
+  const { isPending } = authClient.useSession()
 
   const tform = useAppForm({
     defaultValues: { email: "", password: "" },
     validators: { onSubmit: formSchema },
     onSubmit: async ({ value }) => {
-      console.log(value)
-      return loginMutation.mutateAsync(value)
+      await authClient.signIn.email(
+        {
+          email: value.email,
+          password: value.password,
+        },
+        {
+          onSuccess: () => {
+            router.push("/")
+            toaster.success({ title: "Login successful" })
+          },
+          onError: (ctx) => {
+            toaster.error({
+              title: ctx.error.error,
+              description: ctx.error.message,
+            })
+          },
+        },
+      )
     },
   })
 
@@ -35,13 +42,16 @@ const LoginForm = () => {
     <form
       onSubmit={(e) => {
         e.preventDefault()
+        e.stopPropagation()
         tform.handleSubmit()
       }}
     >
       <tform.AppForm>
         <AuthCard
           title="Login"
-          footer={<tform.SubmitButton label="Submit" fullWidth />}
+          footer={
+            <tform.SubmitButton label="Submit" fullWidth disabled={isPending} />
+          }
         >
           <tform.AppField name="email">
             {(field) => (
@@ -50,6 +60,7 @@ const LoginForm = () => {
                 placeholder="Email..."
                 type="email"
                 required
+                disabled={isPending}
               />
             )}
           </tform.AppField>
@@ -61,6 +72,7 @@ const LoginForm = () => {
                 placeholder="Password..."
                 type="password"
                 required
+                disabled={isPending}
               />
             )}
           </tform.AppField>

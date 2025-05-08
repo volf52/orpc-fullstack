@@ -6,5 +6,9 @@ const NODE_ENV = env
   .get("NODE_ENV")
   .default("DEV")
   .asEnum(["DEV", "PROD"] as const)
+const TRUSTED_ORIGIN = env
+  .get("TRUSTED_ORIGIN")
+  .default("http://localhost:3000")
+  .asString()
 
-export default { PORT, NODE_ENV } as const
+export default { PORT, NODE_ENV, TRUSTED_ORIGIN } as const

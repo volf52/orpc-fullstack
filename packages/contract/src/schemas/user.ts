@@ -35,14 +35,19 @@ export const UserSchema = oz.openapi(BaseUserSchema, {
   ],
 })
 
-// export const NewUserSchema = oz.openapi(BaseUserSchema.omit({ id: true }), {
-//   examples: [
-//     {
-//       name: "John Doe",
-//       email: "john.doe@dev.com",
-//       password: "suPerSeCreT@123!",
-//     },
-//   ],
-// })
+export const NewUserSchema = oz.openapi(
+  BaseUserSchema.pick({ name: true, email: true }).extend({
+    password: z.string().min(5),
+  }),
+  {
+    examples: [
+      {
+        name: "John Doe",
+        email: "john.doe@dev.com",
+        password: "suPerSeCreT@123!",
+      },
+    ],
+  },
+)
 
 // export type NewUser = z.infer<typeof NewUserSchema>

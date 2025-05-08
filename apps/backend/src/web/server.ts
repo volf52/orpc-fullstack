@@ -5,17 +5,16 @@ import { cors } from "hono/cors"
 import { serve } from "@hono/node-server"
 import { addOpenApiHandler } from "./utils/openapi.handler"
 import { addRpcHandler } from "./utils/rpc.handler"
-import { resolveAuth, resolveAuthFromContainer } from "@/infra/auth/better-auth"
 import { container } from "tsyringe"
 import { initAuthRouter } from "./router/auth"
+import config from "@/infra/config"
 
 const app = new Hono()
 app.use(logger())
 app.use(
   "/*",
   cors({
-    // TODO: move to config
-    origin: process.env.CORS_ORIGIN || "",
+    origin: [config.app.TRUSTED_ORIGIN, "http://localhost:3000"],
     allowMethods: ["GET", "POST", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
     credentials: true,

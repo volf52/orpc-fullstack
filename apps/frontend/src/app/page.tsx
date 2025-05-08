@@ -1,11 +1,7 @@
-import { css } from "@/styled-system/css"
+import GreetUser from "@/components/home/GreetUser"
 
 const Home = () => {
-  return (
-    <div className={css({ fontSize: "2xl", fontWeight: "bold" })}>
-      Hello 🐼!
-    </div>
-  )
+  return <GreetUser />
 }
 
 export default Home

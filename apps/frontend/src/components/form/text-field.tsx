@@ -23,7 +23,7 @@ const TextField = ({
 
   return (
     <Field.Root invalid={!field.state.meta.isValid}>
-      <Field.Label>{label}</Field.Label>
+      <Field.Label htmlFor={field.name}>{label}</Field.Label>
       <Field.Input asChild>
         <Input
           id={field.name}
