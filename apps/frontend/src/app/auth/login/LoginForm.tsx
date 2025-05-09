@@ -1,6 +1,6 @@
 "use client"
 
-import AuthCard from "@/components/AuthCard"
+import CardLayout from "@/components/layout/Card"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
 import { authClient } from "@/utils/auth-client"
 import { type } from "arktype"
@@ -47,7 +47,7 @@ const LoginForm = () => {
       }}
     >
       <tform.AppForm>
-        <AuthCard
+        <CardLayout
           title="Login"
           footer={
             <tform.SubmitButton label="Submit" fullWidth disabled={isPending} />
@@ -76,7 +76,7 @@ const LoginForm = () => {
               />
             )}
           </tform.AppField>
-        </AuthCard>
+        </CardLayout>
       </tform.AppForm>
     </form>
   )

@@ -2,7 +2,7 @@
 
 import NavLink from "./NavLink"
 import { Flex, Box } from "@/styled-system/jsx"
-import LogoutBtn from "./LogoutBtn"
+import LogoutBtn from "@/components/auth/LogoutBtn"
 import { useAuth } from "@/utils/contexts/auth-context"
 
 const LoggedInRoutes = () => {

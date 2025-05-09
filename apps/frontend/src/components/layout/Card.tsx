@@ -1,31 +1,35 @@
 import { Container } from "@/styled-system/jsx/container"
-import { Card } from "./ui/card"
+import { Card } from "@/components/ui/card"
 import { Stack, VStack, type StackProps } from "@/styled-system/jsx"
 
-type AuthCardProps = {
+type CardLayoutProps = {
   title: string
-  altTitle?: string
+  subtitle?: string
   footer?: React.ReactNode
   children: React.ReactNode
   gap?: StackProps["gap"]
+  maxWidth?: string
+  py?: { base: string; md: string }
 }
 
-const AuthCard = ({
+const CardLayout = ({
   title,
-  altTitle,
+  subtitle,
   gap,
   children,
   footer,
-}: AuthCardProps) => {
+  maxWidth = "md",
+  py = { base: "12", md: "16" },
+}: CardLayoutProps) => {
   const stackGap = gap || "4"
 
   return (
-    <Container py={{ base: "12", md: "16" }} maxWidth="md">
+    <Container py={py} maxWidth={maxWidth}>
       <Card.Root>
         <Card.Header>
           <VStack alignContent="center">
             <Card.Title>{title}</Card.Title>
-            {altTitle && <Card.Description>{altTitle}</Card.Description>}
+            {subtitle && <Card.Description>{subtitle}</Card.Description>}
           </VStack>
         </Card.Header>
 
@@ -39,4 +43,4 @@ const AuthCard = ({
   )
 }
 
-export default AuthCard
+export default CardLayout

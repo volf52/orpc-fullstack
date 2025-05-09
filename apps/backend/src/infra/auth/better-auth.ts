@@ -5,7 +5,6 @@ import {
   container,
   type DependencyContainer,
   instanceCachingFactory,
-  type FactoryProvider,
 } from "tsyringe"
 import * as authSchema from "@/infra/db/models/auth.model"
 import { resolveDbFromContainer } from "../db/conn"

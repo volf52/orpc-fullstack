@@ -1,6 +1,6 @@
 "use client"
 
-import AuthCard from "@/components/AuthCard"
+import CardLayout from "@/components/layout/Card"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
 import { toaster } from "@/utils/toast"
 import { NewUserSchema } from "@repo/contract/schemas"
@@ -54,7 +54,7 @@ const RegisterForm = () => {
       }}
     >
       <tform.AppForm>
-        <AuthCard
+        <CardLayout
           title="Register"
           footer={<tform.SubmitButton label="Submit" fullWidth />}
         >
@@ -93,7 +93,7 @@ const RegisterForm = () => {
               />
             )}
           </tform.AppField>
-        </AuthCard>
+        </CardLayout>
       </tform.AppForm>
     </form>
   )
