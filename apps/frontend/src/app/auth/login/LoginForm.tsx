@@ -6,32 +6,28 @@ import { authClient } from "@/utils/auth-client"
 import { type } from "arktype"
 import { toaster } from "@/utils/toast"
 import { useRouter } from "next/navigation"
+import { useSignIn } from "@/utils/hooks/authHooks"
 
 const formSchema = type({ email: "string.email", password: "string >= 8" })
 
 const LoginForm = () => {
   const router = useRouter()
   const { isPending } = authClient.useSession()
+  const signInHandler = useSignIn()
 
   const tform = useAppForm({
     defaultValues: { email: "", password: "" },
     validators: { onSubmit: formSchema },
     onSubmit: async ({ value }) => {
-      await authClient.signIn.email(
-        {
-          email: value.email,
-          password: value.password,
-        },
+      await signInHandler.mutateAsync(
+        { ...value },
         {
           onSuccess: () => {
             router.push("/")
             toaster.success({ title: "Login successful" })
           },
-          onError: (ctx) => {
-            toaster.error({
-              title: ctx.error.error,
-              description: ctx.error.message,
-            })
+          onError: (err) => {
+            toaster.error({ title: "Login failed", description: err.message })
           },
         },
       )

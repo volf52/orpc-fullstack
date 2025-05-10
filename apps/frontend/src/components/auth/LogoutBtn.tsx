@@ -1,37 +1,31 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { authClient } from "@/utils/auth-client"
+import { useSignout } from "@/utils/hooks/authHooks"
 import { toaster } from "@/utils/toast"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 
 const LogoutBtn = () => {
   const router = useRouter()
-  const [isPending, setIsPending] = useState(false)
+  const signoutMut = useSignout()
 
   const handleClick = async () => {
-    setIsPending(true)
-    await authClient.signOut(
-      {},
-      {
-        onSuccess: () => {
-          router.push("/auth/login")
-        },
-        onError: (ctx) => {
-          setIsPending(false)
-          toaster.error({
-            title: "Failed to logout",
-            description: ctx.error.message,
-          })
-        },
+    await signoutMut.mutateAsync(undefined, {
+      onSuccess: () => {
+        router.push("/auth/login")
       },
-    )
+      onError: (ctx) => {
+        toaster.error({
+          title: "Failed to logout",
+          description: ctx.message,
+        })
+      },
+    })
   }
 
   return (
-    <Button disabled={isPending} onClick={handleClick}>
-      {isPending ? "Logging out..." : "Logout"}
+    <Button disabled={signoutMut.isPending} onClick={handleClick}>
+      {signoutMut.isPending ? "Logging out..." : "Logout"}
     </Button>
   )
 }

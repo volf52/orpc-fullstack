@@ -4,8 +4,8 @@ import CardLayout from "@/components/layout/Card"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
 import { toaster } from "@/utils/toast"
 import { NewUserSchema } from "@repo/contract/schemas"
-import { authClient } from "@/utils/auth-client"
 import { useRouter } from "next/navigation"
+import { useSignUp } from "@/utils/hooks/authHooks"
 
 // const formSchema = type({
 //   name: "string > 4",
@@ -17,18 +17,15 @@ const formSchema = NewUserSchema
 
 const RegisterForm = () => {
   const router = useRouter()
-  const { isPending: authPending } = authClient.useSession()
+  const signUpHandler = useSignUp()
+  const authPending = signUpHandler.isPending
 
   const tform = useAppForm({
     defaultValues: { name: "", email: "", password: "" },
     validators: { onSubmit: formSchema },
     onSubmit: async ({ value }) => {
-      await authClient.signUp.email(
-        {
-          email: value.email,
-          password: value.password,
-          name: value.name,
-        },
+      await signUpHandler.mutateAsync(
+        { ...value },
         {
           onSuccess: () => {
             router.push("/")
@@ -36,8 +33,8 @@ const RegisterForm = () => {
           },
           onError: (err) => {
             toaster.error({
-              title: err.error.error,
-              description: err.error.message,
+              title: "Registration failed",
+              description: err.message,
             })
           },
         },

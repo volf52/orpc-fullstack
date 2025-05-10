@@ -1,12 +1,12 @@
 "use client"
 
 import { Container } from "@/styled-system/jsx"
-import { authClient } from "@/utils/auth-client"
 import Loader from "../Loader"
+import { useSession } from "@/utils/hooks/authHooks"
 
 const GreetUser = () => {
-  const { data, isPending } = authClient.useSession()
-  const name = data?.user?.name || "Anonymous"
+  const { session, isPending } = useSession()
+  const name = session?.data?.user.name || "Guest"
 
   if (isPending) {
     return <Loader fullHeight />
