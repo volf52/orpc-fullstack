@@ -1,7 +1,21 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  output: "standalone",
+  reactStrictMode: true,
 
-export default nextConfig;
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "2mb",
+      allowedOrigins: ["localhost:3000"],
+    },
+  },
+
+  serverExternalPackages: [],
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
+}
+
+export default nextConfig

@@ -5,7 +5,7 @@ import { useAppForm } from "@/utils/hooks/app-form-hooks"
 import { toaster } from "@/utils/toast"
 import { NewUserSchema } from "@repo/contract/schemas"
 import { useRouter } from "next/navigation"
-import { useSignUp } from "@/utils/hooks/authHooks"
+import { useSignUp } from "@/utils/hooks/auth-hooks"
 
 // const formSchema = type({
 //   name: "string > 4",

@@ -2,11 +2,11 @@
 
 import { Container } from "@/styled-system/jsx"
 import Loader from "../Loader"
-import { useSession } from "@/utils/hooks/authHooks"
+import { useUser } from "@/utils/hooks/auth-hooks"
 
 const GreetUser = () => {
-  const { session, isPending } = useSession()
-  const name = session?.data?.user.name || "Guest"
+  const { user, isPending } = useUser()
+  const name = user?.name || "Guest"
 
   if (isPending) {
     return <Loader fullHeight />

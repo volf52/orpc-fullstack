@@ -1,5 +1,15 @@
+"use client"
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { authClient } from "../auth-client"
+
+const handleAuthResponse = <T, E>(res: { data: T | null; error: E | null }) => {
+  if (res.error) {
+    throw res.error
+  }
+
+  return res.data as T
+}
 
 const SESSION_KEY = ["auth", "session"] as const
 
@@ -10,7 +20,10 @@ export const useSession = () => {
     isLoading,
   } = useQuery({
     queryKey: SESSION_KEY,
-    queryFn: () => authClient.getSession(),
+    queryFn: async () => {
+      const res = await authClient.getSession()
+      return handleAuthResponse(res)
+    },
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
   })
@@ -21,15 +34,17 @@ export const useSession = () => {
 export const useUser = () => {
   const { session, isPending, isLoading } = useSession()
 
-  return { user: session?.data?.user || null, isPending, isLoading }
+  return { user: session?.user || null, isPending, isLoading }
 }
 
 export const useSignIn = () => {
   const queryClient = useQueryClient()
 
   const signIn = useMutation({
-    mutationFn: (creds: { email: string; password: string }) =>
-      authClient.signIn.email(creds),
+    mutationFn: async (creds: { email: string; password: string }) => {
+      const res = await authClient.signIn.email(creds)
+      return handleAuthResponse(res)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SESSION_KEY })
     },
@@ -42,7 +57,10 @@ export const useSignout = () => {
   const queryClient = useQueryClient()
 
   const signout = useMutation({
-    mutationFn: () => authClient.signOut(),
+    mutationFn: async () => {
+      const res = await authClient.signOut()
+      return handleAuthResponse(res)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SESSION_KEY })
     },
@@ -61,11 +79,7 @@ export const useSignUp = () => {
       name: string
     }) => {
       const res = await authClient.signUp.email(creds)
-      if (res.error) {
-        throw res.error
-      }
-
-      return res.data
+      return handleAuthResponse(res)
     },
 
     onSuccess: () => {

@@ -9,3 +9,5 @@ export const router = {
     auth: { whoami: whoamiHandler },
   }),
 }
+
+export type BackendRouter = typeof router

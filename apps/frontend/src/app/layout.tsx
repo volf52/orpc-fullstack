@@ -1,6 +1,6 @@
+import "./globals.css"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
 import Providers from "@/components/layout/Providers"
 import Toaster from "@/components/layout/Toaster"
 import Navbar from "@/components/layout/Navbar"

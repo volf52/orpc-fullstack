@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { useSignout } from "@/utils/hooks/authHooks"
+import { useSignout } from "@/utils/hooks/auth-hooks"
 import { toaster } from "@/utils/toast"
 import { useRouter } from "next/navigation"
 

@@ -2,17 +2,15 @@
 
 import CardLayout from "@/components/layout/Card"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
-import { authClient } from "@/utils/auth-client"
 import { type } from "arktype"
 import { toaster } from "@/utils/toast"
 import { useRouter } from "next/navigation"
-import { useSignIn } from "@/utils/hooks/authHooks"
+import { useSignIn } from "@/utils/hooks/auth-hooks"
 
 const formSchema = type({ email: "string.email", password: "string >= 8" })
 
 const LoginForm = () => {
   const router = useRouter()
-  const { isPending } = authClient.useSession()
   const signInHandler = useSignIn()
 
   const tform = useAppForm({
@@ -46,7 +44,11 @@ const LoginForm = () => {
         <CardLayout
           title="Login"
           footer={
-            <tform.SubmitButton label="Submit" fullWidth disabled={isPending} />
+            <tform.SubmitButton
+              label="Submit"
+              fullWidth
+              disabled={signInHandler.isPending}
+            />
           }
         >
           <tform.AppField name="email">
@@ -56,7 +58,7 @@ const LoginForm = () => {
                 placeholder="Email..."
                 type="email"
                 required
-                disabled={isPending}
+                disabled={signInHandler.isPending}
               />
             )}
           </tform.AppField>
@@ -68,7 +70,7 @@ const LoginForm = () => {
                 placeholder="Password..."
                 type="password"
                 required
-                disabled={isPending}
+                disabled={signInHandler.isPending}
               />
             )}
           </tform.AppField>

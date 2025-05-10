@@ -1,8 +1,7 @@
 {
-  "name": "backend",
+  "name": "@repo/backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "tsc && tsc-alias",
     "dev": "tsx --watch src/web/server.ts",
