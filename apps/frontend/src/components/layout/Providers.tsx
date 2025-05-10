@@ -1,18 +1,16 @@
 "use client"
 
-// import { AuthProvider } from "@/utils/contexts/auth-context"
 import { ORPCProvider } from "@/utils/contexts/orpc-context"
 import { getQueryClient } from "@/utils/query-client"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { useState } from "react"
 
 type Props = {
   children: React.ReactNode
 }
 
 const Providers = ({ children }: Props) => {
-  const [queryClient] = useState(() => getQueryClient())
+  const queryClient = getQueryClient()
 
   return (
     <QueryClientProvider client={queryClient}>
