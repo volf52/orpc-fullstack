@@ -4,6 +4,7 @@ import { useUser } from "@/utils/hooks/auth-hooks"
 import { Box } from "@/styled-system/jsx"
 import LogoutBtn from "@/components/auth/LogoutBtn"
 import NavLink from "@/components/layout/NavLink"
+import { Button } from "../ui/button"
 
 const LoggedInRoutes = () => {
   return (
@@ -21,7 +22,9 @@ const LoggedOutRoutes = () => {
     <>
       {loggedOutRoutes.map((link) => (
         <Box key={link.to}>
-          <NavLink to={link.to}>{link.label}</NavLink>
+          <NavLink to={link.to}>
+            <Button variant="ghost">{link.label}</Button>
+          </NavLink>
         </Box>
       ))}
     </>

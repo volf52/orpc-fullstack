@@ -3,6 +3,7 @@
 import { Container } from "@/styled-system/jsx"
 import Loader from "../Loader"
 import { useUser } from "@/utils/hooks/auth-hooks"
+import { Heading } from "@/components/ui/heading"
 
 const GreetUser = () => {
   const { user, isPending } = useUser()
@@ -13,8 +14,10 @@ const GreetUser = () => {
   }
 
   return (
-    <Container fontSize="2xl" fontWeight="bold">
-      Hello {name} 🐼!
+    <Container mx="0.5">
+      <Heading as="h2" fontSize="2xl">
+        Hello {name} 🐼!
+      </Heading>
     </Container>
   )
 }

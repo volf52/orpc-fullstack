@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import Providers from "@/components/layout/Providers"
 import Toaster from "@/components/layout/Toaster"
 import Navbar from "@/components/layout/Navbar"
+import { Box } from "@/styled-system/jsx"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,15 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Providers>
           <Navbar />
-          {children}
+          <Box
+            minH="90vh"
+            bgGradient="to-br"
+            gradientFrom="teal.a5"
+            gradientTo="teal.a2"
+            pt="4"
+          >
+            {children}
+          </Box>
         </Providers>
         <Toaster />
       </body>

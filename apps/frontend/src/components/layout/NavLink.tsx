@@ -4,10 +4,11 @@ import { Link } from "@/components/ui/link"
 type NavLinkProps = Omit<NextLinkProps, "href"> & {
   to: string
   children: React.ReactNode
+  noHover?: boolean
 }
 
-const NavLink = ({ children, to, ...rest }: NavLinkProps) => (
-  <Link asChild>
+const NavLink = ({ children, noHover, to, ...rest }: NavLinkProps) => (
+  <Link asChild _hover={noHover ? { textDecoration: "none" } : undefined}>
     <NextLink href={to} {...rest}>
       {children}
     </NextLink>

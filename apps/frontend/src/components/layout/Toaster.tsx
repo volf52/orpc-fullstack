@@ -3,6 +3,7 @@
 import { toaster } from "@/utils/toast"
 import { Toast } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
+import { Text } from "@/components/ui/text"
 import { IconButton } from "@/components/ui/icon-button"
 import { XIcon } from "lucide-react"
 
@@ -11,8 +12,12 @@ const Toaster = () => {
     <Toast.Toaster toaster={toaster}>
       {(toast) => (
         <Toast.Root key={toast.id}>
-          <Toast.Title>{toast.title}</Toast.Title>
-          <Toast.Description>{toast.description}</Toast.Description>
+          <Toast.Title color={toast.type === "error" ? "danger" : undefined}>
+            {toast.title}
+          </Toast.Title>
+          <Toast.Description>
+            <Text>{toast.description}</Text>
+          </Toast.Description>
 
           {toast.action && (
             <Toast.ActionTrigger asChild>

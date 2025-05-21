@@ -25,7 +25,12 @@ const CardLayout = ({
 
   return (
     <Container py={py} maxWidth={maxWidth}>
-      <Card.Root>
+      <Card.Root
+        backdropBlur="lg"
+        borderRadius="2xl"
+        boxShadow="xl"
+        bg="white.a11"
+      >
         <Card.Header>
           <VStack alignContent="center">
             <Card.Title>{title}</Card.Title>
