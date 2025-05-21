@@ -1,14 +1,13 @@
 {
-  "name": "backend",
+  "name": "@repo/backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "tsc && tsc-alias",
     "dev": "tsx --watch src/web/server.ts",
     "start": "node dist/web/server.js",
     "db:studio": "drizzle-kit studio",
-    "db:generate": "drizzle-kit migrate",
+    "db:generate": "drizzle-kit generate --name",
     "db:migrate": "drizzle-kit migrate"
   },
   "keywords": [],

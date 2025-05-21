@@ -1,28 +1,18 @@
+import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
 import type { Context as HonoContext } from "hono"
-import type { AppContext } from "./types"
-import { container } from "tsyringe"
-import { AuthService } from "@/application/services/auth.service"
+import type { DependencyContainer } from "tsyringe"
 
-const authServ = container.resolve(AuthService)
+export const createContext = async (
+  c: HonoContext,
+  container: DependencyContainer,
+) => {
+  const auth = resolveAuthFromContainer(container)
 
-export const createContext = async (c: HonoContext): Promise<AppContext> => {
-  const authHeader = c.req.header("Authorization")
-  if (!authHeader) {
-    return {}
-  }
+  const session = await auth.api.getSession({
+    headers: c.req.raw.headers,
+  })
 
-  const [type_, token] = authHeader.split(" ")
-  if (type_ !== "Bearer" || !token) {
-    return {}
-  }
-
-  const payload = authServ.decodeToken(token)
-  if (!payload) {
-    return {}
-  }
-  const user = await authServ.fetchUserById(payload.id)
-
-  if (!user) return {}
-
-  return { user }
+  return session
 }
+
+export type AuthContext = Awaited<ReturnType<typeof createContext>>
