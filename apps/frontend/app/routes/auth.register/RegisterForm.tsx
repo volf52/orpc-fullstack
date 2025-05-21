@@ -4,7 +4,7 @@ import CardLayout from "@/components/layout/Card"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
 import { toaster } from "@/utils/toast"
 import { NewUserSchema } from "@repo/contract/schemas"
-import { useRouter } from "next/navigation"
+import { useNavigate } from "react-router"
 import { useSignUp } from "@/utils/hooks/auth-hooks"
 
 // const formSchema = type({
@@ -16,7 +16,7 @@ import { useSignUp } from "@/utils/hooks/auth-hooks"
 const formSchema = NewUserSchema
 
 const RegisterForm = () => {
-  const router = useRouter()
+  const navigateTo = useNavigate()
   const signUpHandler = useSignUp()
   const authPending = signUpHandler.isPending
 
@@ -28,7 +28,7 @@ const RegisterForm = () => {
         { ...value },
         {
           onSuccess: () => {
-            router.push("/")
+            navigateTo("/")
             toaster.success({ title: "Registration successful" })
           },
           onError: (err) => {

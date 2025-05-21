@@ -1,7 +1,10 @@
-import NextLink, { type LinkProps as NextLinkProps } from "next/link"
+import {
+  NavLink as RRLink,
+  type NavLinkProps as RRNavLinkProps,
+} from "react-router"
 import { Link } from "@/components/ui/link"
 
-type NavLinkProps = Omit<NextLinkProps, "href"> & {
+type NavLinkProps = Omit<RRNavLinkProps, "to"> & {
   to: string
   children: React.ReactNode
   noHover?: boolean
@@ -9,9 +12,9 @@ type NavLinkProps = Omit<NextLinkProps, "href"> & {
 
 const NavLink = ({ children, noHover, to, ...rest }: NavLinkProps) => (
   <Link asChild _hover={noHover ? { textDecoration: "none" } : undefined}>
-    <NextLink href={to} {...rest}>
+    <RRLink to={to} {...rest}>
       {children}
-    </NextLink>
+    </RRLink>
   </Link>
 )
 

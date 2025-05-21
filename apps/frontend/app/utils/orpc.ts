@@ -6,7 +6,7 @@ import type { ContractRouterClient } from "@orpc/contract"
 export type ContractClient = ContractRouterClient<typeof CONTRACT>
 
 export const rpcLink = new RPCLink({
-  url: `${process.env.NEXT_PUBLIC_SERVER_URL}/rpc`,
+  url: `${import.meta.env.NEXT_PUBLIC_SERVER_URL}/rpc`,
   fetch(req, opts) {
     return fetch(req, {
       credentials: "include",

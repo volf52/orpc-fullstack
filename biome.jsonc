@@ -20,6 +20,9 @@
       ".vscode",
       ".git",
       ".github",
+      ".server",
+      ".client",
+      ".react-router",
       "public"
     ]
   },
@@ -61,5 +64,10 @@
     "linter": { "enabled": true }
   },
   // https://biomejs.dev/guides/big-projects/#monorepos
-  "overrides": [{ "include": ["./apps/frontend/src/**"], "linter": {} }]
+  "overrides": [
+    {
+      "include": ["./apps/frontend/app/**", "./apps/frontend/*.config.ts"],
+      "linter": {}
+    }
+  ]
 }
