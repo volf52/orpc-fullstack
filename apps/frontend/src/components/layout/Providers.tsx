@@ -8,6 +8,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 
 type Props = {
   children: React.ReactNode
@@ -21,7 +22,10 @@ const Providers = ({ children }: Props) => {
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ORPCProvider>{children}</ORPCProvider>
         {process.env.NODE_ENV === "development" && (
-          <ReactQueryDevtools initialIsOpen={false} />
+          <>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <TanStackRouterDevtools initialIsOpen={false} />
+          </>
         )}
       </HydrationBoundary>
     </QueryClientProvider>

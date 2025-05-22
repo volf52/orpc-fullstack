@@ -13,20 +13,20 @@ const LoggedInRoutes = () => {
     </>
   )
 }
-const loggedOutRoutes = [
-  { to: "/auth/login", label: "Login" },
-  { to: "/auth/register", label: "Register" },
-]
+
 const LoggedOutRoutes = () => {
   return (
     <>
-      {loggedOutRoutes.map((link) => (
-        <Box key={link.to}>
-          <NavLink to={link.to}>
-            <Button variant="ghost">{link.label}</Button>
-          </NavLink>
-        </Box>
-      ))}
+      <Box>
+        <NavLink to="/auth/login" preload="intent">
+          <Button variant="ghost">Login</Button>
+        </NavLink>
+      </Box>
+      <Box>
+        <NavLink to="/auth/register" preload="intent">
+          <Button variant="ghost">Register</Button>
+        </NavLink>
+      </Box>
     </>
   )
 }

@@ -1,18 +1,28 @@
-import NextLink, { type LinkProps as NextLinkProps } from "next/link"
-import { Link } from "@/components/ui/link"
+import { createLink, type LinkComponent } from "@tanstack/react-router"
+import { Link, type LinkProps } from "@/components/ui/link"
+import type { Omitt } from "@/types"
+import { forwardRef } from "react"
 
-type NavLinkProps = Omit<NextLinkProps, "href"> & {
-  to: string
-  children: React.ReactNode
+type NavLinkProps = Omitt<LinkProps, "href"> & {
   noHover?: boolean
 }
 
-const NavLink = ({ children, noHover, to, ...rest }: NavLinkProps) => (
-  <Link asChild _hover={noHover ? { textDecoration: "none" } : undefined}>
-    <NextLink href={to} {...rest}>
-      {children}
-    </NextLink>
-  </Link>
+const NavLinkBuilder = forwardRef<HTMLAnchorElement, NavLinkProps>(
+  (props, ref) => {
+    return (
+      <Link
+        ref={ref}
+        _hover={props.noHover ? { textDecoration: "none" } : undefined}
+        {...props}
+      />
+    )
+  },
+)
+
+const CreatedComponent = createLink(NavLinkBuilder)
+
+const NavLink: LinkComponent<typeof CreatedComponent> = (props) => (
+  <CreatedComponent {...props} />
 )
 
 export default NavLink

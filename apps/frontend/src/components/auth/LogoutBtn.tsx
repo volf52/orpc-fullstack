@@ -3,16 +3,16 @@
 import { Button } from "@/components/ui/button"
 import { useSignout } from "@/utils/hooks/auth-hooks"
 import { toaster } from "@/utils/toast"
-import { useRouter } from "next/navigation"
+import { useNavigate } from "@tanstack/react-router"
 
 const LogoutBtn = () => {
-  const router = useRouter()
+  const navigateTo = useNavigate()
   const signoutMut = useSignout()
 
   const handleClick = async () => {
     await signoutMut.mutateAsync(undefined, {
       onSuccess: () => {
-        router.push("/auth/login")
+        navigateTo({ to: "/auth/login" })
       },
       onError: (ctx) => {
         toaster.error({
