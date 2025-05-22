@@ -7,6 +7,7 @@ type NavLinkProps = Omitt<LinkProps, "href"> & {
   noHover?: boolean
 }
 
+// https://tanstack.com/router/latest/docs/framework/react/guide/custom-link
 const NavLinkBuilder = forwardRef<HTMLAnchorElement, NavLinkProps>(
   (props, ref) => {
     return (
