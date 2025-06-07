@@ -1,34 +1,21 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "root": true,
   "vcs": {
-    "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": true,
-    "defaultBranch": "main"
+    "defaultBranch": "main",
+    "enabled": true,
+    "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false,
-    "ignore": [
-      "node_modules",
-      "dist",
-      "build",
-      ".next",
-      "coverage",
-      ".turbo",
-      ".vercel",
-      ".idea",
-      ".vscode",
-      ".git",
-      ".github",
-      "public"
-    ]
+    "experimentalScannerIgnores": ["node_modules", ".git"],
+    "ignoreUnknown": true
   },
   "formatter": {
+    "bracketSameLine": true,
     "enabled": true,
+    "expand": "auto",
     "indentStyle": "space"
-  },
-  "organizeImports": {
-    "enabled": true
   },
   "linter": {
     "enabled": true,
@@ -36,30 +23,64 @@
       "recommended": true
     }
   },
-  "javascript": {
+
+  "plugins": [],
+  "grit": {},
+  "graphql": {
+    "assist": { "enabled": false },
+    "formatter": { "enabled": false },
+    "linter": { "enabled": false }
+  },
+
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on",
+        "recommended": true,
+        "useSortedAttributes": "on",
+        "useSortedKeys": "off",
+        "useSortedProperties": "on"
+      }
+    },
+    "enabled": true
+  },
+  "css": {
+    "assist": { "enabled": true },
+    "formatter": { "enabled": true, "indentStyle": "space" },
+    "linter": { "enabled": true },
+    "parser": { "allowWrongLineComments": false, "cssModules": true }
+  },
+
+  "html": {
     "formatter": {
-      "quoteStyle": "double",
-      "semicolons": "asNeeded",
-      "indentStyle": "space",
-      "indentWidth": 2,
-      "arrowParentheses": "always",
-      "trailingCommas": "all"
+      "bracketSameLine": true,
+      "enabled": true,
+      "indentScriptAndStyle": true,
+      "indentStyle": "space"
     }
   },
-  "json": {
+  "javascript": {
+    "assist": { "enabled": true },
     "formatter": {
+      "arrowParentheses": "always",
       "enabled": true,
-      "indentStyle": "space"
+      "indentStyle": "space",
+      "lineEnding": "lf",
+      "quoteStyle": "double",
+      "semicolons": "asNeeded",
+      "trailingCommas": "all"
     },
     "linter": {
       "enabled": true
+    },
+    "parser": {
+      "jsxEverywhere": false,
+      "unsafeParameterDecoratorsEnabled": true
     }
   },
-  "css": {
-    "parser": { "cssModules": true },
-    "formatter": { "enabled": true, "indentStyle": "space" },
+  "json": {
+    "assist": { "enabled": true },
+    "formatter": { "enabled": true, "expand": "auto", "indentStyle": "space" },
     "linter": { "enabled": true }
-  },
-  // https://biomejs.dev/guides/big-projects/#monorepos
-  "overrides": [{ "include": ["./apps/frontend/src/**"], "linter": {} }]
+  }
 }

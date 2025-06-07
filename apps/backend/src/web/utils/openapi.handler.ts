@@ -9,6 +9,7 @@ import { onError } from "@orpc/server"
 import { validationErrMap } from "./interceptors"
 import type { DependencyContainer } from "tsyringe"
 import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
+import { EffectSchemaConverter } from "./effect-schema-converter"
 
 const BASIC_AUTH_STR = `docs:${config.auth.DOCS_AUTH_PASS}`
 const BASIC_AUTH_STR_ENC = Buffer.from(BASIC_AUTH_STR, "ascii").toString(
@@ -63,7 +64,10 @@ export const addOpenApiHandler = async (
     plugins: [
       new ZodSmartCoercionPlugin(),
       new OpenAPIReferencePlugin({
-        schemaConverters: [new ZodToJsonSchemaConverter()],
+        schemaConverters: [
+          new ZodToJsonSchemaConverter(),
+          new EffectSchemaConverter(),
+        ],
         docsPath: "/docs",
         specGenerateOptions: {
           info: { title: "Ct-Starter API", version: "1.0.0" },

@@ -1,0 +1,21 @@
+{
+  "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
+  "root": false,
+  "files": {
+    "includes": [
+      "src/**/*.{js,ts,jsx,tsx,json,css}",
+      "panda.config.ts",
+      "postcss.config.cjs",
+      "park-ui.config.json",
+      "package.json",
+      "tsconfig.json"
+    ]
+  },
+  "linter": {
+    "domains": { "react": "recommended" }
+  },
+  "javascript": {
+    "jsxRuntime": "transparent"
+  },
+  "extends": "//"
+}

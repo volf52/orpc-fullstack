@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "ct-starter",
   "private": true,
   "scripts": {
@@ -9,13 +10,27 @@
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "prettier": "^3.5.3",
+    "@biomejs/biome": "catalog:",
+    "prettier": "catalog:",
     "turbo": "^2.5.2",
-    "typescript": "5.8.2"
+    "typescript": "catalog:",
+    "taze": "catalog:"
   },
-  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39",
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
+  },
+  "workspaces": {
+    "packages": ["packages/*", "apps/*"],
+    "catalog": {
+      "typescript": "^5.8.3",
+      "@types/node": "^22.15.17",
+      "@biomejs/biome": "2.0.0-beta.6",
+      "prettier": "^3.5.3",
+      "@orpc/contract": "^1.2.0",
+      "@orpc/zod": "^1.2.0",
+      "zod": "^3.25.0",
+      "taze": "^19.1.0",
+      "better-auth": "^1.2.7"
+    }
   }
 }
