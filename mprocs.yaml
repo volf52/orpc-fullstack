@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=https://json.schemastore.org/mprocs-0.6.4.json
+
+procs:
+  frontend:
+    cwd: "<CONFIG_DIR>/apps/frontend"
+    shell: "pnpm dev"

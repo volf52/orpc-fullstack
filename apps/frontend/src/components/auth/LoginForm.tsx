@@ -4,13 +4,13 @@ import CardLayout from "@/components/layout/Card"
 import { useAppForm } from "@/utils/hooks/app-form-hooks"
 import { type } from "arktype"
 import { toaster } from "@/utils/toast"
-import { useRouter } from "next/navigation"
 import { useSignIn } from "@/utils/hooks/auth-hooks"
+import { useNavigate } from "@tanstack/react-router"
 
 const formSchema = type({ email: "string.email", password: "string >= 8" })
 
 const LoginForm = () => {
-  const router = useRouter()
+  const navigateTo = useNavigate()
   const signInHandler = useSignIn()
 
   const tform = useAppForm({
@@ -21,7 +21,7 @@ const LoginForm = () => {
         { ...value },
         {
           onSuccess: () => {
-            router.push("/")
+            navigateTo({ to: "/", from: "/auth/login" })
             toaster.success({ title: "Login successful" })
           },
           onError: (err) => {

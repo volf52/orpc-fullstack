@@ -2,6 +2,7 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "ct-starter",
   "private": true,
+  "packageManager": "bun@1.2.15",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -12,9 +13,9 @@
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "prettier": "catalog:",
-    "turbo": "^2.5.2",
-    "typescript": "catalog:",
-    "taze": "catalog:"
+    "taze": "catalog:",
+    "turbo": "^2.5.4",
+    "typescript": "catalog:"
   },
   "engines": {
     "node": ">=22"
