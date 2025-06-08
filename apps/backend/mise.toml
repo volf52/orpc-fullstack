@@ -1,2 +1,23 @@
 [tools]
 bun = "latest"
+
+[env]
+
+[tasks.dev]
+alias = "d"
+description = "Run dev server"
+run = "bun run --hot ./src/web/server.ts"
+
+[tasks.compile]
+description = "Compile API server"
+run = "bun build --compile --target bun ./src/web/server.ts"
+
+[tasks.build]
+alias = "b"
+description = "Build API server"
+run = "bun build --target bun --outfile ./dist/server.js ./src/web/server.ts"
+
+[tasks.start]
+description = "Start API server"
+depends = ["build"]
+run = "bun ./dist/server.js"

@@ -3,3 +3,6 @@ bun = "latest"
 
 [env]
 _.path = ["./node_modules/.bin"]
+
+[tasks.update-deps]
+run = "taze -r"
