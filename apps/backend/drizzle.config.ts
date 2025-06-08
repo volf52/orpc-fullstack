@@ -1,4 +1,5 @@
 import { defineConfig } from "drizzle-kit"
+import config from "./src/infra/config"
 
 export default defineConfig({
   dialect: "postgresql",
@@ -7,5 +8,5 @@ export default defineConfig({
     "./src/infra/db/models/relations.ts",
   ],
   out: "./migrations",
-  dbCredentials: { url: process.env.DB_URL as string },
+  dbCredentials: { url: config.db.DB_URL },
 })

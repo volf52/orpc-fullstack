@@ -5,9 +5,9 @@
   "packageManager": "bun@1.2.15",
   "scripts": {
     "prepare": "panda codegen",
-    "dev": "bun vite --port 3000",
-    "build": "bun vite build",
-    "start": "vite preview",
+    "dev": "bun ---bun vite --port 3000",
+    "build": "bun --bun vite build",
+    "start": "bun --bun vite preview",
     "lint": "biome check",
     "check-types": "tsc --noEmit --pretty"
   },

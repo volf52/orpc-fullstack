@@ -1,15 +1,14 @@
-import type { Hono, MiddlewareHandler } from "hono"
-import { router } from "../router"
 import { OpenAPIHandler } from "@orpc/openapi/fetch"
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins"
-import { ZodSmartCoercionPlugin, ZodToJsonSchemaConverter } from "@orpc/zod"
-import config from "@/infra/config"
-import { createContext } from "./context"
 import { onError } from "@orpc/server"
-import { validationErrMap } from "./interceptors"
+import { ZodSmartCoercionPlugin, ZodToJsonSchemaConverter } from "@orpc/zod"
+import { router } from "@web/router"
+import type { Hono, MiddlewareHandler } from "hono"
 import type { DependencyContainer } from "tsyringe"
 import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
-import { EffectSchemaConverter } from "./effect-schema-converter"
+import config from "@/infra/config"
+import { createContext } from "./context"
+import { validationErrMap } from "./interceptors"
 
 const BASIC_AUTH_STR = `docs:${config.auth.DOCS_AUTH_PASS}`
 const BASIC_AUTH_STR_ENC = Buffer.from(BASIC_AUTH_STR, "ascii").toString(
@@ -64,10 +63,7 @@ export const addOpenApiHandler = async (
     plugins: [
       new ZodSmartCoercionPlugin(),
       new OpenAPIReferencePlugin({
-        schemaConverters: [
-          new ZodToJsonSchemaConverter(),
-          new EffectSchemaConverter(),
-        ],
+        schemaConverters: [new ZodToJsonSchemaConverter()],
         docsPath: "/docs",
         specGenerateOptions: {
           info: { title: "Ct-Starter API", version: "1.0.0" },

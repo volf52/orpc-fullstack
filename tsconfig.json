@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/contract" },
+    { "path": "./apps/backend" }
+  ],
+  "exclude": ["node_modules", "dist", "build", ".git"]
+}

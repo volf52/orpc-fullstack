@@ -8,7 +8,9 @@
     "start": "node dist/web/server.js",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate --name",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "check-types": "tsc --noEmit --pretty",
+    "lint": "biome check"
   },
   "keywords": [],
   "author": "",

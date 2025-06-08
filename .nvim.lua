@@ -1,1 +1,1 @@
-vim.cmd([[set runtimepath+=.nvim]])
+-- vim.cmd([[set runtimepath+=.nvim]])

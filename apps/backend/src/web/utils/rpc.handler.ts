@@ -1,10 +1,10 @@
+import { onError } from "@orpc/server"
 import { RPCHandler } from "@orpc/server/fetch"
+import { router } from "@web/router"
 import type { Hono } from "hono"
-import { router } from "../router"
+import type { DependencyContainer } from "tsyringe"
 import { createContext } from "./context"
 import { validationErrMap } from "./interceptors"
-import { onError } from "@orpc/server"
-import type { DependencyContainer } from "tsyringe"
 
 export const addRpcHandler = (app: Hono, container: DependencyContainer) => {
   const rpcHandler = new RPCHandler(router, {

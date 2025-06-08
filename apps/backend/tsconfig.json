@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/base.json",
+  "extends": "@repo/typescript-config/bun.json",
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -11,10 +11,15 @@
       "@application": ["src/application"],
       "@application/*": ["src/application/*"],
       "@domain": ["src/domain"],
-      "@domain/*": ["src/domain/*"]
+      "@domain/*": ["src/domain/*"],
+      "@web/*": ["src/web/*"],
+
+      // Other packages
+      "@contract/*": ["../../packages/contract/src/*"]
     }
   },
   "include": ["src"],
+  "exclude": ["node_modules", ".git"],
   "tsc-alias": {
     "resolveFullPaths": true
   }
