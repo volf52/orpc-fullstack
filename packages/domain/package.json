@@ -1,5 +1,5 @@
 {
-  "name": "@repo/contract",
+  "name": "@repo/domain",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -11,16 +11,6 @@
       "import": "./src/index.ts",
       "require": "./src/index.ts",
       "types": "./src/index.ts"
-    },
-    "./contracts": {
-      "import": "./src/contracts/index.ts",
-      "require": "./src/contracts/index.ts",
-      "types": "./src/contracts/index.ts"
-    },
-    "./schemas": {
-      "import": "./src/schemas/index.ts",
-      "require": "./src/schemas/index.ts",
-      "types": "./src/schemas/index.ts"
     }
   },
   "devDependencies": {
@@ -29,8 +19,6 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@orpc/contract": "catalog:",
-    "@orpc/zod": "catalog:",
     "zod": "catalog:"
   }
 }

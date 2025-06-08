@@ -1,8 +1,10 @@
+// biome-ignore assist/source/organizeImports: Need reflect-metadata for decorators
 import "reflect-metadata"
+
 import { Hono } from "hono"
+import { showRoutes } from "hono/dev"
 import { logger } from "hono/logger"
 import { cors } from "hono/cors"
-import { serve } from "@hono/node-server"
 import { addOpenApiHandler } from "./utils/openapi.handler"
 import { addRpcHandler } from "./utils/rpc.handler"
 import { container } from "tsyringe"
@@ -25,12 +27,11 @@ initAuthRouter(app, container)
 addOpenApiHandler(app, container)
 addRpcHandler(app, container)
 
-serve(
-  {
-    fetch: app.fetch,
-    port: 8000,
-  },
-  (addr) => {
-    console.log(`Server is running on http://localhost:${addr.port}`)
-  },
-)
+if (config.app.NODE_ENV === "development") {
+  showRoutes(app, { verbose: true })
+}
+
+export default {
+  fetch: app.fetch,
+  port: config.app.PORT,
+}

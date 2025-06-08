@@ -1,0 +1,11 @@
+{
+  "extends": "@repo/typescript-config/bun.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@domain/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "test"],
+  "exclude": ["node_modules"]
+}
