@@ -1,8 +1,8 @@
-import NavLink from "./NavLink"
-import { Flex } from "@/styled-system/jsx"
+import Heading from "@app/components/primitive/Heading"
+import { css } from "@styled/css"
+import { Flex } from "@styled/jsx"
 import NavbarUserSection from "./NavbarUserSection"
-import { css } from "@/styled-system/css"
-import { Heading } from "../ui/heading"
+import NavLink from "./NavLink"
 
 const Navbar = () => {
   return (
@@ -14,18 +14,15 @@ const Navbar = () => {
         py: "3",
         px: { base: "4", md: "8" },
         backdropFilter: "saturate(10) blur(10px)",
-      })}
-    >
+      })}>
       <Flex align="center" justify="space-between" maxW="7x1" mx="4">
         <Flex>
           <NavLink to="/">
-            <Heading size="lg" color="colorPalette.text">
-              CtStarter
-            </Heading>
+            <Heading level="1">CtStarter</Heading>
           </NavLink>
         </Flex>
 
-        <Flex px="4" gap="4">
+        <Flex gap="4" px="4">
           <NavbarUserSection />
         </Flex>
       </Flex>

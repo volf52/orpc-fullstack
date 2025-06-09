@@ -4,13 +4,12 @@
   "files": {
     "includes": [
       "src/**/*.{js,ts,jsx,tsx,json,css}",
+      "app.config.js",
       "panda.config.ts",
-      "postcss.config.cjs",
-      "park-ui.config.json",
       "package.json",
       "tsconfig.json",
-      "vite.config.ts",
-      "index.html"
+      "index.html",
+      "!src/routeTree.gen.ts"
     ]
   },
   "linter": {

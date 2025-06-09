@@ -1,7 +1,11 @@
-import { onError, ORPCError, ValidationError } from "@orpc/server"
+import { ORPCError, ValidationError } from "@orpc/server"
 import { ZodError, type ZodIssue } from "zod"
 
-export const validationErrMap = (err: Error) => {
+export const validationErrMap = (err: unknown) => {
+  if (!(err instanceof Error)) {
+    throw err
+  }
+
   if (!(err instanceof ORPCError)) {
     return
   }

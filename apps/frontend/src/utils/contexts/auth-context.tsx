@@ -1,5 +1,3 @@
-"use client"
-
 import type { User } from "@repo/contract/schemas"
 import { createContext, use, useEffect, useState } from "react"
 import { authClient } from "../auth-client"

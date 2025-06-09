@@ -1,10 +1,8 @@
-"use client"
-
-import { useUser } from "@/utils/hooks/auth-hooks"
-import { Box } from "@/styled-system/jsx"
-import LogoutBtn from "@/components/auth/LogoutBtn"
-import NavLink from "@/components/layout/NavLink"
-import { Button } from "../ui/button"
+import LogoutBtn from "@app/components/auth/LogoutBtn"
+import NavLink from "@app/components/layout/NavLink"
+import { useUser } from "@app/utils/hooks/auth-hooks"
+import { Box } from "@styled/jsx"
+import { Button } from "@ui/button"
 
 const LoggedInRoutes = () => {
   return (
@@ -18,12 +16,12 @@ const LoggedOutRoutes = () => {
   return (
     <>
       <Box>
-        <NavLink to="/auth/login" preload="intent">
+        <NavLink to="/auth/login">
           <Button variant="ghost">Login</Button>
         </NavLink>
       </Box>
       <Box>
-        <NavLink to="/auth/register" preload="intent">
+        <NavLink to="/auth/register">
           <Button variant="ghost">Register</Button>
         </NavLink>
       </Box>
@@ -32,7 +30,7 @@ const LoggedOutRoutes = () => {
 }
 
 const NavbarUserSection = () => {
-  const { user } = useUser()
+  const { data: user } = useUser()
 
   if (user) return <LoggedInRoutes />
 

@@ -2,7 +2,9 @@
   "files": [],
   "references": [
     { "path": "./packages/contract" },
-    { "path": "./apps/backend" }
+    { "path": "./packages/domain" },
+    { "path": "./apps/backend" },
+    { "path": "./apps/frontend" }
   ],
   "exclude": ["node_modules", "dist", "build", ".git"]
 }

@@ -1,4 +1,4 @@
-import LoginForm from "@/components/auth/LoginForm"
+import LoginForm from "@app/components/auth/LoginForm"
 import { createFileRoute } from "@tanstack/react-router"
 
 const LoginPage = () => {

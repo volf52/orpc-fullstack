@@ -1,17 +1,9 @@
-"use client"
-
-import CardLayout from "@/components/layout/Card"
-import { useAppForm } from "@/utils/hooks/app-form-hooks"
-import { toaster } from "@/utils/toast"
+import CardLayout from "@app/components/layout/Card"
+import { useAppForm } from "@app/utils/hooks/app-form-hooks"
+import { useSignUp } from "@app/utils/hooks/auth-hooks"
 import { NewUserSchema } from "@repo/contract/schemas"
-import { useSignUp } from "@/utils/hooks/auth-hooks"
 import { useNavigate } from "@tanstack/react-router"
-
-// const formSchema = type({
-//   name: "string > 4",
-//   email: "string.email",
-//   password: "string",
-// })
+import { useToast } from "@ui/toast/use-toast"
 
 const formSchema = NewUserSchema
 
@@ -20,21 +12,25 @@ const RegisterForm = () => {
   const signUpHandler = useSignUp()
   const authPending = signUpHandler.isPending
 
+  const { toast } = useToast()
+
   const tform = useAppForm({
     defaultValues: { name: "", email: "", password: "" },
     validators: { onSubmit: formSchema },
     onSubmit: async ({ value }) => {
-      await signUpHandler.mutateAsync(
+      signUpHandler.mutate(
         { ...value },
         {
           onSuccess: () => {
             navigateTo({ to: "/", from: "/auth/register" })
-            toaster.success({ title: "Registration successful" })
+            toast({ title: "Registration successful" })
           },
           onError: (err) => {
-            toaster.error({
+            console.error("Registration error:", err)
+            toast({
               title: "Registration failed",
               description: err.message,
+              variant: "destructive",
             })
           },
         },
@@ -48,21 +44,19 @@ const RegisterForm = () => {
         e.preventDefault()
         e.stopPropagation()
         tform.handleSubmit()
-      }}
-    >
+      }}>
       <tform.AppForm>
         <CardLayout
-          title="Register"
-          footer={<tform.SubmitButton label="Submit" fullWidth />}
-        >
+          footer={<tform.SubmitButton fullWidth label="Submit" />}
+          title="Register">
           <tform.AppField name="name">
             {(field) => (
               <field.TextField
+                disabled={authPending}
                 label="Name"
                 placeholder="Name..."
-                type="text"
                 required
-                disabled={authPending}
+                type="text"
               />
             )}
           </tform.AppField>
@@ -70,11 +64,11 @@ const RegisterForm = () => {
           <tform.AppField name="email">
             {(field) => (
               <field.TextField
+                disabled={authPending}
                 label="Email"
                 placeholder="Email..."
-                type="email"
                 required
-                disabled={authPending}
+                type="email"
               />
             )}
           </tform.AppField>
@@ -82,11 +76,11 @@ const RegisterForm = () => {
           <tform.AppField name="password">
             {(field) => (
               <field.TextField
+                disabled={authPending}
                 label="Password"
                 placeholder="Password..."
-                type="password"
                 required
-                disabled={authPending}
+                type="password"
               />
             )}
           </tform.AppField>

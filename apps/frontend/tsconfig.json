@@ -1,27 +1,20 @@
 {
-  "extends": "@repo/typescript-config/nextjs.json",
+  "extends": "@repo/typescript-config/react.json",
   "compilerOptions": {
+    "skipLibCheck": true,
     "strict": true,
-    "jsx": "preserve",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "erasableSyntaxOnly": false,
     "baseUrl": "./",
     "paths": {
-      "@/styled-system/*": ["./styled-system/*"],
-      "@/*": ["./src/*"]
+      "@app/*": ["./src/*"],
+      "@ui/*": ["./src/components/ui/*"],
+      "@styled/*": ["./styled/*"],
+      "@shadow-panda/styled-system/*": ["./styled/*"],
+
+      // Other packages
+      "@contract/*": ["../../packages/contract/src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "next.config.ts",
-    "panda.config.ts",
-    "styled-system"
-  ],
-  "exclude": ["node_modules"]
+  "include": ["src", "panda.config.ts", "styled"],
+  "exclude": ["node_modules", ".git"]
 }

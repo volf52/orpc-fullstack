@@ -1,6 +1,6 @@
-import { Field } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { useFieldContext } from "@/utils/contexts/form-context"
+import { FormControl, FormItem, FormLabel } from "@app/components/form"
+import { useFieldContext } from "@app/utils/contexts/form-context"
+import { Input } from "@ui/input"
 import type { HTMLInputTypeAttribute } from "react"
 import FieldErrors from "./field-errors"
 
@@ -20,25 +20,28 @@ const TextField = ({
   disabled,
 }: TextFieldProps) => {
   const field = useFieldContext<string>()
+  const isInvalid = !field.state.meta.isValid
 
   return (
-    <Field.Root invalid={!field.state.meta.isValid}>
-      <Field.Label htmlFor={field.name}>{label}</Field.Label>
-      <Field.Input asChild>
+    <FormItem>
+      <FormLabel htmlFor={field.name} isInvalid={isInvalid}>
+        {label}
+      </FormLabel>
+      <FormControl>
         <Input
+          disabled={disabled}
           id={field.name}
           name={field.name}
-          placeholder={placeholder}
-          disabled={disabled}
-          type={type}
-          required={required}
-          value={field.state.value}
           onBlur={field.handleBlur}
           onChange={(e) => field.handleChange(e.target.value)}
+          placeholder={placeholder}
+          required={required}
+          type={type}
+          value={field.state.value}
         />
-      </Field.Input>
+      </FormControl>
       <FieldErrors field={field} />
-    </Field.Root>
+    </FormItem>
   )
 }
 

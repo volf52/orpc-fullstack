@@ -1,12 +1,10 @@
-"use client"
-
-import { Container } from "@/styled-system/jsx"
+import Heading from "@app/components/primitive/Heading"
+import { useUser } from "@app/utils/hooks/auth-hooks"
+import { Container } from "@styled/jsx"
 import Loader from "../Loader"
-import { useUser } from "@/utils/hooks/auth-hooks"
-import { Heading } from "@/components/ui/heading"
 
 const GreetUser = () => {
-  const { user, isPending } = useUser()
+  const { data: user, isPending } = useUser()
   const name = user?.name || "Guest"
 
   if (isPending) {
@@ -15,9 +13,7 @@ const GreetUser = () => {
 
   return (
     <Container mx="0.5">
-      <Heading as="h2" fontSize="2xl">
-        Hello {name} 🐼!
-      </Heading>
+      <Heading level="2">Hello {name} 🐼!</Heading>
     </Container>
   )
 }

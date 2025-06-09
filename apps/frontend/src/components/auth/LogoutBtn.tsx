@@ -1,13 +1,12 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
-import { useSignout } from "@/utils/hooks/auth-hooks"
-import { toaster } from "@/utils/toast"
+import { useSignout } from "@app/utils/hooks/auth-hooks"
 import { useNavigate } from "@tanstack/react-router"
+import { Button } from "@ui/button"
+import { useToast } from "@ui/toast/use-toast"
 
 const LogoutBtn = () => {
   const navigateTo = useNavigate()
   const signoutMut = useSignout()
+  const { toast } = useToast()
 
   const handleClick = async () => {
     await signoutMut.mutateAsync(undefined, {
@@ -15,9 +14,10 @@ const LogoutBtn = () => {
         navigateTo({ to: "/auth/login" })
       },
       onError: (ctx) => {
-        toaster.error({
+        toast({
           title: "Failed to logout",
           description: ctx.message,
+          variant: "destructive",
         })
       },
     })

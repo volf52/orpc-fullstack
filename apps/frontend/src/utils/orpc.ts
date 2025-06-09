@@ -1,7 +1,8 @@
 import { createORPCClient } from "@orpc/client"
 import { RPCLink } from "@orpc/client/fetch"
-import type { CONTRACT } from "@repo/contract/contracts"
 import type { ContractRouterClient } from "@orpc/contract"
+import { createORPCReactQueryUtils, type RouterUtils } from "@orpc/react-query"
+import type { CONTRACT } from "@repo/contract/contracts"
 
 export type ContractClient = ContractRouterClient<typeof CONTRACT>
 
@@ -15,4 +16,7 @@ export const rpcLink = new RPCLink({
   },
 })
 
-export const orpcClient: ContractClient = createORPCClient(rpcLink)
+export const orpcClient = createORPCClient<ContractClient>(rpcLink)
+
+export type OrpcReactQuery = RouterUtils<ContractClient>
+export const orpc = createORPCReactQueryUtils(orpcClient)

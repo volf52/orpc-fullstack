@@ -12,4 +12,6 @@ const TRUSTED_ORIGIN = env
   .default("http://localhost:3000")
   .asString()
 
-export default { PORT, NODE_ENV, TRUSTED_ORIGIN } as const
+const APP_NAME = env.get("APP_NAME").default("Carbonteq Starter").asString()
+
+export default { PORT, NODE_ENV, TRUSTED_ORIGIN, APP_NAME } as const

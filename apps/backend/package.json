@@ -20,7 +20,6 @@
     "@types/bun": "catalog:",
     "@types/pg": "^8.15.4",
     "drizzle-kit": "^0.31.1",
-    "tsx": "^4.19.4",
     "typescript": "catalog:"
   },
   "dependencies": {

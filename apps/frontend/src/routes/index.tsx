@@ -1,4 +1,4 @@
-import GreetUser from "@/components/home/GreetUser"
+import GreetUser from "@app/components/home/GreetUser"
 import { createFileRoute } from "@tanstack/react-router"
 
 const Home = () => {

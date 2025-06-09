@@ -1,5 +1,5 @@
-import { useFormContext } from "@/utils/contexts/form-context"
-import { Button } from "@/components/ui/button"
+import { useFormContext } from "@app/utils/contexts/form-context"
+import { Button } from "@ui/button"
 
 export interface SubmitButtonProps {
   label: string
@@ -15,14 +15,12 @@ const SubmitButton = ({ label, fullWidth, disabled }: SubmitButtonProps) => {
       selector={(state) => ({
         canSubmit: state.canSubmit,
         isSubmitting: state.isSubmitting,
-      })}
-    >
+      })}>
       {({ canSubmit, isSubmitting }) => (
         <Button
-          type="submit"
-          width={fullWidth ? "full" : undefined}
           disabled={disabled || isSubmitting || !canSubmit}
-        >
+          type="submit"
+          width={fullWidth ? "full" : undefined}>
           {isSubmitting ? "Submitting..." : label}
         </Button>
       )}

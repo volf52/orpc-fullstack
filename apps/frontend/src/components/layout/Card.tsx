@@ -1,6 +1,13 @@
-import { Container } from "@/styled-system/jsx/container"
-import { Card } from "@/components/ui/card"
-import { Stack, VStack, type StackProps } from "@/styled-system/jsx"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@app/components/ui/card"
+import { Stack, type StackProps, VStack } from "@styled/jsx"
+import { Container } from "@styled/jsx/container"
 
 type CardLayoutProps = {
   title: string
@@ -24,26 +31,21 @@ const CardLayout = ({
   const stackGap = gap || "4"
 
   return (
-    <Container py={py} maxWidth={maxWidth}>
-      <Card.Root
-        backdropBlur="lg"
-        borderRadius="2xl"
-        boxShadow="xl"
-        bg="white.a11"
-      >
-        <Card.Header>
+    <Container maxWidth={maxWidth} py={py}>
+      <Card backdropBlur="lg" bg="white.a11" borderRadius="2xl" boxShadow="xl">
+        <CardHeader>
           <VStack alignContent="center">
-            <Card.Title>{title}</Card.Title>
-            {subtitle && <Card.Description>{subtitle}</Card.Description>}
+            <CardTitle>{title}</CardTitle>
+            {subtitle && <CardDescription>{subtitle}</CardDescription>}
           </VStack>
-        </Card.Header>
+        </CardHeader>
 
-        <Card.Body>
+        <CardContent>
           <Stack gap={stackGap}>{children}</Stack>
-        </Card.Body>
+        </CardContent>
 
-        {footer && <Card.Footer>{footer}</Card.Footer>}
-      </Card.Root>
+        {footer && <CardFooter>{footer}</CardFooter>}
+      </Card>
     </Container>
   )
 }

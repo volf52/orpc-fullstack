@@ -1,7 +1,6 @@
-import { z } from "zod"
 import { oz } from "@orpc/zod"
+import { z } from "zod"
 
-// User type in better-auth
 export type User = {
   id: string
   name: string
@@ -49,5 +48,3 @@ export const NewUserSchema = oz.openapi(
     ],
   },
 )
-
-// export type NewUser = z.infer<typeof NewUserSchema>

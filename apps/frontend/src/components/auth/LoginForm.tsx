@@ -1,17 +1,16 @@
-"use client"
-
-import CardLayout from "@/components/layout/Card"
-import { useAppForm } from "@/utils/hooks/app-form-hooks"
-import { type } from "arktype"
-import { toaster } from "@/utils/toast"
-import { useSignIn } from "@/utils/hooks/auth-hooks"
+import CardLayout from "@app/components/layout/Card"
+import { useAppForm } from "@app/utils/hooks/app-form-hooks"
+import { useSignIn } from "@app/utils/hooks/auth-hooks"
 import { useNavigate } from "@tanstack/react-router"
+import { useToast } from "@ui/toast/use-toast"
+import { type } from "arktype"
 
 const formSchema = type({ email: "string.email", password: "string >= 8" })
 
 const LoginForm = () => {
   const navigateTo = useNavigate()
   const signInHandler = useSignIn()
+  const { toast } = useToast()
 
   const tform = useAppForm({
     defaultValues: { email: "", password: "" },
@@ -22,10 +21,17 @@ const LoginForm = () => {
         {
           onSuccess: () => {
             navigateTo({ to: "/", from: "/auth/login" })
-            toaster.success({ title: "Login successful" })
+            toast({
+              variant: "default",
+              description: "Login successful",
+            })
           },
           onError: (err) => {
-            toaster.error({ title: "Login failed", description: err.message })
+            toast({
+              variant: "destructive",
+              description: err.message,
+              title: "Login failed",
+            })
           },
         },
       )
@@ -38,27 +44,25 @@ const LoginForm = () => {
         e.preventDefault()
         e.stopPropagation()
         tform.handleSubmit()
-      }}
-    >
+      }}>
       <tform.AppForm>
         <CardLayout
-          title="Login"
           footer={
             <tform.SubmitButton
-              label="Submit"
-              fullWidth
               disabled={signInHandler.isPending}
+              fullWidth
+              label="Submit"
             />
           }
-        >
+          title="Login">
           <tform.AppField name="email">
             {(field) => (
               <field.TextField
+                disabled={signInHandler.isPending}
                 label="Email"
                 placeholder="Email..."
-                type="email"
                 required
-                disabled={signInHandler.isPending}
+                type="email"
               />
             )}
           </tform.AppField>
@@ -66,11 +70,11 @@ const LoginForm = () => {
           <tform.AppField name="password">
             {(field) => (
               <field.TextField
+                disabled={signInHandler.isPending}
                 label="Password"
                 placeholder="Password..."
-                type="password"
                 required
-                disabled={signInHandler.isPending}
+                type="password"
               />
             )}
           </tform.AppField>
