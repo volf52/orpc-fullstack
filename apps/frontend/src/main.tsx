@@ -1,5 +1,3 @@
-/// <reference types="vinxi/types/client" />
-
 import { createRouter } from "@app/router"
 import { RouterProvider } from "@tanstack/react-router"
 import { StrictMode } from "react"

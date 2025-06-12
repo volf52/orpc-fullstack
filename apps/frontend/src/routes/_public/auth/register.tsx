@@ -5,6 +5,6 @@ const RegisterPage = () => {
   return <RegisterForm />
 }
 
-export const Route = createFileRoute("/auth/register")({
+export const Route = createFileRoute("/_public/auth/register")({
   component: RegisterPage,
 })

@@ -20,6 +20,7 @@ export const createRouter = () => {
     scrollRestoration: true,
     context: { queryClient, orpc } as const,
     defaultPreload: "intent",
+    defaultPreloadStaleTime: Infinity,
     defaultPendingComponent: Loader,
     defaultNotFoundComponent: () => <NotFound />,
     defaultErrorComponent: DefaultErrorBoundary,

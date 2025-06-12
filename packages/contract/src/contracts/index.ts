@@ -1,3 +1,4 @@
+import type { ContractRouterClient } from "@orpc/contract"
 import { whoami } from "./user"
 
 export const CONTRACT = {
@@ -5,3 +6,5 @@ export const CONTRACT = {
     auth: { whoami },
   },
 }
+
+export type AppRouterClient = ContractRouterClient<typeof CONTRACT>

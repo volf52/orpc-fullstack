@@ -5,6 +5,7 @@
     "includes": [
       "src/**/*.{js,ts,jsx,tsx,json,css}",
       "app.config.ts",
+      "vite.config.ts",
       "postcss.config.mjs",
       "package.json",
       "tsconfig.json",

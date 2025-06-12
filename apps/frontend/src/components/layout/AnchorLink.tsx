@@ -1,39 +1,31 @@
 import type { Omitt, Prettify } from "@app/types"
-import {
-  type ElementProps,
-  Anchor as Link,
-  type AnchorProps as LinkProps,
-} from "@mantine/core"
+import { Anchor, type AnchorProps, type ElementProps } from "@mantine/core"
 import { createLink, type LinkComponent } from "@tanstack/react-router"
 import { forwardRef } from "react"
 
-interface AllAnchorLinkProps
-  extends LinkProps,
-    ElementProps<"a", keyof LinkProps> {}
+// Need this for the polymorphic component to work correctly
+interface AllAnchorProps
+  extends AnchorProps,
+    ElementProps<"a", keyof AnchorProps> {}
+
+// https://tanstack.com/router/latest/docs/framework/react/guide/custom-link#mantine-example
+type MantineAnchorProps = Omitt<AllAnchorProps, "href">
 
 type AnchorLinkProps = Prettify<
-  Omitt<AllAnchorLinkProps, "href"> & {
+  MantineAnchorProps & {
     noHover?: boolean
   }
 >
 
-// https://tanstack.com/router/latest/docs/framework/react/guide/custom-link
-const NavLinkBuilder = forwardRef<typeof Link, AnchorLinkProps>(
+const AnchorLinkBuilder = forwardRef<HTMLAnchorElement, AnchorLinkProps>(
   (props, ref) => {
-    return (
-      <Link
-        _hover={props.noHover ? { textDecoration: "none" } : undefined}
-        // @ts-expect-error
-        ref={ref}
-        {...props}
-      />
-    )
+    return <Anchor ref={ref} {...props} />
   },
 )
 
-const CreatedComponent = createLink(NavLinkBuilder)
+const CreatedComponent = createLink(AnchorLinkBuilder)
 
-const AnchorLink: LinkComponent<typeof CreatedComponent> = (props) => (
+const AnchorLink: LinkComponent<typeof AnchorLinkBuilder> = (props) => (
   <CreatedComponent preload="intent" {...props} />
 )
 

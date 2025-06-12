@@ -7,19 +7,15 @@ interface LinkBtnProps
     ElementProps<"button", keyof ButtonProps> {}
 
 // https://tanstack.com/router/latest/docs/framework/react/guide/custom-link
-const LinkBtnBuilder = forwardRef<typeof Button, LinkBtnProps>((props, ref) => {
-  return (
-    <Button
-      // @ts-expect-error
-      ref={ref}
-      {...props}
-    />
-  )
-})
+const LinkBtnBuilder = forwardRef<HTMLButtonElement, LinkBtnProps>(
+  (props, ref) => {
+    return <Button ref={ref} {...props} />
+  },
+)
 
 const CreatedComponent = createLink(LinkBtnBuilder)
 
-const LinkBtn: LinkComponent<typeof CreatedComponent> = (props) => (
+const LinkBtn: LinkComponent<typeof LinkBtnBuilder> = (props) => (
   <CreatedComponent preload="intent" {...props} />
 )
 

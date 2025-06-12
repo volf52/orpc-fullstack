@@ -44,6 +44,11 @@ next-env.d.ts
 styled-system
 styled-system-studio
 
-.output
 .vinxi
 styled
+
+.tanstack
+.react-router
+.output
+.vite-inspect
+.nitro

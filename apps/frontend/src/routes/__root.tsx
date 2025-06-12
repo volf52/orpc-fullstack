@@ -1,8 +1,8 @@
+/// <reference types="vite/client" />
+
 import DefaultErrorBoundary from "@app/components/layout/DefaultErrorBoundary"
 import NotFound from "@app/components/layout/NotFound"
-import PrivateLayout from "@app/components/layout/PrivateLayout"
-import PublicLayout from "@app/components/layout/PublicLayout"
-import { sessionQueryOptions, useSession } from "@app/utils/hooks/auth-hooks"
+import { authClient } from "@app/utils/auth-client"
 import type { OrpcReactQuery } from "@app/utils/orpc"
 import { seo } from "@app/utils/seo"
 import {
@@ -10,6 +10,7 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core"
+import { Notifications } from "@mantine/notifications"
 import type { QueryClient } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import {
@@ -17,18 +18,10 @@ import {
   HeadContent,
   Outlet,
   Scripts,
-  useMatches,
-  useNavigate,
-  useRouter,
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
-import { Suspense, useEffect } from "react"
-import { Notifications } from "@mantine/notifications"
-import { Loader } from "@mantine/core"
-
-// Import styles through PostCSS
-// import styles from "./styles.css?url"
-import "./styles.css"
+import { Suspense } from "react"
+import styles from "./styles.css?url"
 
 export interface RouterAppContext {
   orpc: OrpcReactQuery
@@ -69,76 +62,11 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-const AuthGuard = () => {
-  const router = useRouter()
-  const matches = useMatches()
-  const navigate = useNavigate()
-  const { data: session, isLoading } = useSession()
-
-  console.log(
-    "Match id is ",
-    matches.map((m) => m.routeId),
-  )
-
-  // Memoize route checks to prevent unnecessary recalculations
-  const isPublicRoute = matches.some((match) =>
-    match.routeId.startsWith("/auth/"),
-  )
-  const isErrorRoute = matches.some((match) =>
-    ["__root__.notFound", "__root__.error"].includes(match.routeId),
-  )
-
-  // Handle redirects during SSR
-  if (typeof window === "undefined") {
-    if (!isErrorRoute) {
-      if (!session && !isPublicRoute) {
-        router.navigate({ to: "/auth/login" })
-      } else if (session && isPublicRoute) {
-        router.navigate({ to: "/" })
-      }
-    }
-  }
-
-  // Handle client-side redirects
-  useEffect(() => {
-    if (!isLoading && !isErrorRoute) {
-      if (!session && !isPublicRoute) {
-        navigate({ to: "/auth/login" })
-      } else if (session && isPublicRoute) {
-        navigate({ to: "/" })
-      }
-    }
-  }, [session, isPublicRoute, isErrorRoute, isLoading, navigate])
-
-  // Show loading state during initial session check
-  if (isLoading) {
-    return <Loader />
-  }
-
-  // Don't render anything if we're redirecting
-  if (
-    !isErrorRoute &&
-    ((!session && !isPublicRoute) || (session && isPublicRoute))
-  ) {
-    return null
-  }
-
-  return isPublicRoute ? (
-    <PublicLayout>
-      <Outlet />
-    </PublicLayout>
-  ) : (
-    <PrivateLayout>
-      <Outlet />
-    </PrivateLayout>
-  )
-}
-
 const RootComponent = () => {
   return (
     <RootDocument>
       <Suspense fallback={<div>Loading...</div>}>
-        <AuthGuard />
+        <Outlet />
       </Suspense>
     </RootDocument>
   )
@@ -152,10 +80,15 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       <DefaultErrorBoundary {...props} />
     </RootDocument>
   ),
-  // Prefetch session data during SSR
-  loader: async ({ context: { queryClient } }) => {
-    await queryClient.prefetchQuery(sessionQueryOptions())
+  beforeLoad: async () => {
+    const session = await authClient.getSession()
+
+    return { user: session.data?.user || null }
   },
+  // Prefetch session data during SSR
+  // loader: async ({ context: { queryClient } }) => {
+  //   await queryClient.prefetchQuery(sessionQueryOptions())
+  // },
   head: () => ({
     meta: [
       {
@@ -171,7 +104,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       }),
     ],
     links: [
-      // { rel: "stylesheet", href: styles },
+      { rel: "stylesheet", href: styles },
       { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
     ],
   }),

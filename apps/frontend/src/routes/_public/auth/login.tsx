@@ -5,6 +5,6 @@ const LoginPage = () => {
   return <LoginForm />
 }
 
-export const Route = createFileRoute("/auth/login")({
+export const Route = createFileRoute("/_public/auth/login")({
   component: LoginPage,
 })
