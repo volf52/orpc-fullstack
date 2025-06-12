@@ -1,9 +1,10 @@
-import CardLayout from "@app/components/layout/Card"
 import { useAppForm } from "@app/utils/hooks/app-form-hooks"
 import { useSignUp } from "@app/utils/hooks/auth-hooks"
+import { toast } from "@app/utils/toast"
+import { Container, Paper, Stack, Text, Title } from "@mantine/core"
 import { NewUserSchema } from "@repo/contract/schemas"
 import { useNavigate } from "@tanstack/react-router"
-import { useToast } from "@ui/toast/use-toast"
+import AnchorLink from "../layout/AnchorLink"
 
 const formSchema = NewUserSchema
 
@@ -11,8 +12,6 @@ const RegisterForm = () => {
   const navigateTo = useNavigate()
   const signUpHandler = useSignUp()
   const authPending = signUpHandler.isPending
-
-  const { toast } = useToast()
 
   const tform = useAppForm({
     defaultValues: { name: "", email: "", password: "" },
@@ -23,13 +22,13 @@ const RegisterForm = () => {
         {
           onSuccess: () => {
             navigateTo({ to: "/", from: "/auth/register" })
-            toast({ title: "Registration successful" })
+            toast.success({ message: "Registration successful" })
           },
           onError: (err) => {
             console.error("Registration error:", err)
-            toast({
+            toast.error({
               title: "Registration failed",
-              description: err.message,
+              message: err.message,
               variant: "destructive",
             })
           },
@@ -39,54 +38,70 @@ const RegisterForm = () => {
   })
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        tform.handleSubmit()
-      }}>
-      <tform.AppForm>
-        <CardLayout
-          footer={<tform.SubmitButton fullWidth label="Submit" />}
-          title="Register">
-          <tform.AppField name="name">
-            {(field) => (
-              <field.TextField
-                disabled={authPending}
-                label="Name"
-                placeholder="Name..."
-                required
-                type="text"
-              />
-            )}
-          </tform.AppField>
+    <Container size="xs" my="xl">
+      <Stack gap="md">
+        <Title ta="center" order={2}>
+          Create an account
+        </Title>
+        <Text c="dimmed" size="sm" ta="center">
+          Already have an account?{" "}
+          <AnchorLink to="/auth/login" size="sm">
+            Sign in
+          </AnchorLink>
+        </Text>
 
-          <tform.AppField name="email">
-            {(field) => (
-              <field.TextField
-                disabled={authPending}
-                label="Email"
-                placeholder="Email..."
-                required
-                type="email"
-              />
-            )}
-          </tform.AppField>
+        <Paper radius="md" p="xl" withBorder>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              tform.handleSubmit()
+            }}>
+            <tform.AppForm>
+              <Stack gap="md">
+                <tform.AppField name="name">
+                  {(field) => (
+                    <field.TextField
+                      disabled={authPending}
+                      label="Name"
+                      placeholder="Your name"
+                      required
+                      type="text"
+                    />
+                  )}
+                </tform.AppField>
 
-          <tform.AppField name="password">
-            {(field) => (
-              <field.TextField
-                disabled={authPending}
-                label="Password"
-                placeholder="Password..."
-                required
-                type="password"
-              />
-            )}
-          </tform.AppField>
-        </CardLayout>
-      </tform.AppForm>
-    </form>
+                <tform.AppField name="email">
+                  {(field) => (
+                    <field.TextField
+                      disabled={authPending}
+                      label="Email"
+                      placeholder="your@email.com"
+                      required
+                      type="email"
+                    />
+                  )}
+                </tform.AppField>
+
+                <tform.AppField name="password">
+                  {(field) => (
+                    <field.PasswordField
+                      disabled={authPending}
+                      label="Password"
+                      placeholder="Your password"
+                      required
+                      type="password"
+                    />
+                  )}
+                </tform.AppField>
+
+                <tform.SubmitButton fullWidth label="Create account" />
+              </Stack>
+            </tform.AppForm>
+          </form>
+        </Paper>
+      </Stack>
+    </Container>
   )
 }
 

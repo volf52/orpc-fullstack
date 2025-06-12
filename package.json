@@ -33,5 +33,12 @@
       "taze": "^19.1.0",
       "better-auth": "^1.2.7"
     }
+  },
+  "dependencies": {
+    "@mantine/core": "^8.0.2",
+    "@mantine/hooks": "^8.0.2",
+    "@mantine/modals": "^8.0.2",
+    "@mantine/notifications": "^8.0.2",
+    "@mantine/nprogress": "^8.0.2"
   }
 }

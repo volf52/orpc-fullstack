@@ -1,5 +1,5 @@
 import { useFieldContext } from "@app/utils/contexts/form-context"
-import { TextInput } from "@mantine/core"
+import { PasswordInput } from "@mantine/core"
 import type { HTMLInputTypeAttribute } from "react"
 
 export interface TextFieldProps {
@@ -10,7 +10,7 @@ export interface TextFieldProps {
   disabled?: boolean
 }
 
-const TextField = ({
+const PasswordField = ({
   label,
   placeholder,
   type,
@@ -22,7 +22,7 @@ const TextField = ({
   const errMsg = field.state.meta.errors.map((err) => err.message).join(", ")
 
   return (
-    <TextInput
+    <PasswordInput
       aria-errormessage={errMsg}
       aria-invalid={isInvalid}
       disabled={disabled}
@@ -39,4 +39,4 @@ const TextField = ({
   )
 }
 
-export default TextField
+export default PasswordField

@@ -4,11 +4,10 @@
   "files": {
     "includes": [
       "src/**/*.{js,ts,jsx,tsx,json,css}",
-      "app.config.js",
-      "panda.config.ts",
+      "app.config.ts",
+      "postcss.config.mjs",
       "package.json",
       "tsconfig.json",
-      "index.html",
       "!src/routeTree.gen.ts"
     ]
   },

@@ -1,5 +1,5 @@
 import { useFormContext } from "@app/utils/contexts/form-context"
-import { Button } from "@ui/button"
+import { Button } from "@mantine/core"
 
 export interface SubmitButtonProps {
   label: string
@@ -18,10 +18,13 @@ const SubmitButton = ({ label, fullWidth, disabled }: SubmitButtonProps) => {
       })}>
       {({ canSubmit, isSubmitting }) => (
         <Button
-          disabled={disabled || isSubmitting || !canSubmit}
-          type="submit"
-          width={fullWidth ? "full" : undefined}>
-          {isSubmitting ? "Submitting..." : label}
+          disabled={disabled || !canSubmit}
+          fullWidth={fullWidth}
+          loading={isSubmitting}
+          mt="xl"
+          radius="md"
+          type="submit">
+          {label}
         </Button>
       )}
     </form.Subscribe>

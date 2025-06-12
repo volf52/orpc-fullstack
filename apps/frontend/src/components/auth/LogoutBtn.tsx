@@ -1,12 +1,13 @@
 import { useSignout } from "@app/utils/hooks/auth-hooks"
+import { toast } from "@app/utils/toast"
+import { Button } from "@mantine/core"
 import { useNavigate } from "@tanstack/react-router"
-import { Button } from "@ui/button"
-import { useToast } from "@ui/toast/use-toast"
+import { LogOutIcon } from "lucide-react"
+import AnchorLink from "../layout/AnchorLink"
 
 const LogoutBtn = () => {
   const navigateTo = useNavigate()
   const signoutMut = useSignout()
-  const { toast } = useToast()
 
   const handleClick = async () => {
     await signoutMut.mutateAsync(undefined, {
@@ -14,18 +15,21 @@ const LogoutBtn = () => {
         navigateTo({ to: "/auth/login" })
       },
       onError: (ctx) => {
-        toast({
+        toast.error({
           title: "Failed to logout",
-          description: ctx.message,
-          variant: "destructive",
+          message: ctx.message,
         })
       },
     })
   }
 
   return (
-    <Button disabled={signoutMut.isPending} onClick={handleClick}>
-      {signoutMut.isPending ? "Logging out..." : "Logout"}
+    <Button
+      component={AnchorLink}
+      loading={signoutMut.isPending}
+      onClick={handleClick}>
+      <LogOutIcon />
+      <span>Logout</span>
     </Button>
   )
 }

@@ -1,6 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useCallback } from "react"
+import {
+  queryOptions,
+  useIsMutating,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query"
 import { type AppSession, authClient } from "../auth-client"
+import { toast } from "../toast"
 
 const handleAuthResponse = <T, E>(res: { data: T | null; error: E | null }) => {
   if (res.error) {
@@ -11,29 +18,28 @@ const handleAuthResponse = <T, E>(res: { data: T | null; error: E | null }) => {
 }
 
 const SESSION_KEY = ["auth", "session"] as const
-
-type SessionSelectFn<T> = (data: AppSession) => T
-
-export const useSession = <T>(select?: SessionSelectFn<T>) => {
-  return useQuery({
+const getSessionFunc = async () => {
+  const res = await authClient.getSession()
+  return handleAuthResponse(res)
+}
+export const sessionQueryOptions = () =>
+  queryOptions<AppSession>({
     queryKey: SESSION_KEY,
-    select,
-    queryFn: async () => {
-      const res = await authClient.getSession()
-      return handleAuthResponse(res)
-    },
+    queryFn: getSessionFunc,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   })
-}
 
-export const useUser = () => {
-  const select = useCallback((session: AppSession) => session.user, [])
+export const useSession = () => useQuery(sessionQueryOptions())
 
-  return useSession(select)
-}
+const selectUser = (session?: AppSession) => session?.user
+export const useUser = () =>
+  useSuspenseQuery({
+    ...sessionQueryOptions(),
+    select: selectUser,
+  })
 
 export const useSignIn = () => {
   const queryClient = useQueryClient()
@@ -52,10 +58,12 @@ export const useSignIn = () => {
   return signIn
 }
 
+const SignoutMutKey = ["auth", "signout"] as const
 export const useSignout = () => {
   const queryClient = useQueryClient()
 
   const signout = useMutation({
+    mutationKey: SignoutMutKey,
     mutationFn: async () => {
       const res = await authClient.signOut()
       return handleAuthResponse(res)
@@ -68,6 +76,9 @@ export const useSignout = () => {
 
   return signout
 }
+
+export const useIsSigningOut = () =>
+  useIsMutating({ mutationKey: SignoutMutKey }) > 0
 
 export const useSignUp = () => {
   const queryClient = useQueryClient()
@@ -86,7 +97,10 @@ export const useSignUp = () => {
       queryClient.invalidateQueries({ queryKey: SESSION_KEY })
     },
     onError: (err) => {
-      console.debug(err)
+      toast.error({
+        title: err.name,
+        message: err.message,
+      })
     },
   })
 
