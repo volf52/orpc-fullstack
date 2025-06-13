@@ -38,19 +38,19 @@ const RegisterForm = () => {
   })
 
   return (
-    <Container size="xs" my="xl">
+    <Container my="xl" size="xs">
       <Stack gap="md">
-        <Title ta="center" order={2}>
+        <Title order={2} ta="center">
           Create an account
         </Title>
         <Text c="dimmed" size="sm" ta="center">
           Already have an account?{" "}
-          <AnchorLink to="/auth/login" size="sm">
+          <AnchorLink size="sm" to="/auth/login">
             Sign in
           </AnchorLink>
         </Text>
 
-        <Paper radius="md" p="xl" withBorder>
+        <Paper p="xl" radius="md" withBorder>
           <form
             onSubmit={(e) => {
               e.preventDefault()

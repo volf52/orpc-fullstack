@@ -24,7 +24,7 @@ export const useSignIn = () => {
 }
 
 export const useSignUp = () => {
-  const queryClient = useQueryClient()
+  const _queryClient = useQueryClient()
 
   const signUp = useMutation({
     mutationFn: async (creds: {

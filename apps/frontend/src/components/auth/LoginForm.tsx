@@ -37,19 +37,19 @@ const LoginForm = () => {
   })
 
   return (
-    <Container size="xs" my="md">
+    <Container my="md" size="xs">
       <Stack gap="sm">
-        <Title ta="center" order={2}>
+        <Title order={2} ta="center">
           Welcome Back!
         </Title>
         <Text c="dimmed" size="sm" ta="center">
           Don't have an account yet?{" "}
-          <AnchorLink to="/auth/register" size="sm">
+          <AnchorLink size="sm" to="/auth/register">
             Create account
           </AnchorLink>
         </Text>
 
-        <Paper radius="md" p="lg" withBorder>
+        <Paper p="lg" radius="md" withBorder>
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -83,7 +83,7 @@ const LoginForm = () => {
                 </tform.AppField>
 
                 <Group justify="space-between">
-                  <AnchorLink to="/auth/forgot-password" size="sm">
+                  <AnchorLink size="sm" to="/auth/forgot-password">
                     Forgot password?
                   </AnchorLink>
                 </Group>

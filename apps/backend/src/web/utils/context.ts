@@ -1,6 +1,6 @@
-import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
 import type { Context as HonoContext } from "hono"
 import type { DependencyContainer } from "tsyringe"
+import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
 
 export const createContext = async (
   c: HonoContext,

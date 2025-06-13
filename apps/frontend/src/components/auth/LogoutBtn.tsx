@@ -1,10 +1,9 @@
-import { useSignout } from "@app/utils/hooks/auth-hooks"
+import { authClient } from "@app/utils/auth-client"
 import { toast } from "@app/utils/toast"
 import { Button } from "@mantine/core"
 import { LogOutIcon } from "lucide-react"
 import { memo, useState } from "react"
 import AnchorLink from "../layout/AnchorLink"
-import { authClient } from "@app/utils/auth-client"
 
 type LogoutBtnProps = {
   onLogoutSuccess: () => Promise<void>

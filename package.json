@@ -21,10 +21,7 @@
     "bun": ">=1.2.15"
   },
   "workspaces": {
-    "packages": [
-      "packages/*",
-      "apps/*"
-    ],
+    "packages": ["packages/*", "apps/*"],
     "catalog": {
       "typescript": "^5.8.3",
       "@types/bun": "^1.2.15",

@@ -1,7 +1,7 @@
-import { authenticated } from "../utils/orpc"
-import type { DependencyContainer } from "tsyringe"
 import type { Hono } from "hono"
+import type { DependencyContainer } from "tsyringe"
 import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
+import { authenticated } from "../utils/orpc"
 
 export const initAuthRouter = (app: Hono, container: DependencyContainer) => {
   const auth = resolveAuthFromContainer(container)
