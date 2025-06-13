@@ -1,9 +1,26 @@
 import LogoutBtn from "@app/components/auth/LogoutBtn"
 import AnchorLink from "@app/components/layout/AnchorLink"
 import { AppShell, Box, Group, Stack, Text } from "@mantine/core"
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useRouter,
+} from "@tanstack/react-router"
+import { useCallback } from "react"
 
 const PrivateLayout = () => {
+  const router = useRouter()
+  const navigate = Route.useNavigate()
+
+  // test: Do we need the useCallback here?
+  const handleLogout = useCallback(async () => {
+    console.debug("User logged out, invalidating router state")
+    router.invalidate().finally(() => {
+      navigate({ to: "/auth/login" })
+    })
+  }, [navigate, router.invalidate])
+
   return (
     <AppShell navbar={{ width: 300, breakpoint: "sm" }}>
       <AppShell.Navbar p="md">
@@ -29,7 +46,7 @@ const PrivateLayout = () => {
             mt="md"
             pt="md"
             style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
-            <LogoutBtn />
+            <LogoutBtn onLogout={handleLogout} />
           </Box>
         </Stack>
       </AppShell.Navbar>
@@ -40,12 +57,13 @@ const PrivateLayout = () => {
   )
 }
 
+// https://tanstack.com/router/v1/docs/framework/react/guide/authenticated-routes#redirecting
 export const Route = createFileRoute("/_private")({
   component: PrivateLayout,
-  beforeLoad: ({ context }) => {
+  beforeLoad: ({ context, location }) => {
     if (!context.user) {
       console.warn("User not authenticated, redirecting to login")
-      throw redirect({ to: "/auth/login" })
+      throw redirect({ to: "/auth/login", search: { redirect: location.href } })
     }
 
     return { user: context.user } // to make user non-null

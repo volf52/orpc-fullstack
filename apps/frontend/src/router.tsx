@@ -3,10 +3,10 @@ import NotFound from "@app/components/layout/NotFound"
 import { routeTree } from "@app/routeTree.gen"
 import { orpc } from "@app/utils/orpc"
 import { queryClient } from "@app/utils/query-client"
-import { Loader } from "@mantine/core"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
 import { routerWithQueryClient } from "@tanstack/react-router-with-query"
+import FullPageLoader from "./components/layout/PageLoader"
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -20,8 +20,7 @@ export const createRouter = () => {
     scrollRestoration: true,
     context: { queryClient, orpc } as const,
     defaultPreload: "intent",
-    defaultPreloadStaleTime: Infinity,
-    defaultPendingComponent: Loader,
+    defaultPendingComponent: FullPageLoader,
     defaultNotFoundComponent: () => <NotFound />,
     defaultErrorComponent: DefaultErrorBoundary,
     Wrap: Providers,
