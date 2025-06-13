@@ -7,7 +7,11 @@ export interface SubmitButtonProps {
   disabled?: boolean
 }
 
-const SubmitButton = ({ label, fullWidth, disabled }: SubmitButtonProps) => {
+const SubmitButton = ({
+  label,
+  fullWidth = false,
+  disabled = false,
+}: SubmitButtonProps) => {
   const form = useFormContext()
 
   return (
@@ -15,15 +19,16 @@ const SubmitButton = ({ label, fullWidth, disabled }: SubmitButtonProps) => {
       selector={(state) => ({
         canSubmit: state.canSubmit,
         isSubmitting: state.isSubmitting,
-      })}>
+      })}
+    >
       {({ canSubmit, isSubmitting }) => (
         <Button
           disabled={disabled || !canSubmit}
           fullWidth={fullWidth}
           loading={isSubmitting}
-          mt="xl"
           radius="md"
-          type="submit">
+          type="submit"
+        >
           {label}
         </Button>
       )}

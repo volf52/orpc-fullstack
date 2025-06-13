@@ -1,7 +1,7 @@
-import { useAppForm } from "@app/utils/hooks/app-form-hooks"
+import { useAppForm } from "@app/utils/hooks/app-form"
 import { useSignUp } from "@app/utils/hooks/auth-hooks"
 import { toast } from "@app/utils/toast"
-import { Container, Paper, Stack, Text, Title } from "@mantine/core"
+import { Card, Container, Divider, Stack, Text, Title } from "@mantine/core"
 import { NewUserSchema } from "@repo/contract/schemas"
 import { useNavigate } from "@tanstack/react-router"
 import AnchorLink from "../layout/AnchorLink"
@@ -38,25 +38,34 @@ const RegisterForm = () => {
   })
 
   return (
-    <Container my="xl" size="xs">
-      <Stack gap="md">
-        <Title order={2} ta="center">
-          Create an account
-        </Title>
-        <Text c="dimmed" size="sm" ta="center">
-          Already have an account?{" "}
-          <AnchorLink size="sm" to="/auth/login">
-            Sign in
-          </AnchorLink>
-        </Text>
-
-        <Paper p="xl" radius="md" withBorder>
+    <Container my="xl" px={0} size="xs">
+      <Card
+        p={32}
+        radius="lg"
+        shadow="md"
+        style={{ minWidth: 350, maxWidth: 400, margin: "0 auto" }}
+        withBorder
+      >
+        <Card.Section inheritPadding py="lg">
+          <Stack align="center" gap="xs">
+            <Title order={2}>Create an account</Title>
+            <Text c="dimmed" size="sm">
+              Already have an account?{" "}
+              <AnchorLink preload="intent" size="sm" to="/auth/login">
+                Sign in
+              </AnchorLink>
+            </Text>
+          </Stack>
+        </Card.Section>
+        <Divider />
+        <Card.Section inheritPadding py="xs">
           <form
             onSubmit={(e) => {
               e.preventDefault()
               e.stopPropagation()
               tform.handleSubmit()
-            }}>
+            }}
+          >
             <tform.AppForm>
               <Stack gap="md">
                 <tform.AppField name="name">
@@ -70,7 +79,6 @@ const RegisterForm = () => {
                     />
                   )}
                 </tform.AppField>
-
                 <tform.AppField name="email">
                   {(field) => (
                     <field.TextField
@@ -82,7 +90,6 @@ const RegisterForm = () => {
                     />
                   )}
                 </tform.AppField>
-
                 <tform.AppField name="password">
                   {(field) => (
                     <field.PasswordField
@@ -94,13 +101,13 @@ const RegisterForm = () => {
                     />
                   )}
                 </tform.AppField>
-
-                <tform.SubmitButton fullWidth label="Create account" />
               </Stack>
+              <Divider my="md" />
+              <tform.SubmitButton fullWidth label="Create account" />
             </tform.AppForm>
           </form>
-        </Paper>
-      </Stack>
+        </Card.Section>
+      </Card>
     </Container>
   )
 }

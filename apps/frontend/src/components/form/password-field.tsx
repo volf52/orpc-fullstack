@@ -26,7 +26,9 @@ const PasswordField = ({
       aria-errormessage={errMsg}
       aria-invalid={isInvalid}
       disabled={disabled}
+      error={errMsg}
       label={label}
+      labelProps={{ mb: "xs" }}
       name={field.name}
       onBlur={field.handleBlur}
       onChange={(e) => field.handleChange(e.target.value)}

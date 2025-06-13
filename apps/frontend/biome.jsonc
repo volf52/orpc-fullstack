@@ -16,7 +16,10 @@
     "domains": { "react": "recommended" }
   },
   "javascript": {
-    "jsxRuntime": "transparent"
+    "jsxRuntime": "transparent",
+    "formatter": {
+      "bracketSameLine": false
+    }
   },
   "extends": "//"
 }

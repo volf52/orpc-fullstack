@@ -14,3 +14,21 @@ export const authClient = createAuthClient({
 })
 
 export type AppSession = typeof authClient.$Infer.Session
+type ErrorCode = keyof typeof authClient.$ERROR_CODES
+
+// type ErrorCodeHandlers = Record<ErrorCode, (error: BetterFetchError) => void>
+//
+// type HandleAuthErrorArgs = {
+//   handlers?: ErrorCodeHandlers
+//   throwOnUnhandled?: boolean
+// }
+//
+// export const handleAuthError = (error: unknown, opts?: HandleAuthErrorArgs) => {
+//   const { handlers = {}, throwOnUnhandled = false } = opts ?? {}
+//
+//   if (error instanceof BetterFetchError) {
+//     const code = error
+//   } else if (throwOnUnhandled) {
+//     throw error
+//   }
+// }
