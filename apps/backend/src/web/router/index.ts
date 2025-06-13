@@ -7,4 +7,5 @@ export const router = {
   }),
 }
 
+// TODO: add types
 export type BackendRouter = typeof router

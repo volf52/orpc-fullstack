@@ -69,7 +69,10 @@ export const addOpenApiHandler = async (
           info: { title: "Ct-Starter API", version: "1.0.0" },
           security: [...authSchema.security],
           tags: [...authSchema.tags],
-          servers: [...authSchema.servers],
+          servers: [
+            ...authSchema.servers,
+            { url: "/api", description: "This server" },
+          ],
           //@ts-expect-error
           paths: { ...authSchema.paths },
           components: {
