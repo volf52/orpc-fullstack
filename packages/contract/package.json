@@ -1,13 +1,12 @@
 {
   "name": "@repo/contract",
   "version": "1.0.0",
-  "description": "",
+  "description": "Contracts and schemas for the project",
+  "packageManager": "bun@1.2.16",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "files": [
-    "src"
-  ],
+  "files": ["src"],
   "exports": {
     ".": {
       "import": "./src/index.ts",
@@ -28,7 +27,8 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@typescript/native-preview": "catalog:"
   },
   "dependencies": {
     "@orpc/contract": "catalog:",

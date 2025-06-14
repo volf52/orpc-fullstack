@@ -1,7 +1,8 @@
 {
   "name": "@repo/backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "API server for the project",
+  "packageManager": "bun@1.2.16",
   "scripts": {
     "build": "bun build --target bun --outfile dist/server.js ./src/web/server.ts",
     "dev": "bun run --hot src/web/server.ts",
@@ -19,7 +20,8 @@
     "@repo/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
     "drizzle-kit": "^0.31.1",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@typescript/native-preview": "catalog:"
   },
   "dependencies": {
     "@orpc/openapi": "^1.5.1",
@@ -30,7 +32,7 @@
     "better-auth": "catalog:",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
-    "effect": "^3.16.6",
+    "effect": "^3.16.7",
     "env-var": "^7.5.0",
     "fast-jwt": "^6.0.2",
     "hono": "^4.7.11",
