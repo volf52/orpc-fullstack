@@ -72,6 +72,18 @@ export const addOpenApiDocs = async (
     servers: [{ url: "/api", description: "JSON-REST API" }],
   })
 
+  // if (authSpecs.components?.securitySchemes) {
+  //   contractSpecs.components = contractSpecs.components || {}
+  //   contractSpecs.components.securitySchemes =
+  //     contractSpecs.components.securitySchemes || {}
+  //   contractSpecs.components.securitySchemes = {
+  //     ...contractSpecs.components.securitySchemes,
+  //     ...authSpecs.components.securitySchemes,
+  //   }
+  //   contractSpecs.security = contractSpecs.security || []
+  //   contractSpecs.security.push(...(authSpecs.security || []))
+  // }
+
   return app
     .use(docsBasicAuth)
     .get("/spec/better-auth.json", (c) => c.json(authSpecs))
