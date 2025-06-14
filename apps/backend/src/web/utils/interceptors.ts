@@ -1,5 +1,6 @@
 import { ORPCError, ValidationError } from "@orpc/server"
-import { ZodError, type ZodIssue } from "zod"
+import { ZodError, z } from "zod/v4"
+import type { $ZodIssue } from "zod/v4/core"
 
 export const validationErrMap = (err: unknown) => {
   if (!(err instanceof Error)) {
@@ -19,13 +20,15 @@ export const validationErrMap = (err: unknown) => {
   // https://orpc.unnoq.com/docs/advanced/validation-errors#customizing-with-middleware
   // https://orpc.unnoq.com/docs/advanced/validation-errors#type%E2%80%90safe-validation-errors
   if (err.code === "BAD_REQUEST") {
-    const zodErr = new ZodError(err.cause.issues as ZodIssue[])
+    const zodErr = new ZodError(err.cause.issues as $ZodIssue[])
+
+    console.error("Validation error:", zodErr)
 
     throw new ORPCError("INPUT_VALIDATION_FAILED", {
       status: 422,
       cause: err.cause,
       message: "Input validation failed",
-      data: zodErr.flatten(),
+      data: z.flattenError(zodErr),
     })
   }
 

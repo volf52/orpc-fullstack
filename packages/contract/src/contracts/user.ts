@@ -1,11 +1,17 @@
-import { UserSchema } from "@contract/schemas/user"
+import type { User } from "@contract/schemas/user"
 import { appAuthenticatedBase } from "@contract/utils/oc.base"
+import { type } from "@orpc/contract"
 
-export const whoami = appAuthenticatedBase
+const userBase = appAuthenticatedBase
+
+export const whoami = userBase
   .route({
     method: "GET",
-    path: "/auth/whoami",
+    path: "/user/whoami",
     summary: "Get current user",
     tags: ["user"],
   })
-  .output(UserSchema)
+  .input(type<never>()) // No input required
+  .output(type<User>())
+
+export default { whoami }

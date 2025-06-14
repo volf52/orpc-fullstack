@@ -2,7 +2,7 @@ import type { Context as HonoContext } from "hono"
 import type { DependencyContainer } from "tsyringe"
 import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
 
-export const createContext = async (
+export const createAuthContext = async (
   c: HonoContext,
   container: DependencyContainer,
 ) => {
@@ -15,4 +15,4 @@ export const createContext = async (
   return session
 }
 
-export type AuthContext = Awaited<ReturnType<typeof createContext>>
+export type AuthContext = Awaited<ReturnType<typeof createAuthContext>>

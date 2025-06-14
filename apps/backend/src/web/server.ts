@@ -10,6 +10,7 @@ import { addRpcHandler } from "./utils/rpc.handler"
 import { container } from "tsyringe"
 import { initAuthRouter } from "./router/auth"
 import config from "@/infra/config"
+import { addOpenApiDocs } from "./utils/openapidocs.handler"
 
 const app = new Hono()
 app.use(logger())
@@ -23,9 +24,10 @@ app.use(
   }),
 )
 
+await addOpenApiDocs(app, container)
 initAuthRouter(app, container)
-addOpenApiHandler(app, container)
 addRpcHandler(app, container)
+await addOpenApiHandler(app, container)
 
 if (config.app.NODE_ENV === "development") {
   showRoutes(app, { verbose: true })

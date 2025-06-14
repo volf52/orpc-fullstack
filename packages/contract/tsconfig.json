@@ -1,6 +1,7 @@
 {
   "extends": "@repo/typescript-config/bun.json",
   "compilerOptions": {
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@contract/*": ["./src/*"]

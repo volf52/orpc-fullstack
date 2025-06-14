@@ -17,6 +17,6 @@
       "@domain/*": ["../../packages/domain/src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "./*.ts"],
   "exclude": ["node_modules", ".git", "dist"]
 }

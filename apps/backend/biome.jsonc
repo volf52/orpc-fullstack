@@ -3,6 +3,7 @@
   "root": false,
   "files": {
     "includes": [
+      "./*.ts",
       "src/**/*.{js,ts,json}",
       "package.json",
       "tsconfig.json",

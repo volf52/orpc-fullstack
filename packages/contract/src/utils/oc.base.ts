@@ -1,14 +1,19 @@
 import { oc } from "@orpc/contract"
-import z from "zod"
+import { z } from "zod"
+
+// Was good for zod v3, but not for v4 which recommends treeifyError
+// https://zod.dev/error-formatting#ztreeifyerror
+const zodErrorSchema = z.object({
+  formErrors: z.array(z.string()),
+  fieldErrors: z.record(z.string(), z.array(z.string()).optional()),
+})
 
 export const appPublicBase = oc.errors({
   INPUT_VALIDATION_FAILED: {
     status: 422,
     message: "Input validation failed",
-    data: z.object({
-      formErrors: z.array(z.string()),
-      fieldErrors: z.record(z.string(), z.array(z.string()).optional()),
-    }),
+
+    data: zodErrorSchema,
   },
 })
 
