@@ -2,7 +2,16 @@
 bun = "latest"
 
 [env]
-_.path = ["./node_modules/.bin"]
+_.path = ["{{config_root}}/node_modules/.bin"]
+PROJECT_NAME = "{{ config_root | basename }}"
+
+[tasks.info]
+description = "Print project information"
+quiet = true
+run = '''
+echo "Project: $PROJECT_NAME"
+echo "NODE_ENV: $NODE_ENV"
+'''
 
 [tasks.update-deps]
-run = "taze -r"
+run = "taze -r -I"

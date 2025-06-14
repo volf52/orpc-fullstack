@@ -2,6 +2,8 @@
 bun = "latest"
 
 [env]
+_.file = ".env"
+PROJECT_NAME = "{{ config_root | basename }}"
 
 [tasks.dev]
 alias = "d"
