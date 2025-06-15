@@ -27,8 +27,9 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
-    "typescript": "catalog:",
-    "@typescript/native-preview": "catalog:"
+    "oxlint": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
     "@orpc/contract": "catalog:",

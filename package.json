@@ -12,11 +12,12 @@
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "@types/bun": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "prettier": "catalog:",
     "taze": "catalog:",
     "turbo": "^2.5.4",
     "typescript": "catalog:",
-    "@typescript/native-preview": "catalog:"
+    "oxlint": "catalog:"
   },
   "engines": {
     "bun": ">=1.2.15"
@@ -31,6 +32,7 @@
       "@orpc/contract": "^1.2.0",
       "@orpc/server": "^1.4.4",
       "@orpc/zod": "^1.2.0",
+      "oxlint": "^1.1.0",
       "zod": "^3.25.0",
       "taze": "^19.1.0",
       "better-auth": "^1.2.7",

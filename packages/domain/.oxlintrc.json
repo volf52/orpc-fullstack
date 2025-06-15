@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "test",
+    "migrations",
+    "transforms"
+  ],
+  "plugins": ["typescript", "unicorn", "oxc", "import", "promise"],
+  "rules": {}
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://github.com/oxc-project/oxc/raw/refs/tags/oxlint_v1.1.0/npm/oxlint/configuration_schema.json",
+  "ignorePatterns": ["node_modules", ".nitro"],
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "import",
+    "promise",
+    "react",
+    "react-perf"
+  ],
+  "rules": {},
+  "settings": {
+    "react": {
+      "formComponents": [],
+      "linkComponents": [
+        "Anchor",
+        { "name": "AnchorLink", "linkAttribute": "to" },
+        { "name": "Link", "linkAttribute": "to" },
+        { "name": "LinkBtn", "linkAttribute": "to" }
+      ]
+    }
+  }
+}

@@ -9,6 +9,7 @@
       "postcss.config.mjs",
       "package.json",
       "tsconfig.json",
+      ".oxlintrc.json",
       "!src/routeTree.gen.ts"
     ]
   },

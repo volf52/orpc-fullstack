@@ -15,3 +15,13 @@ echo "NODE_ENV: $NODE_ENV"
 
 [tasks.update-deps]
 run = "taze -r -I"
+
+[tasks.lint]
+run = "bunx --bun biome check"
+
+[tasks.fmt]
+run = "bunx --bun biome format"
+
+[tasks.oxlint]
+alias = "ol"
+run = "bunx --bun oxlint"

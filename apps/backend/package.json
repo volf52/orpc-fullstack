@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "API server for the project",
   "packageManager": "bun@1.2.16",
+  "type": "module",
   "scripts": {
     "build": "bun build --target bun --outfile dist/server.js ./src/web/server.ts",
     "dev": "bun run --hot src/web/server.ts",
@@ -17,11 +18,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@better-auth/cli": "^1.2.9",
     "@repo/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "drizzle-kit": "^0.31.1",
     "typescript": "catalog:",
-    "@typescript/native-preview": "catalog:"
+    "oxlint": "catalog:"
   },
   "dependencies": {
     "@orpc/openapi": "^1.5.1",
