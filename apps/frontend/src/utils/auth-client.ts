@@ -17,6 +17,8 @@ export const authClient = createAuthClient({
   plugins: [reactStartCookies()],
 })
 
+// Due to SSR, we need a way to fetch the session on both client and server.
+// The server session fetch is being passed headers to access the cookies.
 export const getAuthSession = createIsomorphicFn()
   .client(async () => {
     const res = await authClient.getSession()
