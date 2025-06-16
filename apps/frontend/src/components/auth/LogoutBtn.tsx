@@ -3,7 +3,6 @@ import { toast } from "@app/utils/toast"
 import { Button } from "@mantine/core"
 import { LogOutIcon } from "lucide-react"
 import { memo, useState } from "react"
-import AnchorLink from "../layout/AnchorLink"
 
 type LogoutBtnProps = {
   onLogoutSuccess: () => Promise<void>
@@ -15,23 +14,26 @@ const LogoutBtn = ({ onLogoutSuccess }: LogoutBtnProps) => {
   const handleClick = async () => {
     setLoggingOut(true)
     const signOutRes = await authClient.signOut()
+    setLoggingOut(false)
 
     if (signOutRes.error) {
-      setLoggingOut(false)
-
       toast.error({
-        // title: "Failed to logout",
-        title: signOutRes.error.statusText,
+        title: "Failed to logout",
         message: signOutRes.error.message,
       })
     } else {
-      setLoggingOut(false)
       await onLogoutSuccess()
     }
   }
 
   return (
-    <Button component={AnchorLink} loading={loggingOut} onClick={handleClick}>
+    <Button
+      fullWidth
+      justify="start"
+      loading={loggingOut}
+      onClick={handleClick}
+      variant="transparent"
+    >
       <LogOutIcon />
       <span>Logout</span>
     </Button>

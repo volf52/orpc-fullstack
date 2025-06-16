@@ -2,7 +2,8 @@
 
 import DefaultErrorBoundary from "@app/components/layout/DefaultErrorBoundary"
 import NotFound from "@app/components/layout/NotFound"
-import { authClient } from "@app/utils/auth-client"
+import FullPageLoader from "@app/components/layout/PageLoader"
+import { getAuthSession } from "@app/utils/auth-client"
 import type { OrpcReactQuery } from "@app/utils/orpc"
 import { seo } from "@app/utils/seo"
 import {
@@ -43,7 +44,7 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
           {children}
           <Notifications />
         </MantineProvider>
-        {process.env.NODE_ENV === "development" ? (
+        {import.meta.env.DEV ? (
           <>
             <ReactQueryDevtools
               buttonPosition="bottom-right"
@@ -66,7 +67,7 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
 const RootComponent = () => {
   return (
     <RootDocument>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<FullPageLoader />}>
         <Outlet />
       </Suspense>
     </RootDocument>
@@ -82,14 +83,14 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
     </RootDocument>
   ),
   beforeLoad: async () => {
-    const session = await authClient.getSession()
+    // This function will execute before every page load, and on a page transition with SSR.
+    // However, better-auth is using the current cookies to prevent an unnecessary request to the backend
+    const res = await getAuthSession()
+    const user = res.session?.user || null
 
-    return { user: session.data?.user || null }
+    return { user }
   },
-  // Prefetch session data during SSR
-  // loader: async ({ context: { queryClient } }) => {
-  //   await queryClient.prefetchQuery(sessionQueryOptions())
-  // },
+
   head: () => ({
     meta: [
       {

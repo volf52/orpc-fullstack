@@ -9,6 +9,7 @@ const formSchema = type({ email: "string.email", password: "string" })
 
 type LoginFormProps = {
   onLoginSuccess: () => Promise<void>
+  loginFn: () => Promise<void>
 }
 
 const LoginForm = ({ onLoginSuccess }: LoginFormProps) => {

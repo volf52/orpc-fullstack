@@ -9,6 +9,7 @@ interface ViteTypeOptions {
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string
   readonly VITE_SERVER_URL: string
+  readonly SESSION_PASS: string
 }
 
 interface ImportMeta {

@@ -8,8 +8,6 @@ const LoginPage = () => {
   const redirectedTo = Route.useSearch({ select: (state) => state.redirect })
   const navigateTo = Route.useNavigate()
 
-  console.debug("LoginPage search params:", redirectedTo)
-
   const onLoginSuccess = useCallback(async () => {
     if (redirectedTo) {
       navigateTo({ to: redirectedTo, from: Route.path })

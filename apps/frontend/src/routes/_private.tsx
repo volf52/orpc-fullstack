@@ -15,7 +15,6 @@ const PrivateLayout = () => {
 
   // test: Do we need the useCallback here?
   const handleLogout = useCallback(async () => {
-    console.debug("User logged out, invalidating router state")
     router.invalidate().finally(() => {
       navigate({ to: "/auth/login" })
     })
@@ -24,7 +23,7 @@ const PrivateLayout = () => {
   return (
     <AppShell navbar={{ width: 300, breakpoint: "sm" }}>
       <AppShell.Navbar p="md">
-        <Stack>
+        <Stack dir="column" gap="md">
           <Box>
             <Group
               mb="md"
@@ -34,7 +33,7 @@ const PrivateLayout = () => {
               }}
             >
               <AnchorLink to="/">
-                <Text fw="bold" variant="text">
+                <Text fw="bold" ta="center" variant="text">
                   App
                 </Text>
               </AnchorLink>
@@ -48,7 +47,7 @@ const PrivateLayout = () => {
             pt="md"
             style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}
           >
-            <LogoutBtn onLogout={handleLogout} />
+            <LogoutBtn onLogoutSuccess={handleLogout} />
           </Box>
         </Stack>
       </AppShell.Navbar>
