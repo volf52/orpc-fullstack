@@ -19,7 +19,9 @@ const PasswordField = ({
 }: TextFieldProps) => {
   const field = useFieldContext<string>()
   const isInvalid = !field.state.meta.isValid
-  const errMsg = field.state.meta.errors.map((err) => err.message).join(", ")
+  console.debug("Password error map", field.state.meta.errors)
+  const errMsg = field.state.meta.errors.join(", ")
+  console.debug("Password error msg", errMsg)
 
   return (
     <PasswordInput

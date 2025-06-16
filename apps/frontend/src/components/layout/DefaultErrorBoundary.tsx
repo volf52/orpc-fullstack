@@ -23,7 +23,8 @@ const DefaultErrorBoundary = ({ error }: ErrorComponentProps) => {
       style={{
         alignItems: "center",
         justifyContent: "center",
-      }}>
+      }}
+    >
       <Stack align="center" gap="xl">
         <ErrorComponent error={error} />
 
@@ -34,7 +35,8 @@ const DefaultErrorBoundary = ({ error }: ErrorComponentProps) => {
               router.invalidate()
             }}
             tt="uppercase"
-            variant="light">
+            variant="light"
+          >
             Try Again
           </Button>
 
@@ -51,7 +53,8 @@ const DefaultErrorBoundary = ({ error }: ErrorComponentProps) => {
               }}
               to="/"
               tt="uppercase"
-              variant="light">
+              variant="light"
+            >
               Go Back
             </LinkBtn>
           )}

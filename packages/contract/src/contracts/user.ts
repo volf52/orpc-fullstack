@@ -11,7 +11,7 @@ export const whoami = userBase
     summary: "Get current user",
     tags: ["user"],
   })
-  .input(type<never>()) // No input required
+  .input(type<void>()) // No input required
   .output(type<User>())
 
 export default { whoami }

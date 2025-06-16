@@ -19,7 +19,7 @@ const PrivateLayout = () => {
     router.invalidate().finally(() => {
       navigate({ to: "/auth/login" })
     })
-  }, [navigate, router.invalidate])
+  }, [navigate, router])
 
   return (
     <AppShell navbar={{ width: 300, breakpoint: "sm" }}>
@@ -31,7 +31,8 @@ const PrivateLayout = () => {
               pb="md"
               style={{
                 borderBottom: "1px solid var(--mantine-color-dark-4)",
-              }}>
+              }}
+            >
               <AnchorLink to="/">
                 <Text fw="bold" variant="text">
                   App
@@ -45,7 +46,8 @@ const PrivateLayout = () => {
           <Box
             mt="md"
             pt="md"
-            style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
+            style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}
+          >
             <LogoutBtn onLogout={handleLogout} />
           </Box>
         </Stack>

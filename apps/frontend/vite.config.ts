@@ -12,7 +12,8 @@ export default defineConfig(() => {
 
     css: { transformer: cssTransformer }, // might cause issues for postcss specific stuff
     build: { cssMinify: cssTransformer },
-    server: { port: 3000 },
+    dev: {},
+    // oxc: {},
     plugins: [
       tsConfigPaths({ projects: ["./tsconfig.json"] }),
       tanstackStart({
@@ -20,7 +21,7 @@ export default defineConfig(() => {
         react: { disableOxcRecommendation: false },
         sitemap: { enabled: false },
 
-        // target: "bun",
+        // target: "bun", // doesn't play well with mantine yet
       }),
       Inspect({
         dev: false,

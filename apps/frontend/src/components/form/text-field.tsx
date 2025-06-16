@@ -19,7 +19,7 @@ const TextField = ({
 }: TextFieldProps) => {
   const field = useFieldContext<string>()
   const isInvalid = !field.state.meta.isValid
-  const errMsg = field.state.meta.errors.map((err) => err.message).join(", ")
+  const errMsg = field.state.meta.errors.join(", ")
 
   return (
     <TextInput

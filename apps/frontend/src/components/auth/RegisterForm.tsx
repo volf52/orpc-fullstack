@@ -1,114 +1,108 @@
+import { authClient } from "@app/utils/auth-client"
+import { setOnSubmitErrorMap } from "@app/utils/form"
 import { useAppForm } from "@app/utils/hooks/app-form"
-import { useSignUp } from "@app/utils/hooks/auth-hooks"
 import { toast } from "@app/utils/toast"
-import { Card, Container, Divider, Stack, Text, Title } from "@mantine/core"
-import { NewUserSchema } from "@repo/contract/schemas"
-import { useNavigate } from "@tanstack/react-router"
+import { Card, Divider, Stack, Text, Title } from "@mantine/core"
+import { type } from "arktype"
 import AnchorLink from "../layout/AnchorLink"
 
-const formSchema = NewUserSchema
+// const formSchema = NewUserSchema
+const formSchema = type({
+  name: "string >= 1",
+  email: "string.email",
+  password: "string >= 3",
+})
 
-const RegisterForm = () => {
-  const navigateTo = useNavigate()
-  const signUpHandler = useSignUp()
-  const authPending = signUpHandler.isPending
+type RegisterFormProps = {
+  onRegisterSuccess: () => Promise<void>
+}
 
-  const tform = useAppForm({
+const RegisterForm = ({ onRegisterSuccess }: RegisterFormProps) => {
+  const form = useAppForm({
     defaultValues: { name: "", email: "", password: "" },
     validators: { onSubmit: formSchema },
-    onSubmit: async ({ value }) => {
-      signUpHandler.mutate(
-        { ...value },
-        {
-          onSuccess: () => {
-            navigateTo({ to: "/", from: "/auth/register" })
-            toast.success({ message: "Registration successful" })
-          },
-          onError: (err) => {
-            console.error("Registration error:", err)
-            toast.error({
-              title: "Registration failed",
-              message: err.message,
-              variant: "destructive",
-            })
-          },
-        },
-      )
+    onSubmit: async ({ value, formApi }) => {
+      const res = await authClient.signUp.email({ ...value })
+
+      if (res.error) {
+        toast.error({
+          message: res.error.message,
+          title: res.error.code,
+        })
+        setOnSubmitErrorMap(res.error, formApi)
+      } else {
+        toast.success({ message: "Registration successful" })
+        await onRegisterSuccess()
+      }
     },
   })
+  const authPending = form.state.isSubmitting
 
   return (
-    <Container my="xl" px={0} size="xs">
-      <Card
-        p={32}
-        radius="lg"
-        shadow="md"
-        style={{ minWidth: 350, maxWidth: 400, margin: "0 auto" }}
-        withBorder
+    <Card miw="65%" p="lg" radius="lg" shadow="md" withBorder>
+      <Card.Section inheritPadding py="lg">
+        <Stack align="center" gap="xs">
+          <Title order={2}>Create an account</Title>
+          <Text c="dimmed" size="sm">
+            Already have an account?{" "}
+            <AnchorLink preload="intent" size="sm" to="/auth/login">
+              Sign in
+            </AnchorLink>
+          </Text>
+        </Stack>
+      </Card.Section>
+      <Divider />
+      <Card.Section
+        component="form"
+        inheritPadding
+        onSubmit={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          form.handleSubmit()
+        }}
+        py="xs"
       >
-        <Card.Section inheritPadding py="lg">
-          <Stack align="center" gap="xs">
-            <Title order={2}>Create an account</Title>
-            <Text c="dimmed" size="sm">
-              Already have an account?{" "}
-              <AnchorLink preload="intent" size="sm" to="/auth/login">
-                Sign in
-              </AnchorLink>
-            </Text>
+        <form.AppForm>
+          <Stack gap="md">
+            <form.AppField name="name">
+              {(field) => (
+                <field.TextField
+                  disabled={authPending}
+                  label="Name"
+                  placeholder="Your name"
+                  required
+                  type="text"
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="email">
+              {(field) => (
+                <field.TextField
+                  disabled={authPending}
+                  label="Email"
+                  placeholder="your@email.com"
+                  required
+                  type="email"
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="password">
+              {(field) => (
+                <field.PasswordField
+                  disabled={authPending}
+                  label="Password"
+                  placeholder="Your password"
+                  required
+                  type="password"
+                />
+              )}
+            </form.AppField>
           </Stack>
-        </Card.Section>
-        <Divider />
-        <Card.Section inheritPadding py="xs">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              tform.handleSubmit()
-            }}
-          >
-            <tform.AppForm>
-              <Stack gap="md">
-                <tform.AppField name="name">
-                  {(field) => (
-                    <field.TextField
-                      disabled={authPending}
-                      label="Name"
-                      placeholder="Your name"
-                      required
-                      type="text"
-                    />
-                  )}
-                </tform.AppField>
-                <tform.AppField name="email">
-                  {(field) => (
-                    <field.TextField
-                      disabled={authPending}
-                      label="Email"
-                      placeholder="your@email.com"
-                      required
-                      type="email"
-                    />
-                  )}
-                </tform.AppField>
-                <tform.AppField name="password">
-                  {(field) => (
-                    <field.PasswordField
-                      disabled={authPending}
-                      label="Password"
-                      placeholder="Your password"
-                      required
-                      type="password"
-                    />
-                  )}
-                </tform.AppField>
-              </Stack>
-              <Divider my="md" />
-              <tform.SubmitButton fullWidth label="Create account" />
-            </tform.AppForm>
-          </form>
-        </Card.Section>
-      </Card>
-    </Container>
+          <Divider my="md" />
+          <form.SubmitButton fullWidth label="Create account" />
+        </form.AppForm>
+      </Card.Section>
+    </Card>
   )
 }
 

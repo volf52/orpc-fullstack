@@ -40,13 +40,11 @@ const PublicAuthLoginRoute = PublicAuthLoginRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '': typeof PublicRouteWithChildren
   '/': typeof PrivateIndexRoute
   '/auth/login': typeof PublicAuthLoginRoute
   '/auth/register': typeof PublicAuthRegisterRoute
 }
 export interface FileRoutesByTo {
-  '': typeof PublicRouteWithChildren
   '/': typeof PrivateIndexRoute
   '/auth/login': typeof PublicAuthLoginRoute
   '/auth/register': typeof PublicAuthRegisterRoute
@@ -61,9 +59,9 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/' | '/auth/login' | '/auth/register'
+  fullPaths: '/' | '/auth/login' | '/auth/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/' | '/auth/login' | '/auth/register'
+  to: '/' | '/auth/login' | '/auth/register'
   id:
     | '__root__'
     | '/_private'

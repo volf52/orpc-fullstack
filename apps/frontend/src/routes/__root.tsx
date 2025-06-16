@@ -38,7 +38,8 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
         <MantineProvider
           defaultColorScheme="dark"
           withCssVariables
-          withGlobalClasses>
+          withGlobalClasses
+        >
           {children}
           <Notifications />
         </MantineProvider>
