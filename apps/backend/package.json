@@ -23,11 +23,11 @@
     "@types/bun": "catalog:",
     "@typescript/native-preview": "catalog:",
     "drizzle-kit": "^0.31.1",
-    "typescript": "catalog:",
-    "oxlint": "catalog:"
+    "oxlint": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "@orpc/openapi": "^1.5.1",
+    "@orpc/openapi": "^1.5.2",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
     "@repo/contract": "workspace:*",

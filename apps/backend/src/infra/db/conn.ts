@@ -11,7 +11,7 @@ import config from "@/infra/config"
 
 import * as schema from "./schema"
 
-const dbConnFactory = () => {
+export const createDbInstance = () => {
   const client = new SQL(config.db.DB_URL, { max: 25 })
 
   const db = drizzle({
@@ -27,7 +27,7 @@ const DbSym = Symbol.for("Database")
 export type AppDatabase = BunSQLDatabase<typeof schema>
 
 export const DbProvider: FactoryProvider<AppDatabase> = {
-  useFactory: instanceCachingFactory(dbConnFactory),
+  useFactory: instanceCachingFactory(createDbInstance),
 }
 
 container.register(DbSym, DbProvider)

@@ -27,6 +27,7 @@ const docsBasicAuth: MiddlewareHandler = async (c, next) => {
 }
 
 const generator = new OpenAPIGenerator({
+  // TODO: fix zod 4 schemas
   schemaConverters: [new ZodToJsonSchemaConverter()],
 })
 
@@ -85,8 +86,7 @@ export const addOpenApiDocs = async (
   // }
 
   return app
-    .use(docsBasicAuth)
-    .get("/spec/better-auth.json", (c) => c.json(authSpecs))
-    .get("/spec/contract.json", (c) => c.json(contractSpecs))
-    .get("/docs", serveStatic({ path: "static/scalar.html" }))
+    .get("/spec/better-auth.json", docsBasicAuth, (c) => c.json(authSpecs))
+    .get("/spec/contract.json", docsBasicAuth, (c) => c.json(contractSpecs))
+    .get("/docs", docsBasicAuth, serveStatic({ path: "static/scalar.html" }))
 }

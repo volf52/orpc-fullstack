@@ -24,9 +24,7 @@ export const addOpenApiHandler = async (
   })
 
   return app.use("/api/*", async (c, next) => {
-    console.debug("OpenAPI request received:", c.req.raw.url)
     const authCtx = await createAuthContext(c, container)
-    console.debug("OpenAPI request context:", authCtx)
 
     const openApiRes = await openApiHandler.handle(c.req.raw, {
       prefix: "/api",
@@ -34,10 +32,8 @@ export const addOpenApiHandler = async (
     })
 
     if (openApiRes.matched) {
-      console.debug("OpenAPI response matched:", openApiRes.response.status)
       return c.newResponse(openApiRes.response.body, openApiRes.response)
     }
-    console.debug("OpenAPI response not matched, passing to next middleware")
 
     return await next()
   })

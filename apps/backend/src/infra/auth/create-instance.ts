@@ -24,6 +24,7 @@ const beforeHooks = createAuthMiddleware(async (ctx) => {
   }
 })
 
+// biome-ignore lint/suspicious/noExplicitAny: Need it for type inference
 export const createBetterAuthInstance = <T extends Record<string, any>>(
   db: AppDatabase,
   schema?: T,

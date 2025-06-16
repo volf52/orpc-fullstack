@@ -1,8 +1,3 @@
-import { NewUserSchema } from "@contract/schemas/user"
-import { betterAuth } from "better-auth"
-import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { APIError, createAuthMiddleware } from "better-auth/api"
-import { openAPI } from "better-auth/plugins"
 import {
   container,
   type DependencyContainer,
