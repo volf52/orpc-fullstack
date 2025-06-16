@@ -6,9 +6,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "files": [
-    "src"
-  ],
+  "files": ["src"],
   "exports": {
     ".": {
       "import": "./src/index.ts",
