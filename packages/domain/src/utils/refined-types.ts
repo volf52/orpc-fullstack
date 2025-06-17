@@ -1,9 +1,13 @@
 import { Schema as S } from "effect"
+import type { JSONSchema7 } from "json-schema"
 
 export const UUID = S.UUID.pipe(S.brand("UUID")).annotations({
   description: "A universally unique identifier (UUID)",
   identifier: "UUID",
   message: (_issue) => "Invalid UUID format",
+  jsonSchema: {
+    format: "uuid",
+  } satisfies JSONSchema7,
 })
 
 // WARN: encode method will use first member of the union

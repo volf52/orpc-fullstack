@@ -1,25 +1,31 @@
 import { matchRes } from "@carbonteq/fp/match"
 import { DateTime, UUID } from "@domain/utils/refined-types"
 import {
+  BaseEntity,
   BetterStruct,
   createEncoderDecoderBridge,
 } from "@domain/utils/schema-utils"
 import { Schema as S } from "effect"
 
+class UserEntity extends BaseEntity("User", {
+  id: UUID.pipe(S.brand("UserId")),
+  test: UUID,
+}) {}
+
 const UserSchema = BetterStruct("User", {
   id: UUID.pipe(S.brand("UserId")),
-  test: UUID.pipe(S.brand("UUID")),
+  test: UUID,
   createdAt: DateTime,
   updatedAt: DateTime,
 })
-type UserType = S.Schema.Type<typeof UserSchema>
+type UserType = S.Schema.Type<typeof UserEntity>
 type TUUID = UserType["test"]
 type UserId = UserType["id"]
 
 const acceptsUUID = (_t: TUUID) => {}
 const acceptsUserId = (_t: UserId) => {}
 
-const bridge = createEncoderDecoderBridge(UserSchema)
+const bridge = createEncoderDecoderBridge(UserEntity)
 const values = {
   id: crypto.randomUUID(),
   test: crypto.randomUUID(),

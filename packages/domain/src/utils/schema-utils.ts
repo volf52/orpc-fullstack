@@ -52,8 +52,21 @@ export const createEncoderDecoderBridge = <TIn, TOut>(
   return { serialize, deserialize } as const
 }
 
-export const BaseEntitySchema = S.Struct({
+export const baseEntityFields = {
   id: UUID,
   createdAt: DateTime,
   updatedAt: DateTime,
-})
+} as const satisfies S.Struct.Fields
+
+export type TBaseEntityFields = typeof baseEntityFields
+
+export const BaseEntitySchema = S.Struct(baseEntityFields)
+
+export const BaseEntity = <Fields extends S.Struct.Fields>(
+  identifier: string,
+  fields: Fields,
+) =>
+  S.Class<TBaseEntityFields & Fields>(identifier)({
+    ...baseEntityFields,
+    ...fields,
+  })
