@@ -4,6 +4,7 @@
   "files": {
     "includes": [
       "src/**/*.{js,ts,json}",
+      "./*.ts",
       "package.json",
       "tsconfig.json",
       ".oxlintrc.json"

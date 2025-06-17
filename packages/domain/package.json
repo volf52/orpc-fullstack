@@ -22,6 +22,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@carbonteq/fp": "^0.8.2",
     "zod": "catalog:"
   }
 }

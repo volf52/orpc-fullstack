@@ -114,6 +114,7 @@
       "name": "@repo/domain",
       "version": "1.0.0",
       "dependencies": {
+        "@carbonteq/fp": "^0.8.2",
         "zod": "catalog:",
       },
       "devDependencies": {
@@ -249,6 +250,8 @@
     "@biomejs/cli-win32-arm64": ["@biomejs/cli-win32-arm64@2.0.0-beta.6", "", { "os": "win32", "cpu": "arm64" }, "sha512-JijYVZC6R5qq94yLaElowLLzbZ4xR2qDiOVPQV8H1+ru3IqVOjQu5f/lIt4uuea1iRFbxS+mOaxOZM9tUl1pTQ=="],
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.0.0-beta.6", "", { "os": "win32", "cpu": "x64" }, "sha512-zs29t/nxon11dKV+ckQB1yUOmhYx17e2+cHGK8PCVamqVGSMbjrd5evjtlfbnVJXP0ar7nNKhcg4ZWYGJ6aR1w=="],
+
+    "@carbonteq/fp": ["@carbonteq/fp@0.8.2", "", {}, "sha512-TgygpDhBb0D05xskb1GWpjE0gDioq7nfD1unSu2/DQatq5iq6LnSLt/+3CmdmcZ/6BMI1ehDrvJTt+T9c/ThOA=="],
 
     "@chevrotain/cst-dts-gen": ["@chevrotain/cst-dts-gen@10.5.0", "", { "dependencies": { "@chevrotain/gast": "10.5.0", "@chevrotain/types": "10.5.0", "lodash": "4.17.21" } }, "sha512-lhmC/FyqQ2o7pGK4Om+hzuDrm9rhFYIJ/AXoQBeongmn870Xeb0L6oGEiuR8nohFNL5sMaQEJWCxr1oIVIVXrw=="],
 
