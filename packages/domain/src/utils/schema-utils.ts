@@ -1,5 +1,5 @@
 import { Result } from "@carbonteq/fp"
-import { Either, Schema as S, type SchemaAST } from "effect"
+import { type Brand, Either, Schema as S, type SchemaAST } from "effect"
 import type { ParseError } from "effect/ParseResult"
 import { DateTime, UUID } from "./refined-types"
 
@@ -20,22 +20,36 @@ export const BetterStruct = <
     ...fields,
   })
 
-export const createEncoderDecoderBridge = <TIn, TOut>(
-  schema: S.Schema<TOut, TIn>,
-) => {
-  const encoder = S.encodeEither(schema, {
-    errors: "all",
-    exact: true,
-    onExcessProperty: "ignore",
-    propertyOrder: "none",
+const encodeDecodeOpts = {
+  errors: "all",
+  exact: true,
+  onExcessProperty: "ignore",
+  propertyOrder: "none",
+} as const
+
+export const encodeToResult = <In, Out>(
+  schema: S.Schema<Out, In, never>,
+  value: Out,
+) =>
+  Either.match(S.encodeEither(schema, encodeDecodeOpts)(value), {
+    onLeft: Result.Err,
+    onRight: Result.Ok,
   })
 
-  const decoder = S.decodeUnknownEither(schema, {
-    errors: "all",
-    exact: true,
-    onExcessProperty: "ignore",
-    propertyOrder: "none",
+export const decodeUnknownToResult = <In, Out>(
+  schema: S.Schema<Out, In, never>,
+  value: Out,
+) =>
+  Either.match(S.decodeUnknownEither(schema, encodeDecodeOpts)(value), {
+    onLeft: Result.Err,
+    onRight: Result.Ok,
   })
+
+export const createEncoderDecoderBridge = <TIn, TOut>(
+  schema: S.Schema<TOut, TIn, never>,
+) => {
+  const encoder = S.encodeEither(schema, encodeDecodeOpts)
+  const decoder = S.decodeUnknownEither(schema, encodeDecodeOpts)
 
   const serialize = (value: TOut): Result<TIn, ParseError> =>
     Either.match(encoder(value), {
@@ -52,21 +66,27 @@ export const createEncoderDecoderBridge = <TIn, TOut>(
   return { serialize, deserialize } as const
 }
 
-export const baseEntityFields = {
-  id: UUID,
-  createdAt: DateTime,
-  updatedAt: DateTime,
-} as const satisfies S.Struct.Fields
+export type FieldsEncoded<Fields extends S.Struct.Fields> = S.Schema.Encoded<
+  S.Struct<Fields>
+>
+export type FieldsType<Fields extends S.Struct.Fields> = S.Schema.Encoded<
+  S.Struct<Fields>
+>
 
-export type TBaseEntityFields = typeof baseEntityFields
+export type ExtendedSchema<
+  A,
+  I,
+  R,
+  Methods extends Record<string, unknown>,
+> = S.Schema<A, I, R> & Methods
 
-export const BaseEntitySchema = S.Struct(baseEntityFields)
-
-export const BaseEntity = <Fields extends S.Struct.Fields>(
-  identifier: string,
-  fields: Fields,
-) =>
-  S.Class<TBaseEntityFields & Fields>(identifier)({
-    ...baseEntityFields,
-    ...fields,
-  })
+export const addMethodsToSchema = <
+  A,
+  I,
+  R,
+  Methods extends Record<string, unknown>,
+>(
+  schema: S.Schema<A, I, R>,
+  methods: Methods,
+): ExtendedSchema<A, I, R, Methods> =>
+  Object.assign(schema, methods) as ExtendedSchema<A, I, R, Methods>
