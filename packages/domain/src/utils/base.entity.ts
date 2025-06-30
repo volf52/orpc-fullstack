@@ -10,45 +10,35 @@ export type TBaseEntityFields = typeof baseEntityFields
 
 const baseEntityStruct = S.mutable(S.Struct(baseEntityFields))
 
-export const defineEntityStruct = <
-  IdTag extends string,
-  Fields extends S.Struct.Fields,
->(
-  idTag: IdTag,
+export const defineEntityStruct = <Fields extends S.Struct.Fields>(
   fields: Fields,
 ) =>
   S.asSchema(
     S.Struct({
       ...baseEntityFields,
-      id: baseEntityFields.id.pipe(S.brand(idTag)),
       ...fields,
     }),
   )
 
-type BaseEntityEncoded = S.Schema.Encoded<typeof baseEntityStruct>
-type BaseEntityType = S.Schema.Type<typeof baseEntityStruct>
+export type BaseEntityEncoded = S.Schema.Encoded<typeof baseEntityStruct>
+export type BaseEntityType = S.Schema.Type<typeof baseEntityStruct>
 
 export class BaseEntity implements BaseEntityType {
-  #data: BaseEntityType
+  readonly id: BaseEntityType["id"]
+  readonly createdAt: BaseEntityType["createdAt"]
+  #updatedAt: BaseEntityType["updatedAt"]
 
   protected constructor(data: BaseEntityType) {
-    this.#data = data
-  }
-
-  get id() {
-    return this.#data.id
-  }
-
-  get createdAt() {
-    return this.#data.createdAt
+    this.id = data.id
+    this.createdAt = data.createdAt
+    this.#updatedAt = data.updatedAt
   }
 
   get updatedAt() {
-    return this.#data.updatedAt
+    return this.#updatedAt
   }
 
   protected markUpdatedAt() {
-    this.#data.id = UUID.new()
-    this.#data.updatedAt = DateTime.now()
+    this.#updatedAt = DateTime.now()
   }
 }
