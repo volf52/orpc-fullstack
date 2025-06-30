@@ -88,5 +88,12 @@ export const addMethodsToSchema = <
 >(
   schema: S.Schema<A, I, R>,
   methods: Methods,
-): ExtendedSchema<A, I, R, Methods> =>
-  Object.assign(schema, methods) as ExtendedSchema<A, I, R, Methods>
+): ExtendedSchema<A, I, R, Methods> => {
+  const extended = schema as ExtendedSchema<A, I, R, Methods>
+
+  for (const [key, value] of Object.entries(methods)) {
+    extended[key] = value
+  }
+
+  return extended
+}

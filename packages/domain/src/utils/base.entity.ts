@@ -52,17 +52,3 @@ export class BaseEntity implements BaseEntityType {
     this.#data.updatedAt = DateTime.now()
   }
 }
-
-// export const EntityConst = <
-//   Identifier extends string,
-//   Fields extends S.Struct.Fields,
-// >(
-//   identifier: Identifier, // will ensure the type of ID brand is correctly inferred
-//   fields: Fields,
-// ) => {
-//   return S.Class<S.Struct<TBaseEntityFields & Fields>>(identifier)({
-//     ...baseEntityFields,
-//     id: UUID.pipe(S.brand(`${identifier}Id`)),
-//     ...fields,
-//   })
-// }
