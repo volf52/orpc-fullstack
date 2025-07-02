@@ -27,6 +27,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@carbonteq/fp": "catalog:",
     "@orpc/openapi": "^1.6.0",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",

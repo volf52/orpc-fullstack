@@ -1,7 +1,7 @@
 import { OpenAPIHandler } from "@orpc/openapi/fetch"
 import { onError } from "@orpc/server"
 import { CORSPlugin, ResponseHeadersPlugin } from "@orpc/server/plugins"
-import { ZodSmartCoercionPlugin } from "@orpc/zod"
+import { experimental_ZodSmartCoercionPlugin as ZodSmartCoercionPlugin } from "@orpc/zod/zod4"
 import { router } from "@web/router"
 import type { Hono } from "hono"
 import type { DependencyContainer } from "tsyringe"

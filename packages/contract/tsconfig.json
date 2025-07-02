@@ -4,9 +4,19 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@contract/*": ["./src/*"]
+      "@contract/*": [
+        "./src/*"
+      ],
+      "@domain/*": [
+        "../domain/src/*"
+      ]
     }
   },
-  "include": ["src", "test"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src",
+    "test"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

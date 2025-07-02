@@ -6,9 +6,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "files": [
-    "src"
-  ],
+  "files": ["src"],
   "exports": {
     ".": {
       "import": "./src/index.ts",
@@ -29,6 +27,7 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/bun": "catalog:",
+    "@types/json-schema": "^7.0.15",
     "@typescript/native-preview": "catalog:",
     "oxlint": "catalog:",
     "typescript": "catalog:"

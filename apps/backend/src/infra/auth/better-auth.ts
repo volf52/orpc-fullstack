@@ -2,6 +2,7 @@ import {
   container,
   type DependencyContainer,
   type FactoryProvider,
+  inject,
   instanceCachingFactory,
 } from "tsyringe"
 import * as authSchema from "@/infra/db/models/auth.model"
@@ -21,6 +22,8 @@ const AuthProvider: FactoryProvider<AuthHandler> = {
 }
 
 container.register(AuthSym, AuthProvider)
+
+export const injectAuth = () => inject(AuthSym)
 export const resolveAuth = () => container.resolve(AuthSym) as AuthHandler
 export const resolveAuthFromContainer = (di: DependencyContainer) =>
   di.resolve(AuthSym) as AuthHandler
