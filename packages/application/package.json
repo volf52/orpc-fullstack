@@ -1,0 +1,30 @@
+{
+  "name": "@repo/application",
+  "version": "1.0.0",
+  "description": "Application layer with use cases and services for the project",
+  "packageManager": "bun@1.2.17",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "files": ["src"],
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/bun": "catalog:",
+    "@types/json-schema": "^7.0.15",
+    "@typescript/native-preview": "catalog:",
+    "oxlint": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@repo/domain": "workspace:*",
+    "@carbonteq/fp": "catalog:",
+    "zod": "catalog:"
+  }
+}

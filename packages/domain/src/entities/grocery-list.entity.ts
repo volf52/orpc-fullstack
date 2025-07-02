@@ -2,7 +2,7 @@ import type { Result } from "@carbonteq/fp"
 import { Result as R } from "@carbonteq/fp"
 import { GroceryListOwnershipError } from "@domain/errors/grocery-list.errors"
 import { BaseEntity, defineEntityStruct } from "@domain/utils/base.entity"
-import { UUID } from "@domain/utils/refined-types"
+import { DateTime, UUID } from "@domain/utils/refined-types"
 import { createEncoderDecoderBridge } from "@domain/utils/schema-utils"
 import { Schema as S } from "effect"
 import type { UserType } from "./user.entity"
@@ -15,6 +15,10 @@ export const GroceryListSchema = defineEntityStruct({
   ownerId: UUID.pipe(S.brand("UserId")),
 })
 
+export const GroceryListCreateSchema = GroceryListSchema.pipe(
+  S.pick("name", "description"),
+)
+
 export const GroceryListUpdateSchema = S.partialWith(
   GroceryListSchema.pipe(S.pick("name", "description")),
   { exact: true },
@@ -24,6 +28,9 @@ export type GroceryListType = S.Schema.Type<typeof GroceryListSchema>
 export type GroceryListEncoded = S.Schema.Encoded<typeof GroceryListSchema>
 export type GroceryListUpdateData = S.Schema.Type<
   typeof GroceryListUpdateSchema
+>
+export type GroceryListCreateData = S.Schema.Type<
+  typeof GroceryListCreateSchema
 >
 
 const bridge = createEncoderDecoderBridge(GroceryListSchema)
@@ -41,6 +48,22 @@ export class GroceryListEntity extends BaseEntity implements GroceryListType {
     this.name = data.name
     this.description = data.description
     this.ownerId = data.ownerId
+  }
+
+  static create(
+    data: GroceryListCreateData,
+    owner: UserType,
+  ): GroceryListEntity {
+    const groceryListData: GroceryListType = {
+      id: GroceryListId.make(UUID.new()),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      name: data.name,
+      description: data.description,
+      ownerId: owner.id,
+    }
+
+    return new GroceryListEntity(groceryListData)
   }
 
   static from(data: GroceryListType): GroceryListEntity {
