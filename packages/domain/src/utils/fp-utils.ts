@@ -1,5 +1,5 @@
 import { Result } from "@carbonteq/fp/result"
-import { Effect, Either, Cause, Option } from "effect"
+import { Cause, Effect, Either, Option } from "effect"
 
 export const eitherToResult = <R, L>(e: Either.Either<R, L>): Result<R, L> =>
   Either.match(e, {
@@ -22,7 +22,7 @@ export const effectToResult = <A, E>(
     } else {
       if (Cause.isInterrupted(exit.cause)) {
         throw new Error(
-          "Cannot run effect synchronously - it contains async operations"
+          "Cannot run effect synchronously - it contains async operations",
         )
       } else {
         // Get the first failure or defect from the cause
@@ -37,9 +37,13 @@ export const effectToResult = <A, E>(
     }
   } catch (error: any) {
     // Check if it's an AsyncFiberException (async boundary error)
-    if (error && typeof error === 'object' && error._tag === 'AsyncFiberException') {
+    if (
+      error &&
+      typeof error === "object" &&
+      error._tag === "AsyncFiberException"
+    ) {
       throw new Error(
-        "Cannot run effect synchronously - it contains async operations"
+        "Cannot run effect synchronously - it contains async operations",
       )
     }
     throw error
@@ -53,5 +57,7 @@ export const effectToResultAsync = async <A, E>(
   return eitherToResult(either)
 }
 
-export const resultToEffect = <T, E>(r: Result<T, E>): Effect.Effect<T, E, never> =>
+export const resultToEffect = <T, E>(
+  r: Result<T, E>,
+): Effect.Effect<T, E, never> =>
   r.isOk() ? Effect.succeed(r.unwrap()) : Effect.fail(r.unwrapErr())

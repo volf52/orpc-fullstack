@@ -6,9 +6,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "files": [
-    "src"
-  ],
+  "files": ["src"],
   "exports": {
     ".": {
       "import": "./src/index.ts",
@@ -25,7 +23,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@carbonteq/fp": "^0.8.2",
+    "@carbonteq/fp": "catalog:",
     "zod": "catalog:"
   }
 }

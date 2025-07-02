@@ -1,7 +1,6 @@
 import { Result } from "@carbonteq/fp"
-import { type Brand, Either, Schema as S, type SchemaAST } from "effect"
+import { Either, Schema as S, type SchemaAST } from "effect"
 import type { ParseError } from "effect/ParseResult"
-import { DateTime, UUID } from "./refined-types"
 
 // From https://effect.website/docs/schema/basic-usage/#simplifying-tagged-structs-with-taggedstruct
 // Allows the absence of _tag in decode ops
@@ -92,7 +91,8 @@ export const addMethodsToSchema = <
   const extended = schema as ExtendedSchema<A, I, R, Methods>
 
   for (const [key, value] of Object.entries(methods)) {
-    extended[key] = value
+    // biome-ignore lint/suspicious/noExplicitAny: Have to work around the type system here
+    ;(extended as any)[key] = value
   }
 
   return extended
