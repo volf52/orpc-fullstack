@@ -1,7 +1,11 @@
+import type { Result } from "@carbonteq/fp"
+import { Result as R } from "@carbonteq/fp"
+import { GroceryListOwnershipError } from "@domain/errors/grocery-list.errors"
 import { BaseEntity, defineEntityStruct } from "@domain/utils/base.entity"
 import { UUID } from "@domain/utils/refined-types"
 import { createEncoderDecoderBridge } from "@domain/utils/schema-utils"
 import { Schema as S } from "effect"
+import type { UserType } from "./user.entity"
 
 export const GroceryListId = UUID.pipe(S.brand("GroceryListId"))
 export const GroceryListSchema = defineEntityStruct({
@@ -49,6 +53,15 @@ export class GroceryListEntity extends BaseEntity implements GroceryListType {
 
   isOwner(userId: string): boolean {
     return this.ownerId === userId
+  }
+
+  ensureIsOwner(
+    userId: UserType["id"],
+  ): Result<void, GroceryListOwnershipError> {
+    if (!this.isOwner(userId)) {
+      return R.Err(new GroceryListOwnershipError(this.id))
+    }
+    return R.Ok(undefined)
   }
 
   serialize() {

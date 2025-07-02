@@ -1,9 +1,15 @@
+import type { UnitResult } from "@carbonteq/fp"
+import { Result as R } from "@carbonteq/fp"
+import {
+  ItemListMismatchError,
+  ItemOwnershipError,
+} from "@domain/errors/item.errors"
 import { BaseEntity, defineEntityStruct } from "@domain/utils/base.entity"
 import { UUID } from "@domain/utils/refined-types"
 import { createEncoderDecoderBridge } from "@domain/utils/schema-utils"
 import { Schema as S } from "effect"
-import { GroceryListId } from "./grocery-list.entity"
-import { UserIdSchema } from "./user.entity"
+import { GroceryListId, type GroceryListType } from "./grocery-list.entity"
+import { UserIdSchema, type UserType } from "./user.entity"
 
 export const ItemStatusSchema = S.Literal("pending", "bought")
 
@@ -57,12 +63,36 @@ export class ItemEntity extends BaseEntity implements ItemType {
     return this.status === "bought"
   }
 
-  belongsToList(listId: string): boolean {
+  belongsToList(listId: GroceryListType["id"]): boolean {
     return this.listId === listId
   }
 
-  isCreatedBy(userId: string): boolean {
+  isCreatedBy(userId: UserType["id"]): boolean {
     return this.createdBy === userId
+  }
+
+  ensureCanBeModifiedBy(
+    userId: UserType["id"],
+  ): UnitResult<ItemOwnershipError> {
+    if (!this.isCreatedBy(userId)) {
+      return R.Err(new ItemOwnershipError(this.id))
+    }
+
+    return R.UNIT_RESULT
+  }
+
+  ensureBelongsToList(
+    listId: GroceryListType["id"],
+  ): UnitResult<ItemListMismatchError> {
+    if (!this.belongsToList(listId)) {
+      return R.Err(new ItemListMismatchError(this.id, listId))
+    }
+
+    return R.UNIT_RESULT
+  }
+
+  canBeDeletedBy(userId: UserType["id"]): boolean {
+    return this.isCreatedBy(userId)
   }
 
   serialize() {

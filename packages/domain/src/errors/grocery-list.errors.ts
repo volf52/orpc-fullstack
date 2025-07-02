@@ -25,19 +25,3 @@ export class GroceryListOwnershipError extends ForbiddenError {
     this.listId = listId
   }
 }
-
-export class ItemNotFoundError extends NotFoundError {
-  override readonly code = "ITEM_NOT_FOUND" as const
-
-  constructor(itemId: string, context?: Record<string, unknown>) {
-    super("Item", itemId, context)
-  }
-}
-
-export class InvalidInviteError extends ValidationError {
-  override readonly code = "INVALID_INVITE" as const
-
-  constructor(reason: string, context?: Record<string, unknown>) {
-    super(`Invalid invite: ${reason}`, "invite", undefined, context)
-  }
-}
