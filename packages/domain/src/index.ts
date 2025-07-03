@@ -13,6 +13,8 @@ export * from "./services/invite.service"
 export * from "./services/item.service"
 
 export * from "./utils/base.entity"
+export type { ValidationIssue } from "./utils/base.errors"
+export * from "./utils/base.errors"
 export * from "./utils/fp-utils"
 export * from "./utils/refined-types"
 export * from "./utils/schema-utils"

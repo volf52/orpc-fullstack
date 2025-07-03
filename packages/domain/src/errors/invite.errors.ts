@@ -16,7 +16,7 @@ export class InviteExpiredError extends ValidationError {
   override readonly code = "INVITE_EXPIRED" as const
 
   constructor(context?: Record<string, unknown>) {
-    super("The invitation has expired", "invite:expired", undefined, context)
+    super("The invitation has expired", [], context)
   }
 }
 
@@ -24,12 +24,7 @@ export class InviteAlreadyUsedError extends ValidationError {
   override readonly code = "INVITE_ALREADY_USED" as const
 
   constructor(context?: Record<string, unknown>) {
-    super(
-      "The invitation has already been used",
-      "invite:used",
-      undefined,
-      context,
-    )
+    super("The invitation has already been used", [], context)
   }
 }
 
@@ -37,6 +32,6 @@ export class InvalidInviteTokenError extends ValidationError {
   override readonly code = "INVALID_INVITE_TOKEN" as const
 
   constructor(context?: Record<string, unknown>) {
-    super("Invalid invite token", "invite:token", undefined, context)
+    super("Invalid invite token", [], context)
   }
 }

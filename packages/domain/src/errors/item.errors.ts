@@ -38,8 +38,13 @@ export class ItemListMismatchError extends ValidationError {
   ) {
     super(
       "Item does not belong to the specified list",
-      "item:list",
-      undefined,
+      [
+        {
+          field: "itemId",
+          value: itemId,
+          message: "Item does not belong to the specified list",
+        },
+      ],
       context,
     )
     this.itemId = itemId

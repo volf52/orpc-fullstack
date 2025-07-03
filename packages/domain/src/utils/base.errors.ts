@@ -23,21 +23,51 @@ export abstract class AppError extends Error {
   }
 }
 
+export interface ValidationIssue {
+  field?: string
+  value?: unknown
+  message: string
+  path?: string[]
+}
+
 // Base validation error (400)
 export class ValidationError extends AppError {
   readonly code: string = "VALIDATION_ERROR"
-  readonly field?: string
-  readonly value?: unknown
+  readonly issues: ValidationIssue[]
 
   constructor(
+    message: string,
+    issues: ValidationIssue[] = [],
+    context?: Record<string, unknown>,
+  ) {
+    super(message, context)
+    this.issues = issues
+  }
+
+  get field(): string | undefined {
+    return this.issues[0]?.field
+  }
+
+  get value(): unknown {
+    return this.issues[0]?.value
+  }
+
+  static single(
     message: string,
     field?: string,
     value?: unknown,
     context?: Record<string, unknown>,
-  ) {
-    super(message, context)
-    this.field = field
-    this.value = value
+  ): ValidationError {
+    const issues: ValidationIssue[] = field ? [{ field, value, message }] : []
+    return new ValidationError(message, issues, context)
+  }
+
+  static multiple(
+    issues: ValidationIssue[],
+    context?: Record<string, unknown>,
+  ): ValidationError {
+    const message = `Validation failed with ${issues.length} error(s): ${issues.map((i) => i.message).join(", ")}`
+    return new ValidationError(message, issues, context)
   }
 }
 

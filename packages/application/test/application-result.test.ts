@@ -1,10 +1,19 @@
-import { describe, it, expect } from "bun:test"
+import { describe, expect, it } from "bun:test"
 import { Result } from "@carbonteq/fp"
+import {
+  ConflictError,
+  ExternalServiceError,
+  ForbiddenError,
+  InternalError,
+  NotFoundError,
+  UnauthorizedError,
+  ValidationError,
+} from "@repo/domain"
 import {
   AppError,
   AppErrStatus,
   ApplicationResult,
-} from "../src/types/common.types"
+} from "../src/utils/application-result.utils"
 
 describe("ApplicationResult", () => {
   describe("static constructors", () => {
@@ -81,20 +90,57 @@ describe("ApplicationResult", () => {
       expect(AppError.NotFound().status).toBe(AppErrStatus.NotFound)
       expect(AppError.InvalidData().status).toBe(AppErrStatus.InvalidData)
       expect(AppError.Unauthorized().status).toBe(AppErrStatus.Unauthorized)
-      expect(AppError.AlreadyExists().status).toBe(AppErrStatus.AlreadyExists)
-      expect(AppError.InvalidOperation().status).toBe(
-        AppErrStatus.InvalidOperation,
+      expect(AppError.Forbidden().status).toBe(AppErrStatus.Forbidden)
+      expect(AppError.Conflict().status).toBe(AppErrStatus.Conflict)
+      expect(AppError.InternalError().status).toBe(AppErrStatus.InternalError)
+      expect(AppError.ExternalServiceError().status).toBe(
+        AppErrStatus.ExternalServiceError,
       )
-      expect(AppError.GuardViolation().status).toBe(AppErrStatus.GuardViolation)
       expect(AppError.Generic("test").status).toBe(AppErrStatus.Generic)
     })
 
-    it("should map different error types", () => {
-      const notFoundError = new Error("not found")
-      notFoundError.name = "NotFoundError"
+    it("should map different error types using instanceof checks", () => {
+      // Test domain error mapping with actual domain error instances
+      const notFoundError = new NotFoundError("TestResource", "123")
+      expect(AppError.fromErr(notFoundError).status).toBe(AppErrStatus.NotFound)
 
-      const appError = AppError.fromErr(notFoundError)
-      expect(appError.status).toBe(AppErrStatus.NotFound)
+      const unauthorizedError = new UnauthorizedError("unauthorized")
+      expect(AppError.fromErr(unauthorizedError).status).toBe(
+        AppErrStatus.Unauthorized,
+      )
+
+      const forbiddenError = new ForbiddenError("forbidden")
+      expect(AppError.fromErr(forbiddenError).status).toBe(
+        AppErrStatus.Forbidden,
+      )
+
+      const validationError = ValidationError.single(
+        "validation failed",
+        "field",
+      )
+      expect(AppError.fromErr(validationError).status).toBe(
+        AppErrStatus.InvalidData,
+      )
+
+      const conflictError = new ConflictError("resource already exists")
+      expect(AppError.fromErr(conflictError).status).toBe(AppErrStatus.Conflict)
+
+      const internalError = new InternalError("internal error")
+      expect(AppError.fromErr(internalError).status).toBe(
+        AppErrStatus.InternalError,
+      )
+
+      const externalServiceError = new ExternalServiceError(
+        "payment-service",
+        "external service error",
+      )
+      expect(AppError.fromErr(externalServiceError).status).toBe(
+        AppErrStatus.ExternalServiceError,
+      )
+
+      // Test unknown error type fallback
+      const unknownError = new Error("unknown error")
+      expect(AppError.fromErr(unknownError).status).toBe(AppErrStatus.Generic)
     })
   })
 })

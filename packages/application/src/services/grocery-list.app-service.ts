@@ -1,8 +1,24 @@
-import type { ApplicationService } from "../types/common.types"
+import { parseErrorsToValidationError } from "@application/utils/validation-error.utils"
+import { Result } from "@carbonteq/fp"
+import {
+  type GroceryListEncoded,
+  type GroceryListRepository,
+  ResultUtils,
+  type UserEntity,
+  type ValidationError,
+} from "@repo/domain"
 
-export class GroceryListAppService implements ApplicationService {
-  readonly serviceName = "GroceryListAppService"
+export class GroceryListAppService {
+  constructor(private readonly groceryListRepo: GroceryListRepository) {}
 
-  // Simple application service that provides basic operations
-  // Actual business logic will be implemented in workflows
+  async findGroceryListsForUser(
+    user: UserEntity,
+  ): Promise<Result<{ lists: GroceryListEncoded[] }, ValidationError>> {
+    const lists = await this.groceryListRepo.findByUserId(user.id)
+    const listsEncoded = Result.all(...lists.map(ResultUtils.serialized))
+      .mapErr(parseErrorsToValidationError)
+      .map((lists) => ({ lists }))
+
+    return listsEncoded
+  }
 }
