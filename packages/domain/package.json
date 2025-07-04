@@ -2,11 +2,13 @@
   "name": "@repo/domain",
   "version": "1.0.0",
   "description": "Domain logic and entities for the project",
-  "packageManager": "bun@1.2.17",
+  "packageManager": "bun@1.2.18",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "exports": {
     ".": {
       "import": "./src/index.ts",

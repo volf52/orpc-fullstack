@@ -2,7 +2,7 @@
   "name": "@repo/backend",
   "version": "1.0.0",
   "description": "API server for the project",
-  "packageManager": "bun@1.2.17",
+  "packageManager": "bun@1.2.18",
   "type": "module",
   "scripts": {
     "build": "bun build --target bun --outfile dist/server.js ./src/web/server.ts",
@@ -24,11 +24,12 @@
     "@typescript/native-preview": "catalog:",
     "drizzle-kit": "^0.31.4",
     "oxlint": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@scalar/openapi-types": "^0.3.4"
   },
   "dependencies": {
     "@carbonteq/fp": "catalog:",
-    "@orpc/openapi": "^1.6.0",
+    "@orpc/openapi": "^1.6.4",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
     "@repo/contract": "workspace:*",
@@ -36,7 +37,7 @@
     "better-auth": "catalog:",
     "dotenv": "^16.6.1",
     "drizzle-orm": "^0.44.2",
-    "effect": "^3.16.10",
+    "effect": "^3.16.12",
     "env-var": "^7.5.0",
     "fast-jwt": "^6.0.2",
     "hono": "^4.8.3",

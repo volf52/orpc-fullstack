@@ -1,6 +1,6 @@
 import { OpenAPIGenerator } from "@orpc/openapi"
 // import { experimental_ZodToJsonSchemaConverter as ZodToJsonSchemaConverter } from "@orpc/zod/zod4"
-import { ZodToJsonSchemaConverter } from "@orpc/zod"
+// import { ZodToJsonSchemaConverter } from "@orpc/zod"
 import type { Hono } from "hono"
 import { serveStatic } from "hono/bun"
 import type { MiddlewareHandler } from "hono/types"
@@ -27,8 +27,7 @@ const docsBasicAuth: MiddlewareHandler = async (c, next) => {
 }
 
 const generator = new OpenAPIGenerator({
-  // TODO: fix zod 4 schemas
-  schemaConverters: [new ZodToJsonSchemaConverter()],
+  // schemaConverters: [new ZodToJsonSchemaConverter()],
 })
 
 export const addOpenApiDocs = async (

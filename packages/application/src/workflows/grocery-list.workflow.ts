@@ -9,6 +9,11 @@ import type {
   UserRepository,
 } from "@repo/domain"
 
+export interface DashboardStats {
+  totalLists: number
+  recentLists: GroceryListEncoded[]
+}
+
 export class GroceryListWorkflow {
   private readonly groceryListService: GroceryListAppService
 
@@ -29,6 +34,35 @@ export class GroceryListWorkflow {
   async listGroceryListsForUser(user: UserEntity) {
     const result = await this.groceryListService.findGroceryListsForUser(user)
     return ApplicationResult.fromResult(result)
+  }
+
+  async getDashboardData(
+    user: UserEntity,
+  ): Promise<ApplicationResult<DashboardStats>> {
+    const listsResult =
+      await this.groceryListService.findGroceryListsForUser(user)
+
+    if (listsResult.isErr()) {
+      return ApplicationResult.fromResult(listsResult)
+    }
+
+    const { lists } = listsResult.unwrap()
+
+    // Sort by updatedAt and get recent lists (HTTP layer orchestration)
+    const recentLists = lists
+      .sort((a, b) => {
+        const aTime = a.updatedAt.toString()
+        const bTime = b.updatedAt.toString()
+        return bTime.localeCompare(aTime)
+      })
+      .slice(0, 4)
+
+    const stats: DashboardStats = {
+      totalLists: lists.length,
+      recentLists,
+    }
+
+    return ApplicationResult.Ok(stats)
   }
 
   async updateGroceryList(

@@ -115,7 +115,7 @@ export class ApplicationResult<T> {
     this._isOk = inner_result.isOk()
   }
 
-  isOk(): this is ApplicationResult<T> {
+  isOk(): boolean {
     return this.inner_result.isOk()
   }
 
