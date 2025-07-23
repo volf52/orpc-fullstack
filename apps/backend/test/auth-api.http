@@ -3,15 +3,15 @@
 
 ### Signup
 
-POST {{baseUrl}}/public/auth/signup HTTP/1.1
+POST {{baseUrl}}/auth/sign-up/email HTTP/1.1
 Content-Type: application/json
 
 {
- "json": {
- "name": "Test User",
- "email": "test@dev.com",
- "password": "passwords"
- }
+  "json": {
+    "email": "test@dev.com",
+    "name": "Test User",
+    "password": "passwords"
+  }
 }
 
 
@@ -21,20 +21,18 @@ Content-Type: application/json
 
 POST {{baseUrl}}/auth/sign-in/email HTTP/1.1
 Content-Type: application/json
-Origin: http://localhost:3000
 
 {
- "email": "test@dev.com",
- "password": "testpass"
+  "email": "test@dev.com",
+  "password": "testpass"
 }
+
+> ./post-login.lua
 
 
 ### Get Current User
 
-POST {{baseUrl}}/authenticated/auth/whoami HTTP/1.1
-Authorization: Bearer {{login.response.body.$.json.token}}
+GET {{baseUrl}}/api/user/whoami HTTP/1.1
 Content-Type: application/json
-
-{
- "json": {}
-}
+Cookie: better-auth.session_token={{session_token}}
+Cookie: better-auth.session_data={{session_data}}

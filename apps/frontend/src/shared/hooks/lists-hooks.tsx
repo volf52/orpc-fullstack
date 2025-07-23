@@ -82,6 +82,39 @@ export const useNewListMutation = () => {
   return useMutation(mutOpts, queryClient)
 }
 
+export const useUpdateListMutation = () => {
+  const queryClient = useQueryClient()
+
+  const mutOpts =
+    orpc.authenticated.groceryList.updateGroceryList.mutationOptions({
+      throwOnError: false,
+      onError: (err) => {
+        toast.error({
+          title: "Failed to update grocery list",
+          message: err.message,
+        })
+      },
+      onSuccess: async (data) => {
+        // Update the specific list query cache
+        queryClient.setQueryData(
+          orpc.authenticated.groceryList.getListById.key({
+            input: { params: { id: data.id } },
+          }),
+          data,
+        )
+
+        // Invalidate the lists query to refresh the list view
+        await queryClient.invalidateQueries({
+          queryKey: orpc.authenticated.groceryList.getLists.key(),
+        })
+
+        toast.success({ message: `List ${data.name} updated successfully!` })
+      },
+    })
+
+  return useMutation(mutOpts, queryClient)
+}
+
 export const useDeleteListMutation = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate({ from: "/lists/$id" })

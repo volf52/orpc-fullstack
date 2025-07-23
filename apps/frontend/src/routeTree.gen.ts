@@ -16,7 +16,8 @@ import { Route as PrivateListsIndexRouteImport } from './routes/_private/lists/i
 import { Route as PublicAuthRegisterRouteImport } from './routes/_public/auth/register'
 import { Route as PublicAuthLoginRouteImport } from './routes/_public/auth/login'
 import { Route as PrivateListsNewRouteImport } from './routes/_private/lists/new'
-import { Route as PrivateListsIdRouteImport } from './routes/_private/lists/$id'
+import { Route as PrivateListsIdIndexRouteImport } from './routes/_private/lists/$id/index'
+import { Route as PrivateListsIdEditRouteImport } from './routes/_private/lists/$id/edit'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -51,66 +52,77 @@ const PrivateListsNewRoute = PrivateListsNewRouteImport.update({
   path: '/lists/new',
   getParentRoute: () => PrivateRoute,
 } as any)
-const PrivateListsIdRoute = PrivateListsIdRouteImport.update({
-  id: '/lists/$id',
-  path: '/lists/$id',
+const PrivateListsIdIndexRoute = PrivateListsIdIndexRouteImport.update({
+  id: '/lists/$id/',
+  path: '/lists/$id/',
+  getParentRoute: () => PrivateRoute,
+} as any)
+const PrivateListsIdEditRoute = PrivateListsIdEditRouteImport.update({
+  id: '/lists/$id/edit',
+  path: '/lists/$id/edit',
   getParentRoute: () => PrivateRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PrivateIndexRoute
-  '/lists/$id': typeof PrivateListsIdRoute
   '/lists/new': typeof PrivateListsNewRoute
   '/auth/login': typeof PublicAuthLoginRoute
   '/auth/register': typeof PublicAuthRegisterRoute
   '/lists': typeof PrivateListsIndexRoute
+  '/lists/$id/edit': typeof PrivateListsIdEditRoute
+  '/lists/$id': typeof PrivateListsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PrivateIndexRoute
-  '/lists/$id': typeof PrivateListsIdRoute
   '/lists/new': typeof PrivateListsNewRoute
   '/auth/login': typeof PublicAuthLoginRoute
   '/auth/register': typeof PublicAuthRegisterRoute
   '/lists': typeof PrivateListsIndexRoute
+  '/lists/$id/edit': typeof PrivateListsIdEditRoute
+  '/lists/$id': typeof PrivateListsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_private': typeof PrivateRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_private/': typeof PrivateIndexRoute
-  '/_private/lists/$id': typeof PrivateListsIdRoute
   '/_private/lists/new': typeof PrivateListsNewRoute
   '/_public/auth/login': typeof PublicAuthLoginRoute
   '/_public/auth/register': typeof PublicAuthRegisterRoute
   '/_private/lists/': typeof PrivateListsIndexRoute
+  '/_private/lists/$id/edit': typeof PrivateListsIdEditRoute
+  '/_private/lists/$id/': typeof PrivateListsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/lists/$id'
     | '/lists/new'
     | '/auth/login'
     | '/auth/register'
     | '/lists'
+    | '/lists/$id/edit'
+    | '/lists/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/lists/$id'
     | '/lists/new'
     | '/auth/login'
     | '/auth/register'
     | '/lists'
+    | '/lists/$id/edit'
+    | '/lists/$id'
   id:
     | '__root__'
     | '/_private'
     | '/_public'
     | '/_private/'
-    | '/_private/lists/$id'
     | '/_private/lists/new'
     | '/_public/auth/login'
     | '/_public/auth/register'
     | '/_private/lists/'
+    | '/_private/lists/$id/edit'
+    | '/_private/lists/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -169,11 +181,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateListsNewRouteImport
       parentRoute: typeof PrivateRoute
     }
-    '/_private/lists/$id': {
-      id: '/_private/lists/$id'
+    '/_private/lists/$id/': {
+      id: '/_private/lists/$id/'
       path: '/lists/$id'
       fullPath: '/lists/$id'
-      preLoaderRoute: typeof PrivateListsIdRouteImport
+      preLoaderRoute: typeof PrivateListsIdIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/lists/$id/edit': {
+      id: '/_private/lists/$id/edit'
+      path: '/lists/$id/edit'
+      fullPath: '/lists/$id/edit'
+      preLoaderRoute: typeof PrivateListsIdEditRouteImport
       parentRoute: typeof PrivateRoute
     }
   }
@@ -181,16 +200,18 @@ declare module '@tanstack/react-router' {
 
 interface PrivateRouteChildren {
   PrivateIndexRoute: typeof PrivateIndexRoute
-  PrivateListsIdRoute: typeof PrivateListsIdRoute
   PrivateListsNewRoute: typeof PrivateListsNewRoute
   PrivateListsIndexRoute: typeof PrivateListsIndexRoute
+  PrivateListsIdEditRoute: typeof PrivateListsIdEditRoute
+  PrivateListsIdIndexRoute: typeof PrivateListsIdIndexRoute
 }
 
 const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateIndexRoute: PrivateIndexRoute,
-  PrivateListsIdRoute: PrivateListsIdRoute,
   PrivateListsNewRoute: PrivateListsNewRoute,
   PrivateListsIndexRoute: PrivateListsIndexRoute,
+  PrivateListsIdEditRoute: PrivateListsIdEditRoute,
+  PrivateListsIdIndexRoute: PrivateListsIdIndexRoute,
 }
 
 const PrivateRouteWithChildren =

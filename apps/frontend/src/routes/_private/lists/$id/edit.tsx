@@ -1,16 +1,16 @@
-import { ListDetailsPage } from "@app/pages/lists/details-page"
+import { ListUpdatePage } from "@app/pages/lists/update-page"
 import { prefetchList } from "@app/shared/hooks/lists-hooks"
 import { createFileRoute } from "@tanstack/react-router"
 
-const ListDetailPageWrapper = () => {
+const ListUpdatePageWrapper = () => {
   const { id } = Route.useParams()
 
-  return <ListDetailsPage id={id} />
+  return <ListUpdatePage id={id} />
 }
 
-export const Route = createFileRoute("/_private/lists/$id")({
-  component: ListDetailPageWrapper,
-  head: () => ({ meta: [{ title: "List Detail" }] }),
+export const Route = createFileRoute("/_private/lists/$id/edit")({
+  component: ListUpdatePageWrapper,
+  head: () => ({ meta: [{ title: "Edit List" }] }),
   loader: async ({ context, params }) => {
     const { queryClient } = context
 

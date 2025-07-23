@@ -14,6 +14,7 @@ import {
 import { Schema as S } from "effect"
 
 const list = GroceryListSchema.pipe(S.omit("ownerId"))
+const encodedList = S.encodedBoundSchema(list)
 
 export type GroceryListEncoded = S.Schema.Encoded<typeof list>
 
@@ -42,13 +43,12 @@ export const GetListsParamsSchema = S.Struct({
 
 export const GetListsResultSchema = PaginatedResultSchema(S.encodedSchema(list))
 
-export const GroceryListDetailsSchema = S.asSchema(
-  GroceryListSchema.pipe(
-    S.omit("ownerId"),
+export const GroceryListDetailsSchema = S.mutable(
+  encodedList.pipe(
     S.extend(
       S.Struct({
-        owner: UserSchema,
-        items: S.Array(ItemSchema),
+        owner: S.encodedBoundSchema(UserSchema),
+        items: S.Array(S.encodedBoundSchema(ItemSchema)),
         stats: S.Struct({
           totalItems: S.Number,
           pendingItems: S.Number,
