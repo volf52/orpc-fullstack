@@ -1,5 +1,6 @@
+import { devtools } from "@tanstack/devtools-vite"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
-import viteReact from "@vitejs/plugin-react-oxc"
+import viteReact from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 import Inspect from "vite-plugin-inspect"
 import tsConfigPaths from "vite-tsconfig-paths"
@@ -22,16 +23,10 @@ export default defineConfig(({ mode }) => {
     },
     // oxc: {},
     plugins: [
+      devtools(),
       tsConfigPaths({ projects: ["./tsconfig.json"] }),
       viteReact({}),
-      tanstackStart({
-        tsr: { target: "react" },
-        react: { disableOxcRecommendation: false },
-        sitemap: { enabled: false },
-        customViteReactPlugin: true,
-
-        // target: "bun", // doesn't play well with mantine yet
-      }),
+      tanstackStart({}),
       Inspect({
         dev: false,
         build: true,

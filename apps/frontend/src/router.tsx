@@ -14,7 +14,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export const createRouter = () => {
+export const getRouter = () => {
   const router = createTanStackRouter({
     routeTree,
     scrollRestoration: true,
@@ -31,6 +31,6 @@ export const createRouter = () => {
 
 declare module "@tanstack/react-router" {
   interface Register {
-    router: ReturnType<typeof createRouter>
+    router: ReturnType<typeof getRouter>
   }
 }

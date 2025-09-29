@@ -5,7 +5,6 @@
     "noEmit": true,
     "strict": true,
     "erasableSyntaxOnly": false,
-    "baseUrl": "./",
     "paths": {
       "@app/*": ["./src/*"],
 

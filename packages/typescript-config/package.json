@@ -1,7 +1,7 @@
 {
   "name": "@repo/typescript-config",
   "version": "0.0.0",
-  "packageManager": "bun@1.2.19",
+  "packageManager": "bun@1.2.23",
   "description": "Shared TypeScript configuration for the project",
   "private": true,
   "license": "MIT",
@@ -15,6 +15,6 @@
   },
   "devDependencies": {
     "@tsconfig/bun": "^1.0.8",
-    "@tsconfig/vite-react": "^7.0.0"
+    "@tsconfig/vite-react": "^7.0.1"
   }
 }

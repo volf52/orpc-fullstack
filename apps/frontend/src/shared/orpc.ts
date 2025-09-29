@@ -3,7 +3,7 @@ import { RPCLink, type RPCLinkOptions } from "@orpc/client/fetch"
 import { createORPCReactQueryUtils, type RouterUtils } from "@orpc/react-query"
 import type { AppRouterClient } from "@repo/contract/contracts"
 import { createIsomorphicFn } from "@tanstack/react-start"
-import { getHeaders } from "@tanstack/react-start/server"
+import { getRequestHeaders as getHeaders } from "@tanstack/react-start/server"
 
 export type ContractClient = AppRouterClient
 

@@ -1,5 +1,5 @@
 import { createIsomorphicFn } from "@tanstack/react-start"
-import { getHeaders } from "@tanstack/react-start/server"
+import { getRequestHeaders as getHeaders } from "@tanstack/react-start/server"
 import { createAuthClient } from "better-auth/react"
 import { reactStartCookies } from "better-auth/react-start"
 

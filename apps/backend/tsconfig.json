@@ -3,12 +3,11 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
-      "@infra": ["src/infra"],
-      "@infra/*": ["src/infra/*"],
-      "@web/*": ["src/web/*"],
+      "@/*": ["./src/*"],
+      "@infra": ["./src/infra"],
+      "@infra/*": ["./src/infra/*"],
+      "@web/*": ["./src/web/*"],
       // Other packages
       "@contract/*": ["../../packages/contract/src/*"],
       "@domain/*": ["../../packages/domain/src/*"],

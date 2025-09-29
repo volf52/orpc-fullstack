@@ -12,15 +12,16 @@ import {
   mantineHtmlProps,
 } from "@mantine/core"
 import { Notifications } from "@mantine/notifications"
+import { TanStackDevtools } from "@tanstack/react-devtools"
 import type { QueryClient } from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools"
 import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
 } from "@tanstack/react-router"
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { Suspense } from "react"
 import styles from "./styles.css?url"
 
@@ -44,12 +45,18 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
           {children}
           <Notifications />
         </MantineProvider>
-        <ReactQueryDevtools
-          buttonPosition="bottom-right"
-          initialIsOpen={false}
-          position="bottom"
+        <TanStackDevtools
+          plugins={[
+            { name: "Router", render: <TanStackRouterDevtoolsPanel /> },
+            { name: "Rquery", render: <ReactQueryDevtoolsPanel /> },
+          ]}
         />
-        <TanStackRouterDevtools initialIsOpen={false} position="top-right" />
+        {/* <ReactQueryDevtools */}
+        {/*   buttonPosition="bottom-right" */}
+        {/*   initialIsOpen={false} */}
+        {/*   position="bottom" */}
+        {/* /> */}
+        {/* <TanStackRouterDevtools initialIsOpen={false} position="top-right" /> */}
         <Scripts />
         <ColorSchemeScript defaultColorScheme="dark" />
       </body>

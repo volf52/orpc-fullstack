@@ -2,7 +2,7 @@
   "name": "@repo/application",
   "version": "1.0.0",
   "description": "Application layer with use cases and services for the project",
-  "packageManager": "bun@1.2.19",
+  "packageManager": "bun@1.2.23",
   "keywords": [],
   "author": "",
   "license": "ISC",
