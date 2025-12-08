@@ -45,5 +45,8 @@
       "better-auth": "^1.4.5",
       "@typescript/native-preview": "^7.0.0-dev.20251208.1"
     }
+  },
+  "overrides": {
+    "vite": "8.0.0-beta.0"
   }
 }

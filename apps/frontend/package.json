@@ -62,8 +62,5 @@
     "vite": "^7",
     "vite-plugin-inspect": "^11.3.3",
     "vite-tsconfig-paths": "^5.1.4"
-  },
-  "overrides": {
-    "vite": "npm:rolldown-vite@latest"
   }
 }
