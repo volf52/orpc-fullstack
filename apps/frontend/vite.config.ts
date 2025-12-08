@@ -1,17 +1,16 @@
 import { devtools } from "@tanstack/devtools-vite"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
+import { nitro } from "nitro/vite"
 import { defineConfig } from "vite"
-import Inspect from "vite-plugin-inspect"
+// import Inspect from "vite-plugin-inspect"
 import tsConfigPaths from "vite-tsconfig-paths"
 
 const cssTransformer = "lightningcss" as const
 
 export default defineConfig(({ mode }) => {
   return {
-    // Native plugins mess with css for now
     // experimental: { enableNativePlugin: true },
-
     css: { transformer: cssTransformer }, // might cause issues for postcss specific stuff
     build: { cssMinify: cssTransformer },
     dev: {},
@@ -21,18 +20,20 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       allowedHosts: mode === "development" ? true : undefined,
     },
-    // oxc: {},
     plugins: [
       devtools(),
+      nitro({ preset: "bun" }),
       tsConfigPaths({ projects: ["./tsconfig.json"] }),
-      viteReact({}),
       tanstackStart({}),
-      Inspect({
-        dev: false,
-        build: true,
-        embedded: false,
-        exclude: [/node_modules/],
+      viteReact({
+        babel: { plugins: ["babel-plugin-react-compiler"] },
       }),
+      // Inspect({
+      //   dev: false,
+      //   build: true,
+      //   embedded: false,
+      //   exclude: [/node_modules/],
+      // }),
     ],
   }
 })

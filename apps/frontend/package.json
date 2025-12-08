@@ -36,6 +36,7 @@
     "better-auth": "catalog:",
     "immer": "^11.0.1",
     "lucide-react": "^0.556.0",
+    "nitro": "^3.0.1-alpha.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "zustand": "^5.0.9"
@@ -43,11 +44,12 @@
   "devDependencies": {
     "@repo/configs": "workspace:*",
     "@tanstack/router-plugin": "^1.140.0",
-    "@types/react": "19.2.7",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "^19.2.1",
+    "@types/react-dom": "^19.2.1",
     "@typescript/native-preview": "catalog:",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitejs/plugin-react-oxc": "^0.4.3",
+    "babel-plugin-react-compiler": "^1.0.0",
     "lightningcss": "^1.30.2",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",

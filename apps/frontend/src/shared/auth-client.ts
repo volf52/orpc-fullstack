@@ -1,12 +1,10 @@
 import { createIsomorphicFn } from "@tanstack/react-start"
 import { getRequestHeaders as getHeaders } from "@tanstack/react-start/server"
 import { createAuthClient } from "better-auth/react"
-import { reactStartCookies } from "better-auth/react-start"
 
 export const authClient = createAuthClient({
   baseURL: import.meta.env.VITE_SERVER_URL,
   basePath: "/auth",
-  plugins: [reactStartCookies()],
   fetchOptions: {
     credentials: "include",
   },

@@ -1,7 +1,8 @@
+import { experimental_SmartCoercionPlugin as SmartCoercionPlugin } from "@orpc/json-schema"
 import { OpenAPIHandler } from "@orpc/openapi/fetch"
 import { onError } from "@orpc/server"
 import { CORSPlugin, ResponseHeadersPlugin } from "@orpc/server/plugins"
-import { experimental_ZodSmartCoercionPlugin as ZodSmartCoercionPlugin } from "@orpc/zod/zod4"
+import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4"
 import { router } from "@web/router"
 import type { Hono } from "hono"
 import type { DependencyContainer } from "tsyringe"
@@ -17,12 +18,11 @@ export const addOpenApiHandler = async (
     interceptors: [onError(validationErrMap)],
     clientInterceptors: [],
     plugins: [
-      // @ts-expect-error version mismatch
       new CORSPlugin(),
-      // @ts-expect-error version mismatch
       new ResponseHeadersPlugin(),
-      // @ts-expect-error version mismatch
-      new ZodSmartCoercionPlugin(),
+      new SmartCoercionPlugin({
+        schemaConverters: [new ZodToJsonSchemaConverter()],
+      }),
     ],
   })
 
