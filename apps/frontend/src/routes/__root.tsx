@@ -13,6 +13,7 @@ import {
 } from "@mantine/core"
 import { Notifications } from "@mantine/notifications"
 import { TanStackDevtools } from "@tanstack/react-devtools"
+import { formDevtoolsPlugin } from "@tanstack/react-form-devtools"
 import type { QueryClient } from "@tanstack/react-query"
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools"
 import {
@@ -49,14 +50,9 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
           plugins={[
             { name: "Router", render: <TanStackRouterDevtoolsPanel /> },
             { name: "Rquery", render: <ReactQueryDevtoolsPanel /> },
+            formDevtoolsPlugin(),
           ]}
         />
-        {/* <ReactQueryDevtools */}
-        {/*   buttonPosition="bottom-right" */}
-        {/*   initialIsOpen={false} */}
-        {/*   position="bottom" */}
-        {/* /> */}
-        {/* <TanStackRouterDevtools initialIsOpen={false} position="top-right" /> */}
         <Scripts />
         <ColorSchemeScript defaultColorScheme="dark" />
       </body>
