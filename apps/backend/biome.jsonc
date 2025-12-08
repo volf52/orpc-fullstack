@@ -5,13 +5,13 @@
     "includes": [
       "./src/**/*.{js,ts,json}",
       "./test/**/*.ts",
-      "./*.ts",
-      "package.json",
-      "tsconfig.json",
-      ".oxlintrc.json",
-      "drizzle.config.ts"
+      "./*.{js,ts,json,jsonc}"
     ]
   },
-  "javascript": { "parser": { "unsafeParameterDecoratorsEnabled": true } },
+  "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  },
   "extends": "//"
 }

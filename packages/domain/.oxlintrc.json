@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
   "ignorePatterns": [
     "node_modules",
     "dist",
@@ -7,6 +7,20 @@
     "migrations",
     "transforms"
   ],
-  "plugins": ["typescript", "unicorn", "oxc", "import", "promise"],
-  "rules": {}
+  "plugins": [
+    "eslint",
+    "import",
+    "node",
+    "oxc",
+    "promise",
+    "typescript",
+    "unicorn"
+  ],
+  "jsPlugins": [],
+  "globals": {},
+  "rules": {},
+  "settings": {},
+  "env": {
+    "builtin": true
+  }
 }

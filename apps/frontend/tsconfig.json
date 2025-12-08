@@ -7,7 +7,6 @@
     "erasableSyntaxOnly": false,
     "paths": {
       "@app/*": ["./src/*"],
-
       // Other packages
       "@contract/*": ["../../packages/contract/src/*"],
       "@domain/*": ["../../packages/domain/src/*"],

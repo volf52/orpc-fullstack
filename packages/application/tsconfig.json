@@ -1,7 +1,6 @@
 {
   "extends": "@repo/typescript-config/bun.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "paths": {

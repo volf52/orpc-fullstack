@@ -2,7 +2,6 @@
   "name": "@repo/contract",
   "version": "1.0.0",
   "description": "Contracts and schemas for the project",
-  "packageManager": "bun@1.2.23",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -34,7 +33,9 @@
     "@types/bun": "catalog:",
     "@types/json-schema": "^7.0.15",
     "@typescript/native-preview": "catalog:",
+    "oxfmt": "catalog:",
     "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {

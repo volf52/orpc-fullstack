@@ -2,7 +2,6 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "ct-starter",
   "private": true,
-  "packageManager": "bun@1.2.23",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -14,9 +13,11 @@
     "@biomejs/biome": "catalog:",
     "@types/bun": "catalog:",
     "@typescript/native-preview": "catalog:",
+    "oxfmt": "catalog:",
     "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
     "prettier": "catalog:",
-    "turbo": "^2.6.1",
+    "turbo": "^2.6.3",
     "typescript": "catalog:"
   },
   "engines": {
@@ -26,21 +27,23 @@
     "packages": ["packages/*", "apps/*"],
     "catalog": {
       "typescript": "^5.9.3",
-      "@types/bun": "^1.3.2",
-      "@biomejs/biome": "2.3.5",
+      "@types/bun": "^1.3.4",
+      "@biomejs/biome": "2.3.8",
       "@carbonteq/fp": "^0.8.2",
-      "prettier": "^3.6.2",
-      "@orpc/contract": "1.11.2",
-      "@orpc/server": "1.11.2",
-      "@orpc/client": "1.11.2",
-      "@orpc/zod": "1.11.2",
-      "oxlint": "^1.28.0",
-      "effect": "^3.19.3",
+      "prettier": "^3.7.4",
+      "@orpc/contract": "1.12.2",
+      "@orpc/server": "1.12.2",
+      "@orpc/client": "1.12.2",
+      "@orpc/zod": "1.12.2",
+      "oxfmt": "^0.17.0",
+      "oxlint": "^1.32.0",
+      "oxlint-tsgolint": "^0.8.4",
+      "effect": "^3.19.9",
       "tsyringe": "^4.10.0",
-      "zod": "^4.1.12",
+      "zod": "^4.1.13",
       "taze": "^19.9.0",
-      "better-auth": "^1.3.34",
-      "@typescript/native-preview": "^7.0.0-dev.20251116.1"
+      "better-auth": "^1.4.5",
+      "@typescript/native-preview": "^7.0.0-dev.20251208.1"
     }
   }
 }

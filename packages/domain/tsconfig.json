@@ -1,7 +1,6 @@
 {
   "extends": "@repo/typescript-config/bun.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@domain/*": ["./src/*"]
     }
