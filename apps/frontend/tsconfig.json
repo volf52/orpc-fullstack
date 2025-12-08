@@ -16,6 +16,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "erasableSyntaxOnly": false,
     "paths": {
       "@app/*": ["./src/*"],
       // Other packages
