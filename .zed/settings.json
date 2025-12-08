@@ -15,10 +15,10 @@
       "language_servers": ["tsgo", "vtsls", "oxc", "biome"]
     },
     "JSON": {
-      "language_servers": ["biome"]
+      "language_servers": ["biome", "json-language-server"]
     },
     "JSONC": {
-      "language_servers": ["biome"]
+      "language_servers": ["biome", "json-language-server"]
     }
   }
 }
