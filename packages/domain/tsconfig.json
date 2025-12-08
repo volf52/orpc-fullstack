@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/bun.json",
+  "extends": "@repo/configs/bun.json",
   "compilerOptions": {
     "paths": {
       "@domain/*": ["./src/*"]

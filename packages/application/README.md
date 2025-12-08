@@ -25,7 +25,9 @@ src/
 ## Key Concepts
 
 ### Services (Entity-Focused Logic)
+
 Application services contain entity-focused business logic and are closer to the domain layer. They handle:
+
 - Entity-focused/domain-focused business logic
 - Domain object transformations and business rule validation
 - Repository interactions and data serialization/encoding
@@ -34,6 +36,7 @@ Application services contain entity-focused business logic and are closer to the
 Services focus on domain operations and return domain-level Results that workflows can then convert to ApplicationResults.
 
 Example:
+
 ```typescript
 export class GroceryListAppService {
   constructor(private readonly groceryListRepo: GroceryListRepository) {}
@@ -53,7 +56,9 @@ export class GroceryListAppService {
 ```
 
 ### Workflows (HTTP-Layer Orchestration)
+
 Workflows handle HTTP-layer business logic and orchestration. They are meant to be called directly by route handlers and handle:
+
 - Request/response formatting, auth/authorization, input validation
 - Orchestrate service calls and convert Results to ApplicationResults
 - Return `ApplicationResult<T>` types (wrapping service Result types)
@@ -62,6 +67,7 @@ Workflows handle HTTP-layer business logic and orchestration. They are meant to 
 Workflows focus on HTTP concerns and convert domain Results to ApplicationResults for consistent API error handling.
 
 Example:
+
 ```typescript
 export class GroceryListWorkflow {
   private readonly groceryListService: GroceryListAppService
@@ -82,13 +88,16 @@ export class GroceryListWorkflow {
 ```
 
 ### DTOs and Validation
+
 DTOs follow the "creation is validation" approach and are kept simple and focused on API contracts:
+
 - All inputs are validated using domain entity schemas at creation time
 - DTOs are immutable once created, ensuring data integrity
 - Domain schemas from the domain layer are composed into application DTOs
 - Static `create()` methods handle validation and return `Result<DTO, ValidationError>`
 
 Example:
+
 ```typescript
 export class CreateGroceryListDto implements GroceryListCreateData {
   readonly name: string

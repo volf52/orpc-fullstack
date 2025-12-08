@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/react.json",
+  "extends": "@repo/configs/react.json",
   "compilerOptions": {
     "skipLibCheck": true,
     "noEmit": true,

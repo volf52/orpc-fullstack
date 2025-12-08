@@ -19,7 +19,7 @@
   "author": "",
   "devDependencies": {
     "@better-auth/cli": "^1.4.5",
-    "@repo/typescript-config": "workspace:*",
+    "@repo/configs": "workspace:*",
     "@scalar/openapi-types": "^0.5.2",
     "@standard-schema/spec": "^1.0.0",
     "@types/bun": "catalog:",

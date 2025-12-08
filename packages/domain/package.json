@@ -39,7 +39,7 @@
     }
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@repo/configs": "workspace:*",
     "@types/bun": "catalog:",
     "@types/json-schema": "^7.0.15",
     "@typescript/native-preview": "catalog:",
