@@ -8,11 +8,14 @@
     "enabled": true
   },
   "languages": {
+    "JavaScript": {
+      "language_servers": ["tsgo", "!vtsls", "oxc", "biome"]
+    },
     "TypeScript": {
-      "language_servers": ["tsgo", "vtsls", "oxc", "biome"]
+      "language_servers": ["tsgo", "!vtsls", "oxc", "biome"]
     },
     "TSX": {
-      "language_servers": ["tsgo", "vtsls", "oxc", "biome"]
+      "language_servers": ["tsgo", "!vtsls", "oxc", "biome"]
     },
     "JSON": {
       "language_servers": ["biome", "json-language-server"]

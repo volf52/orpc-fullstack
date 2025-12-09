@@ -12,11 +12,11 @@
     "test": "echo 'no tests'"
   },
   "dependencies": {
-    "@mantine/core": "^8.3.9",
-    "@mantine/hooks": "^8.3.9",
-    "@mantine/modals": "^8.3.9",
-    "@mantine/notifications": "^8.3.9",
-    "@mantine/nprogress": "^8.3.9",
+    "@mantine/core": "^8.3.10",
+    "@mantine/hooks": "^8.3.10",
+    "@mantine/modals": "^8.3.10",
+    "@mantine/notifications": "^8.3.10",
+    "@mantine/nprogress": "^8.3.10",
     "@orpc/client": "^1.12.2",
     "@orpc/contract": "catalog:",
     "@orpc/react-query": "^1.12.2",

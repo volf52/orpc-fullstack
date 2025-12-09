@@ -6,7 +6,8 @@
   "scripts": {
     "build": "bun build --target bun --outfile dist/server.js ./src/web/server.ts",
     "dev": "bun run --watch src/web/server.ts",
-    "start": "node dist/server.js",
+    "start": "bun src/web/server",
+    "start:prod": "bun dist/server.js",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate --name",
     "db:migrate": "drizzle-kit migrate",
@@ -30,7 +31,12 @@
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@bogeychan/elysia-logger": "^0.1.10",
     "@carbonteq/fp": "catalog:",
+    "@elysiajs/cors": "^1.4.0",
+    "@elysiajs/openapi": "^1.4.11",
+    "@elysiajs/opentelemetry": "^1.4.8",
+    "@elysiajs/static": "^1.4.7",
     "@orpc/json-schema": "^1.12.2",
     "@orpc/openapi": "^1.12.2",
     "@orpc/server": "catalog:",
@@ -40,6 +46,7 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.0",
     "effect": "catalog:",
+    "elysia": "^1.4.18",
     "env-var": "^7.5.0",
     "fast-jwt": "^6.1.0",
     "hono": "^4.10.7",

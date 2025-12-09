@@ -38,12 +38,12 @@
       "oxfmt": "^0.17.0",
       "oxlint": "^1.32.0",
       "oxlint-tsgolint": "^0.8.4",
-      "effect": "^3.19.9",
+      "effect": "^3.19.10",
       "tsyringe": "^4.10.0",
       "zod": "^4.1.13",
       "taze": "^19.9.0",
-      "better-auth": "^1.4.5",
-      "@typescript/native-preview": "^7.0.0-dev.20251208.1"
+      "better-auth": "^1.4.6",
+      "@typescript/native-preview": "^7.0.0-dev.20251209.1"
     }
   },
   "overrides": {
