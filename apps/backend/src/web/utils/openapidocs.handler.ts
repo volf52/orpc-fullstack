@@ -1,9 +1,10 @@
-import staticPlugin from "@elysiajs/static"
+import { fromTypes, openapi } from "@elysiajs/openapi"
 import { OpenAPIGenerator } from "@orpc/openapi"
-import Elysia from "elysia"
-// import { experimental_ZodToJsonSchemaConverter as ZodToJsonSchemaConverter } from "@orpc/zod/zod4"
-// import { ZodToJsonSchemaConverter } from "@orpc/zod"
+import { JSONSchema } from "effect"
+import { Elysia } from "elysia"
 import type { DependencyContainer } from "tsyringe"
+import z from "zod"
+import { IS_DEV, IS_PROD } from "@/constants"
 import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
 import config from "@/infra/config"
 import { router } from "../router"
@@ -45,7 +46,7 @@ export const elysiaOpenApiDocs = async (container: DependencyContainer) => {
         )
       }
 
-      return [uri, specs]
+      return [`/auth${uri}`, specs]
     }),
   )
   // if (authSpecs.components?.securitySchemes) {
@@ -67,12 +68,22 @@ export const elysiaOpenApiDocs = async (container: DependencyContainer) => {
     },
     servers: [{ url: "/api", description: "JSON-REST API" }],
   })
+  if (contractSpecs.paths) {
+    contractSpecs.paths = Object.fromEntries(
+      Object.entries(contractSpecs.paths).map(([uri, specs]) => {
+        return [`/api${uri}`, specs]
+      }),
+    )
+  }
 
   const docsPlugin = new Elysia({
     name: "openapi-docs",
   }).guard(
     {
       beforeHandle({ request, status, set }) {
+        if (IS_DEV) {
+          return
+        }
         const auth = request.headers.get("Authorization")
         if (!auth || auth !== EXPECTED_BASIC_AUTH_HEADER) {
           set.headers["www-authenticate"] = "Basic"
@@ -81,10 +92,61 @@ export const elysiaOpenApiDocs = async (container: DependencyContainer) => {
       },
     },
     (app) =>
-      app
-        .get("/spec/better-auth.json", () => authSpecs)
-        .get("/spec/contract.json", () => contractSpecs)
-        .use(staticPlugin({ assets: "static", prefix: "/docs" })),
+      app.use(
+        openapi({
+          path: "/docs",
+          provider: "scalar",
+          mapJsonSchema: {
+            zod: z.toJSONSchema,
+            effect: JSONSchema.make,
+          },
+          documentation: {
+            info: {
+              title: "Carbonteq Starter API",
+              description:
+                "This is the API documentation for the Carbonteq Starter project. It provides details about the available endpoints, request/response formats, and authentication methods.",
+              version: "0.0.1",
+            },
+            // TODO: fix the type errors here (runtime is ok)
+            // @ts-expect-error: later
+            components: {
+              ...contractSpecs.components,
+              ...authSpecs.components,
+            },
+            // @ts-expect-error: runtime ok
+            paths: {
+              ...contractSpecs.paths,
+              ...authSpecs.paths,
+            },
+          },
+          // references: fromTypes("src/web/server.ts"),
+          scalar: {
+            theme: "kepler",
+            // theme: "bluePlanet",
+            // theme: "deepSpace",
+            darkMode: true,
+            layout: "modern",
+            hideClientButton: true,
+            showDeveloperTools: IS_PROD ? "never" : undefined,
+            // sources: [
+            //   {
+            //     title: "API Docs (Contract)",
+            //     slug: "contract",
+            //     default: true,
+            //     url: "/spec/contract.json",
+            //   },
+            //   {
+            //     title: "Better Auth",
+            //     slug: "better-auth",
+            //     url: "/spec/better-auth.json",
+            //   },
+            // ],
+          },
+        }),
+      ),
+    // .get("/spec/better-auth.json", () => authSpecs)
+    // .get("/spec/contract.json", () => contractSpecs)
+    // .get("/docs", () => file("static/scalar.html")),
   )
 
   return docsPlugin

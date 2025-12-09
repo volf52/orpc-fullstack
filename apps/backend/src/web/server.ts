@@ -50,10 +50,10 @@ const elysiaApp = new Elysia({
   )
   .use(serverTiming({ enabled: true }))
   .use(opentelemetry({ spanProcessors: [] }))
-  .use(elysiaOpenApiDocs(container))
-  .use(getElysiaAuthRouter(container)) // register better-auth auth routes
-  .use(elysiaOrpcRPC(container)) // register ORPC RPC handler
-  .use(elysiaOrpcOAI(container)) // register ORPC OpenAPI handler
+  .use(elysiaOpenApiDocs(container)) // /docs OpenAI API endpoint with better-auth + orpc
+  .use(getElysiaAuthRouter(container)) // /auth/* register better-auth auth routes
+  .use(elysiaOrpcRPC(container)) // /rpc/* register ORPC RPC handler
+  .use(elysiaOrpcOAI(container)) // /api/* register ORPC OpenAPI handler
 
 if (isDev) {
   elysiaApp.get("/routes", async () => {
