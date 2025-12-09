@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@repo/configs": "workspace:*",
-    "@standard-schema/spec": "^1.0.0",
+    "@standard-schema/spec": "^1.1.0",
     "@types/bun": "catalog:",
     "@types/json-schema": "^7.0.15",
     "@typescript/native-preview": "catalog:",

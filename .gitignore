@@ -37,3 +37,4 @@ yarn-error.log*
 .DS_Store
 *.pem
 apps/backend/tsconfig.tsbuildinfo
+packages/domain/tsconfig.tsbuildinfo
