@@ -5,7 +5,7 @@ import { registerRepositories } from "../db/repos/di"
 const services = [] as const
 const workflows = [GroceryListWorkflows] as const
 
-export const wireDi = () => {
+export const wireDi = async () => {
   registerRepositories()
 
   // register application services

@@ -1,14 +1,12 @@
-import type { Hono } from "hono"
+import Elysia from "elysia"
 import type { DependencyContainer } from "tsyringe"
-import { AuthService } from "@/infra/auth/auth.service"
+import { resolveAuthFromContainer } from "@/infra/auth/better-auth"
 
-export const initAuthRouter = (app: Hono, container: DependencyContainer) => {
-  const authServ = container.resolve(AuthService)
+export const getElysiaAuthRouter = (container: DependencyContainer) => {
+  const auth = resolveAuthFromContainer(container)
 
-  app.on(["GET", "POST"], "/auth/**", async (c) => {
-    const res = await authServ.getAuthInstance().handler(c.req.raw)
-    return res
-  })
-
-  return app
+  return new Elysia({
+    name: "better-auth",
+    prefix: "/auth",
+  }).mount(auth.handler)
 }

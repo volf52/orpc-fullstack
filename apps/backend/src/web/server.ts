@@ -1,43 +1,72 @@
 // biome-ignore assist/source/organizeImports: Need reflect-metadata for decorators
 import "reflect-metadata"
 
-import { Hono } from "hono"
-import { showRoutes } from "hono/dev"
-import { logger } from "hono/logger"
-import { cors } from "hono/cors"
-import { addOpenApiHandler } from "./utils/openapi.handler"
-import { addRpcHandler } from "./utils/rpc.handler"
+import { Elysia } from "elysia"
+// import { openapi, fromTypes } from "@elysiajs/openapi"
+import { serverTiming } from "@elysiajs/server-timing"
+import { opentelemetry } from "@elysiajs/opentelemetry"
+import { elysiaOrpcOAI } from "./utils/openapi.handler"
+import { elysiaOrpcRPC } from "./utils/rpc.handler"
 import { container } from "tsyringe"
-import { initAuthRouter } from "./router/auth"
+import { getElysiaAuthRouter } from "./router/auth"
 import config from "@/infra/config"
-import { addOpenApiDocs } from "./utils/openapidocs.handler"
+import { elysiaOpenApiDocs } from "./utils/openapidocs.handler"
 import { wireDi } from "@/infra/di"
-import { CORS_TRUSTED_ORIGINS } from "@/constants"
+import { logger as elysiaLogger } from "@bogeychan/elysia-logger"
+import { cors as elysiaCors } from "@elysiajs/cors"
 
-wireDi()
+await wireDi()
 
-const app = new Hono()
-app.use(logger())
-app.use(
-  "/*",
-  cors({
-    origin: CORS_TRUSTED_ORIGINS,
-    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
-    credentials: true,
-    exposeHeaders: ["Set-Cookie"],
-  }),
-)
+const isDev = config.app.NODE_ENV === "development"
+const isProd = config.app.NODE_ENV === "production"
 
-await addOpenApiDocs(app, container)
-initAuthRouter(app, container)
-addRpcHandler(app, container)
-await addOpenApiHandler(app, container)
+const elysiaApp = new Elysia({
+  // setting this to false leads to 'Body already consumed' errors, and even explicit undefined causes issues with preflight
+  // aot: isProd ? true : undefined,
+  // precompile: isProd,
+  precompile: isProd || isDev,
+})
+  .use(
+    elysiaCors({
+      // origin: CORS_TRUSTED_ORIGINS,
+      origin: isDev ? true : config.app.TRUSTED_ORIGIN,
+      credentials: true,
+      exposeHeaders: isDev ? true : ["Set-Cookie", "Authorization"],
+      methods: isDev
+        ? true
+        : ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
+    }),
+  )
+  // .use(
+  //   openapi({
+  //     enabled: isDev,
+  //     references: fromTypes(),
+  //   }),
+  // )
+  .use(
+    elysiaLogger({
+      autoLogging: isDev,
+    }),
+  )
+  .use(serverTiming({ enabled: true }))
+  .use(opentelemetry({ spanProcessors: [] }))
+  .use(elysiaOpenApiDocs(container))
+  .use(getElysiaAuthRouter(container)) // register better-auth auth routes
+  .use(elysiaOrpcRPC(container)) // register ORPC RPC handler
+  .use(elysiaOrpcOAI(container)) // register ORPC OpenAPI handler
 
-if (config.app.NODE_ENV === "development") {
-  showRoutes(app, { verbose: true })
+if (isDev) {
+  elysiaApp.get("/routes", async () => {
+    const routes = elysiaApp.routes.map((route) => ({
+      method: route.method,
+      url: route.path,
+    }))
+
+    return routes
+  })
 }
 
 export default {
-  fetch: app.fetch,
+  fetch: elysiaApp.fetch,
   port: config.app.PORT,
 }

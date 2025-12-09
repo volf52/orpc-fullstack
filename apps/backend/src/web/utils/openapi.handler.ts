@@ -1,24 +1,20 @@
 import { experimental_SmartCoercionPlugin as SmartCoercionPlugin } from "@orpc/json-schema"
 import { OpenAPIHandler } from "@orpc/openapi/fetch"
 import { onError } from "@orpc/server"
-import { CORSPlugin, ResponseHeadersPlugin } from "@orpc/server/plugins"
+import { ResponseHeadersPlugin } from "@orpc/server/plugins"
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4"
 import { router } from "@web/router"
-import type { Hono } from "hono"
+import Elysia from "elysia"
 import type { DependencyContainer } from "tsyringe"
 import type { AppContext } from "../types"
-import { createAuthContext } from "./auth-context"
+import { getAuthCtxPlugin } from "./auth.plugin"
 import { validationErrMap } from "./interceptors"
 
-export const addOpenApiHandler = async (
-  app: Hono,
-  container: DependencyContainer,
-) => {
-  const openApiHandler = new OpenAPIHandler<AppContext>(router, {
+export const elysiaOrpcOAI = (container: DependencyContainer) => {
+  const oaiHandler = new OpenAPIHandler<AppContext>(router, {
     interceptors: [onError(validationErrMap)],
     clientInterceptors: [],
     plugins: [
-      new CORSPlugin(),
       new ResponseHeadersPlugin(),
       new SmartCoercionPlugin({
         schemaConverters: [new ZodToJsonSchemaConverter()],
@@ -26,18 +22,22 @@ export const addOpenApiHandler = async (
     ],
   })
 
-  return app.use("/api/*", async (c, next) => {
-    const authCtx = await createAuthContext(c, container)
-
-    const openApiRes = await openApiHandler.handle(c.req.raw, {
-      prefix: "/api",
-      context: { auth: authCtx },
-    })
-
-    if (openApiRes.matched) {
-      return c.newResponse(openApiRes.response.body, openApiRes.response)
-    }
-
-    return await next()
+  return new Elysia({
+    name: "orpc-openapi",
+    prefix: "/api",
   })
+    .use(getAuthCtxPlugin(container))
+    .get("/ping", () => ({ pong: true }))
+    .all(
+      "/*",
+      async ({ request, auth }) => {
+        const { response } = await oaiHandler.handle(request, {
+          prefix: "/api",
+          context: { auth },
+        })
+
+        return response ?? new Response(null, { status: 404 })
+      },
+      { parse: "none" },
+    )
 }

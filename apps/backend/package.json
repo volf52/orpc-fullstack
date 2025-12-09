@@ -36,6 +36,7 @@
     "@elysiajs/cors": "^1.4.0",
     "@elysiajs/openapi": "^1.4.11",
     "@elysiajs/opentelemetry": "^1.4.8",
+    "@elysiajs/server-timing": "^1.4.0",
     "@elysiajs/static": "^1.4.7",
     "@orpc/json-schema": "^1.12.2",
     "@orpc/openapi": "^1.12.2",
@@ -49,7 +50,6 @@
     "elysia": "^1.4.18",
     "env-var": "^7.5.0",
     "fast-jwt": "^6.1.0",
-    "hono": "^4.10.7",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "catalog:",
     "zod": "catalog:"

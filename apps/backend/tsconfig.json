@@ -3,6 +3,7 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "strict": true,
     "paths": {
       "@/*": ["./src/*"],
       "@infra": ["./src/infra"],
