@@ -3,7 +3,10 @@ import {
   UpdateGroceryListDto,
 } from "@application/dtos/grocery-list.dto"
 import { DashboardStatsSchema } from "@application/schemas/dashboard"
-import { dtoStandardSchema } from "@application/utils/validation.utils"
+import {
+  dtoStandardSchema,
+  zodStandardSchemaV1,
+} from "@application/utils/validation.utils"
 import { appAuthenticatedBase } from "@contract/utils/oc.base"
 import { GroceryListId } from "@domain/grocery-list/grocery-list.entity"
 import {
@@ -12,11 +15,11 @@ import {
   GroceryListDetailsSchema,
 } from "@domain/grocery-list/grocery-list.schemas"
 import { type } from "@orpc/contract"
-import { Schema as S } from "effect"
+import { z } from "zod/v4"
 
 const groceryListBase = appAuthenticatedBase
 
-const groceryListIdStruct = S.Struct({
+const groceryListIdStruct = z.object({
   id: GroceryListId,
 })
 
@@ -28,7 +31,7 @@ export const getStats = groceryListBase
     tags: ["grocery-list"],
   })
   .input(type<void>())
-  .output(S.standardSchemaV1(DashboardStatsSchema))
+  .output(zodStandardSchemaV1(DashboardStatsSchema))
 
 export const getLists = groceryListBase
   .route({
@@ -37,8 +40,8 @@ export const getLists = groceryListBase
     summary: "Get grocery lists with optional filters and pagination",
     tags: ["grocery-list"],
   })
-  .input(S.standardSchemaV1(GetListsParamsSchema))
-  .output(S.standardSchemaV1(GetListsResultSchema))
+  .input(zodStandardSchemaV1(GetListsParamsSchema))
+  .output(zodStandardSchemaV1(GetListsResultSchema))
 
 export const fetchRecentLists = groceryListBase
   .route({
@@ -48,7 +51,7 @@ export const fetchRecentLists = groceryListBase
     tags: ["grocery-list"],
   })
   .input(type<void>())
-  .output(S.standardSchemaV1(GetListsResultSchema))
+  .output(zodStandardSchemaV1(GetListsResultSchema))
 
 export const getListById = groceryListBase
   .route({
@@ -59,13 +62,13 @@ export const getListById = groceryListBase
     inputStructure: "detailed",
   })
   .input(
-    S.standardSchemaV1(
-      S.Struct({
+    zodStandardSchemaV1(
+      z.object({
         params: groceryListIdStruct,
       }),
     ),
   )
-  .output(S.standardSchemaV1(GroceryListDetailsSchema))
+  .output(zodStandardSchemaV1(GroceryListDetailsSchema))
 
 export const createGroceryList = groceryListBase
   .route({
@@ -75,7 +78,7 @@ export const createGroceryList = groceryListBase
     tags: ["grocery-list"],
   })
   .input(dtoStandardSchema(CreateGroceryListDto))
-  .output(S.standardSchemaV1(GroceryListDetailsSchema))
+  .output(zodStandardSchemaV1(GroceryListDetailsSchema))
 
 export const updateGroceryList = groceryListBase
   .route({
@@ -87,7 +90,7 @@ export const updateGroceryList = groceryListBase
   })
   .input(dtoStandardSchema(UpdateGroceryListDto))
   // .input(S.standardSchemaV1(GroceryListCreateSchema))
-  .output(S.standardSchemaV1(GroceryListDetailsSchema))
+  .output(zodStandardSchemaV1(GroceryListDetailsSchema))
 
 export const deleteGroceryList = groceryListBase
   .route({
@@ -98,13 +101,13 @@ export const deleteGroceryList = groceryListBase
     inputStructure: "detailed",
   })
   .input(
-    S.standardSchemaV1(
-      S.Struct({
+    zodStandardSchemaV1(
+      z.object({
         params: groceryListIdStruct,
       }),
     ),
   )
-  .output(S.standardSchemaV1(groceryListIdStruct))
+  .output(zodStandardSchemaV1(groceryListIdStruct))
 
 export default {
   getStats,

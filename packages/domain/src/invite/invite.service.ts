@@ -1,7 +1,7 @@
-import { Result as R, type UnitResult } from "@carbonteq/fp"
-import type { GroceryListEntity } from "@domain/grocery-list/grocery-list.entity"
-import type { UserEntity } from "@domain/user/user.entity"
-import type { InviteEntity } from "./invite.entity"
+import { Result as R, type UnitResult } from '@carbonteq/fp'
+import type { GroceryListEntity } from '@domain/grocery-list/grocery-list.entity'
+import type { UserEntity } from '@domain/user/user.entity'
+import type { InviteEntity } from './invite.entity'
 
 export interface InviteUsageAttempt {
   invite: InviteEntity
@@ -17,15 +17,15 @@ export class InviteDomainService {
     const { invite, list, user } = attempt
 
     if (!invite.isValid()) {
-      errors.push("Invite has expired")
+      errors.push('Invite has expired')
     }
 
     if (!invite.belongsToList(list.id)) {
-      errors.push("Invite does not belong to this list")
+      errors.push('Invite does not belong to this list')
     }
 
     if (list.isOwner(user.id)) {
-      errors.push("User already owns this list")
+      errors.push('User already owns this list')
     }
 
     if (errors.length === 0) return R.UNIT_RESULT

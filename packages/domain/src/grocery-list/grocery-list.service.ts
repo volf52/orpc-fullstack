@@ -1,20 +1,20 @@
-import { Result } from "@carbonteq/fp"
-import { ItemEntity } from "@domain/grocery-list-item/item.entity"
-import { type UserEntity } from "@domain/user/user.entity"
-import type { ValidationError } from "@domain/utils"
-import { ComposeUtils } from "@domain/utils/compose.utils"
-import { FpUtils } from "@domain/utils/fp-utils"
+import { Result } from '@carbonteq/fp'
+import { ItemEntity } from '@domain/grocery-list-item/item.entity'
+import { type UserEntity } from '@domain/user/user.entity'
+import type { ValidationError } from '@domain/utils'
+import { ComposeUtils } from '@domain/utils/compose.utils'
+import { FpUtils } from '@domain/utils/fp-utils'
 import {
   GroceryListEntity,
   type GroceryListUpdateData,
-} from "./grocery-list.entity"
-import type { GroceryListOwnershipError } from "./grocery-list.errors"
+} from './grocery-list.entity'
+import type { GroceryListOwnershipError } from './grocery-list.errors'
 import type {
   GroceryListDetails,
   NewGroceryListData,
-} from "./grocery-list.schemas"
+} from './grocery-list.schemas'
 
-type GroceryListStats = GroceryListDetails["stats"]
+type GroceryListStats = GroceryListDetails['stats']
 
 export class GroceryListService {
   static calculateDetailedStats(items: ItemEntity[]): GroceryListStats {
@@ -33,62 +33,71 @@ export class GroceryListService {
     }
   }
 
+  private static serializeListData(
+    list: GroceryListEntity,
+    owner: UserEntity,
+    items: ItemEntity[],
+  ) {
+    const itemsSerialized = items.map(FpUtils.serialized)
+
+    return {
+      ownerSerialized: owner.serialize(),
+      listSerialized: list.serialize(),
+      itemsSerialized,
+    }
+  }
+
   static processListDetails(
     list: GroceryListEntity,
     owner: UserEntity,
     items: ItemEntity[],
   ): Result<GroceryListDetails, GroceryListOwnershipError | ValidationError> {
-    const encoded = list
+    const r = list
       .ensureIsOwner(owner)
-      .flatMap((_) => FpUtils.serialized(list))
-      .flatZip((_) => FpUtils.serialized(owner))
-      .flatMap(([listEncoded, ownerEncoded]) => {
-        const itemsSerialized = items.map(FpUtils.serialized)
-        const itemsEncoded = FpUtils.collectValidationErrors(itemsSerialized)
+      .map((_) => GroceryListService.serializeListData(list, owner, items))
+      .map(
+        ({
+          itemsSerialized,
+          listSerialized,
+          ownerSerialized,
+        }): GroceryListDetails => {
+          const stats = GroceryListService.calculateDetailedStats(items)
 
-        return itemsEncoded.map((it) => ({
-          itemsEncoded: it,
-          listEncoded,
-          ownerEncoded,
-        }))
-      })
-      .map(({ itemsEncoded, listEncoded, ownerEncoded }) => {
-        const stats = GroceryListService.calculateDetailedStats(items)
+          return {
+            ...listSerialized,
+            items: itemsSerialized,
+            owner: ownerSerialized,
+            stats,
+          }
+        },
+      )
 
-        return {
-          ...listEncoded,
-          items: itemsEncoded,
-          owner: ownerEncoded,
-          stats,
-        } satisfies GroceryListDetails
-      })
-
-    return encoded
+    return r
   }
 
   static calculateCompletionStatus(
     items: ItemEntity[],
   ):
-    | "empty"
-    | "just-started"
-    | "in-progress"
-    | "nearly-complete"
-    | "completed" {
+    | 'empty'
+    | 'just-started'
+    | 'in-progress'
+    | 'nearly-complete'
+    | 'completed' {
     if (items.length === 0) {
-      return "empty"
+      return 'empty'
     }
 
     const completedItems = items.filter((item) => item.isBought()).length
     const completionRatio = completedItems / items.length
 
     if (completionRatio === 0) {
-      return "just-started"
+      return 'just-started'
     } else if (completionRatio === 1) {
-      return "completed"
+      return 'completed'
     } else if (completionRatio >= 0.8) {
-      return "nearly-complete"
+      return 'nearly-complete'
     } else {
-      return "in-progress"
+      return 'in-progress'
     }
   }
 
@@ -106,17 +115,10 @@ export class GroceryListService {
     updateData: GroceryListUpdateData,
     user: UserEntity,
   ): Result<GroceryListEntity, GroceryListOwnershipError | ValidationError> {
-    return (
-      list
-        .ensureIsOwner(user)
-        .flatMap(FpUtils.serialized)
-        // .map((serializedList) => ({
-        //   ...serializedList,
-        //   ...updateData,
-        //   updatedAt: new Date(),
-        // }))
-        .map(ComposeUtils.merge({ ...updateData, updatedAt: new Date() }))
-        .flatMap(GroceryListEntity.fromEncoded)
-    )
+    return list
+      .ensureIsOwner(user)
+      .map(FpUtils.serialized)
+      .map(ComposeUtils.merge({ ...updateData, updatedAt: new Date() }))
+      .flatMap(GroceryListEntity.fromEncoded)
   }
 }

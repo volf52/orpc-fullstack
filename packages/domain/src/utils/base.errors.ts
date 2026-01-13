@@ -34,7 +34,7 @@ export interface ValidationIssue {
 }
 
 export class ValidationError extends AppError {
-  readonly code: string = "VALIDATION_ERROR"
+  readonly code: string = 'VALIDATION_ERROR'
   readonly issues: ValidationIssue[]
 
   constructor(
@@ -73,13 +73,13 @@ export class ValidationError extends AppError {
     issues: ValidationIssue[],
     context?: Record<string, unknown>,
   ): ValidationError {
-    const message = `Validation failed with ${issues.length} error(s): ${issues.map((i) => i.message).join(", ")}`
+    const message = `Validation failed with ${issues.length} error(s): ${issues.map((i) => i.message).join(', ')}`
     return new ValidationError(message, issues, context)
   }
 }
 
 export class NotFoundError extends AppError {
-  readonly code: string = "NOT_FOUND"
+  readonly code: string = 'NOT_FOUND'
   readonly resourceType: string
   readonly resourceId: string
 
@@ -96,10 +96,10 @@ export class NotFoundError extends AppError {
 }
 
 export class UnauthorizedError extends AppError {
-  readonly code: string = "UNAUTHORIZED"
+  readonly code: string = 'UNAUTHORIZED'
 
   constructor(
-    message = "Authentication required",
+    message = 'Authentication required',
     context?: Record<string, unknown>,
     cause?: unknown,
   ) {
@@ -108,11 +108,11 @@ export class UnauthorizedError extends AppError {
 }
 
 export class ForbiddenError extends AppError {
-  readonly code: string = "FORBIDDEN"
+  readonly code: string = 'FORBIDDEN'
   readonly requiredPermission?: string
 
   constructor(
-    message = "Insufficient permissions",
+    message = 'Insufficient permissions',
     requiredPermission?: string,
     context?: Record<string, unknown>,
     cause?: unknown,
@@ -123,7 +123,7 @@ export class ForbiddenError extends AppError {
 }
 
 export class ConflictError extends AppError {
-  readonly code: string = "CONFLICT"
+  readonly code: string = 'CONFLICT'
   readonly conflictReason: string
 
   constructor(
@@ -137,11 +137,11 @@ export class ConflictError extends AppError {
 }
 
 export class InternalError extends AppError {
-  readonly code: string = "INTERNAL_ERROR"
+  readonly code: string = 'INTERNAL_ERROR'
   readonly originalError?: Error
 
   constructor(
-    message = "Internal server error",
+    message = 'Internal server error',
     originalError?: Error,
     context?: Record<string, unknown>,
   ) {
@@ -151,7 +151,7 @@ export class InternalError extends AppError {
 }
 
 export class ExternalServiceError extends AppError {
-  readonly code: string = "EXTERNAL_SERVICE_ERROR"
+  readonly code: string = 'EXTERNAL_SERVICE_ERROR'
   readonly serviceName: string
   readonly serviceError?: unknown
 

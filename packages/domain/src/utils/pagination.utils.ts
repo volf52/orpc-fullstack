@@ -1,32 +1,28 @@
-import { Schema as S } from "effect"
+import { z } from 'zod/v4'
 
-export const PaginationParamsSchema = S.Struct({
-  page: S.optional(S.Number.pipe(S.positive())),
-  limit: S.optional(S.Number.pipe(S.positive(), S.lessThanOrEqualTo(100))),
-  sortBy: S.optional(S.String),
-  sortOrder: S.optional(S.Union(S.Literal("asc"), S.Literal("desc"))),
+export const PaginationParamsSchema = z.object({
+  page: z.number().positive().optional(),
+  limit: z.number().positive().max(100).optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 })
 
-export type PaginationParams = S.Schema.Type<typeof PaginationParamsSchema>
+export type PaginationParams = z.output<typeof PaginationParamsSchema>
 
 export const DEFAULT_PAGE = 1
 export const DEFAULT_LIMIT = 10
-export const DEFAULT_SORT_ORDER = "asc" as const
+export const DEFAULT_SORT_ORDER = 'asc' as const
 
-export const PaginatedResultSchema = <A, I>(
-  itemSchema: S.Schema<A, I, never>,
-) =>
-  S.asSchema(
-    S.Struct({
-      items: S.Array(itemSchema),
-      totalCount: S.Number,
-      page: S.Number,
-      limit: S.Number,
-      totalPages: S.Number,
-      hasNext: S.Boolean,
-      hasPrevious: S.Boolean,
-    }),
-  )
+export const PaginatedResultSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
+  z.object({
+    items: z.array(itemSchema),
+    totalCount: z.number(),
+    page: z.number(),
+    limit: z.number(),
+    totalPages: z.number(),
+    hasNext: z.boolean(),
+    hasPrevious: z.boolean(),
+  })
 
 export type Paginated<T> = {
   items: T[]

@@ -19,7 +19,6 @@ import { ItemRepository } from "@domain/grocery-list-item/item.repository"
 import type { UserEntity } from "@domain/user/user.entity"
 import type { PaginationParams } from "@domain/utils"
 import { FpUtils } from "@domain/utils/fp-utils"
-import { DateTime as DT } from "effect"
 import { autoInjectable } from "tsyringe"
 
 const sevenDaysAgo = () => {
@@ -89,10 +88,7 @@ export class GroceryListWorkflows {
     { filters, pagination }: GetListsParams,
   ): Promise<ApplicationResult<GetListsResult>> {
     const since = filters.sinceMs
-      ? new Date(
-          DT.unsafeNow().pipe(DT.subtract({ millis: filters.sinceMs }))
-            .epochMillis,
-        )
+      ? new Date(Date.now() - filters.sinceMs)
       : undefined
 
     const repoFilters: GroceryListFindFilters = {

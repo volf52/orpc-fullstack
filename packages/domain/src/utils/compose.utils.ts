@@ -63,7 +63,7 @@ export const ComposeUtils = {
 
   mergeMul:
     // biome-ignore lint/suspicious/noExplicitAny: Better type inference
-      <U extends Record<string, any>[], M = Merged<U>>(...toAdd: U) =>
+    <U extends Record<string, any>[], M = Merged<U>>(...toAdd: U) =>
       <T extends Record<string, unknown>>(base: T): T & M => {
         const merged = Object.assign({}, base, ...toAdd) as T & M
 

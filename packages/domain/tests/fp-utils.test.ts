@@ -1,132 +1,10 @@
 import { expect, test } from "bun:test"
 import { Result } from "@carbonteq/fp/result"
 import { ValidationError } from "@domain/utils/base.errors"
-import {
-  effectToResult,
-  effectToResultAsync,
-  eitherToResult,
-  FpUtils,
-  resultToEffect,
-  resultToEither,
-} from "@domain/utils/fp-utils"
+import { FpUtils } from "@domain/utils/fp-utils"
 import type { Paginated } from "@domain/utils/pagination.utils"
-import { parseErrorToValidationError } from "@domain/utils/validation.utils"
-import { Effect, Either, Schema as S } from "effect"
-
-test("eitherToResult - converts Either.right to Result.Ok", () => {
-  const either = Either.right(42)
-  const result = eitherToResult(either)
-
-  expect(result.isOk()).toBe(true)
-  expect(result.unwrap()).toBe(42)
-})
-
-test("eitherToResult - converts Either.left to Result.Err", () => {
-  const either = Either.left("error")
-  const result = eitherToResult(either)
-
-  expect(result.isErr()).toBe(true)
-  expect(result.unwrapErr()).toBe("error")
-})
-
-test("resultToEither - converts Result.Ok to Either.right", () => {
-  const result = Result.Ok(42)
-  const either = resultToEither(result)
-
-  expect(Either.isRight(either)).toBe(true)
-  if (Either.isRight(either)) {
-    expect(either.right).toBe(42)
-  }
-})
-
-test("resultToEither - converts Result.Err to Either.left", () => {
-  const result = Result.Err<string, number>("error")
-  const either = resultToEither(result)
-
-  expect(Either.isLeft(either)).toBe(true)
-  if (Either.isLeft(either)) {
-    expect(either.left).toBe("error")
-  }
-})
-
-test("effectToResult - converts successful Effect to Result.Ok", () => {
-  const effect = Effect.succeed(42)
-  const result = effectToResult(effect)
-
-  expect(result.isOk()).toBe(true)
-  expect(result.unwrap()).toBe(42)
-})
-
-test("effectToResult - converts failing Effect to Result.Err", () => {
-  const effect = Effect.fail("error")
-  const result = effectToResult(effect)
-
-  expect(result.isErr()).toBe(true)
-  expect(result.unwrapErr()).toBe("error")
-})
-
-test("effectToResult - throws error for async effects", () => {
-  // Create an effect that has async boundaries using Effect.delay
-  const asyncEffect = Effect.delay(Effect.succeed(42), "1 millis")
-
-  expect(() => effectToResult(asyncEffect)).toThrow(
-    "Cannot run effect synchronously - it contains async operations",
-  )
-})
-
-test("resultToEffect - converts Result.Ok to successful Effect", async () => {
-  const result = Result.Ok(42)
-  const effect = resultToEffect(result)
-  const value = await Effect.runPromise(effect)
-
-  expect(value).toBe(42)
-})
-
-test("resultToEffect - converts Result.Err to failing Effect", async () => {
-  const result = Result.Err<string, number>("error")
-  const effect = resultToEffect(result)
-
-  try {
-    await Effect.runPromise(effect)
-    expect(true).toBe(false) // Should not reach here
-  } catch (error) {
-    expect(String(error)).toContain("error")
-  }
-})
-
-test("effectToResultAsync - converts successful Effect to Result.Ok", async () => {
-  const effect = Effect.succeed(42)
-  const result = await effectToResultAsync(effect)
-
-  expect(result.isOk()).toBe(true)
-  expect(result.unwrap()).toBe(42)
-})
-
-test("effectToResultAsync - converts failing Effect to Result.Err", async () => {
-  const effect = Effect.fail("error")
-  const result = await effectToResultAsync(effect)
-
-  expect(result.isErr()).toBe(true)
-  expect(result.unwrapErr()).toBe("error")
-})
-
-test("effectToResultAsync - handles async effects", async () => {
-  // Create an effect that has async boundaries using Effect.delay
-  const asyncEffect = Effect.delay(Effect.succeed(42), "1 millis")
-  const result = await effectToResultAsync(asyncEffect)
-
-  expect(result.isOk()).toBe(true)
-  expect(result.unwrap()).toBe(42)
-})
-
-test("effectToResultAsync - handles async failing effects", async () => {
-  // Create an async effect that fails
-  const asyncEffect = Effect.delay(Effect.fail("async error"), "1 millis")
-  const result = await effectToResultAsync(asyncEffect)
-
-  expect(result.isErr()).toBe(true)
-  expect(result.unwrapErr()).toBe("async error")
-})
+import { zodErrorToValidationError } from "@domain/utils/zod/error-mapper"
+import { z } from "zod/v4"
 
 // Tests for serialized utility
 
@@ -270,14 +148,13 @@ test("ResultUtils.serializedPreserveId - preserves id from object and merges wit
 })
 
 test("ResultUtils.serializedPreserveId - preserves Err from serialize method", () => {
-  // Generate a real ParseError using schema validation
-  const failingResult = S.decodeUnknownEither(S.Number)("not-a-number")
+  const failingResult = z.number().safeParse("not-a-number")
 
-  expect(failingResult._tag).toBe("Left")
+  expect(failingResult.success).toBe(false)
 
-  if (failingResult._tag === "Left") {
+  if (!failingResult.success) {
     const mockParseResult = Result.Err(
-      parseErrorToValidationError(failingResult.left),
+      zodErrorToValidationError(failingResult.error),
     )
     const obj = {
       id: "test-id-123",
@@ -368,7 +245,7 @@ test("ResultUtils.log - works without prefix", () => {
 
 // Tests for mapParseErrors
 
-test("ResultUtils.mapParseErrors - converts successful ParseResults to ValidationError Result", () => {
+test("ResultUtils.mapParseErrors - converts successful results to ValidationError Result", () => {
   const results = [
     Result.Ok("value1"),
     Result.Ok("value2"),
@@ -381,24 +258,17 @@ test("ResultUtils.mapParseErrors - converts successful ParseResults to Validatio
   expect(mapped.unwrap()).toEqual(["value1", "value2", "value3"])
 })
 
-test("ResultUtils.mapParseErrors - converts ParseErrors to ValidationError", () => {
-  // Generate a real ParseError using schema validation
-  const failingResult = S.decodeUnknownEither(S.String)(123) // This will fail
+test("ResultUtils.mapParseErrors - converts ValidationErrors", () => {
+  const results = [
+    Result.Ok("value1"),
+    Result.Err(ValidationError.single("Invalid value", "value2")),
+    Result.Ok("value3"),
+  ]
 
-  expect(failingResult._tag).toBe("Left")
+  const mapped = FpUtils.mapParseErrors(results)
 
-  if (failingResult._tag === "Left") {
-    const results = [
-      Result.Ok("value1"),
-      Result.Err(failingResult.left),
-      Result.Ok("value3"),
-    ]
-
-    const mapped = FpUtils.mapParseErrors(results)
-
-    expect(mapped.isErr()).toBe(true)
-    expect(mapped.unwrapErr()).toBeInstanceOf(ValidationError)
-  }
+  expect(mapped.isErr()).toBe(true)
+  expect(mapped.unwrapErr()).toBeInstanceOf(ValidationError)
 })
 
 // Tests for paginatedSerialize
@@ -432,17 +302,16 @@ test("ResultUtils.paginatedSerialize - serializes paginated result with successf
 })
 
 test("ResultUtils.paginatedSerialize - handles ParseErrors in items", () => {
-  // Generate a real ParseError using schema validation
-  const failingResult = S.decodeUnknownEither(S.String)(123) // This will fail
+  const failingResult = z.string().safeParse(123)
 
-  expect(failingResult._tag).toBe("Left")
+  expect(failingResult.success).toBe(false)
 
-  if (failingResult._tag === "Left") {
+  if (!failingResult.success) {
     const mockItems = [
       { serialize: () => Result.Ok({ id: 1, name: "Item 1" }) },
       {
         serialize: () =>
-          Result.Err(parseErrorToValidationError(failingResult.left)),
+          Result.Err(zodErrorToValidationError(failingResult.error)),
       },
     ]
 

@@ -1,31 +1,31 @@
-import { Schema as S } from "effect"
-import { DateTime, UUID } from "./refined-types"
-import { addMethodsToSchema } from "./schema-utils"
+import { z } from 'zod/v4'
+import { DateTime, UUID } from './zod/refined-types'
+import { addMethodsToSchema } from './zod/schema-utils'
 
 export const baseEntityFields = {
   id: UUID,
   createdAt: DateTime,
   updatedAt: DateTime,
-} as const satisfies S.Struct.Fields
+} as const satisfies z.core.$ZodShape
 export type TBaseEntityFields = typeof baseEntityFields
 
-const baseEntityStruct = S.mutable(S.Struct(baseEntityFields))
+const baseEntitySchema = z.object(baseEntityFields)
 
 export const defineEntityStruct = <
   Tag extends string,
-  Fields extends S.Struct.Fields,
+  Fields extends z.core.$ZodShape,
 >(
   tag: Tag,
   fields: Fields,
 ) => {
-  const id = baseEntityFields.id.extend(tag)
+  const id = UUID.extend(tag)
 
-  const struct = S.Struct({
+  const schema = z.object({
     ...baseEntityFields,
     id,
     ...fields,
   })
-  const extendedStruct = addMethodsToSchema(struct, {
+  const extendedSchema = addMethodsToSchema(schema, {
     baseInit: () => ({
       id: id.new(),
       createdAt: DateTime.now(),
@@ -34,18 +34,32 @@ export const defineEntityStruct = <
     id,
   })
 
-  return extendedStruct
+  return extendedSchema
 }
 
-export type BaseEntityEncoded = S.Schema.Encoded<typeof baseEntityStruct>
-export type BaseEntityType = S.Schema.Type<typeof baseEntityStruct>
+export type BaseEntityEncoded = z.input<typeof baseEntitySchema>
+export type BaseEntityType = z.output<typeof baseEntitySchema>
 
-export class BaseEntity implements BaseEntityType {
-  readonly id: BaseEntityType["id"]
-  readonly createdAt: BaseEntityType["createdAt"]
-  readonly updatedAt: BaseEntityType["updatedAt"]
+export type BaseEntityData<
+  Id = BaseEntityType['id'],
+  CreatedAt = BaseEntityType['createdAt'],
+  UpdatedAt = BaseEntityType['updatedAt'],
+> = {
+  id: Id
+  createdAt: CreatedAt
+  updatedAt: UpdatedAt
+}
 
-  protected constructor(data: BaseEntityType) {
+export class BaseEntity<
+  Id = BaseEntityType['id'],
+  CreatedAt = BaseEntityType['createdAt'],
+  UpdatedAt = BaseEntityType['updatedAt'],
+> implements BaseEntityData<Id, CreatedAt, UpdatedAt> {
+  readonly id: Id
+  readonly createdAt: CreatedAt
+  readonly updatedAt: UpdatedAt
+
+  protected constructor(data: BaseEntityData<Id, CreatedAt, UpdatedAt>) {
     this.id = data.id
     this.createdAt = data.createdAt
     this.updatedAt = data.updatedAt

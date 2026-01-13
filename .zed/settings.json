@@ -9,19 +9,58 @@
   },
   "languages": {
     "JavaScript": {
-      "language_servers": ["tsgo", "!vtsls", "oxc", "biome"]
+      "formatter": {
+        "language_server": {
+          "name": "oxfmt"
+        }
+      },
+      "language_servers": [
+        "!tsgo",
+        "vtsls",
+        "oxlint",
+        "oxfmt",
+        "biome"
+      ]
     },
     "TypeScript": {
-      "language_servers": ["tsgo", "!vtsls", "oxc", "biome"]
+      "formatter": {
+        "language_server": {
+          "name": "oxfmt"
+        }
+      },
+      "language_servers": [
+        "!tsgo",
+        "vtsls",
+        "oxlint",
+        "oxfmt",
+        "biome"
+      ]
     },
     "TSX": {
-      "language_servers": ["tsgo", "!vtsls", "oxc", "biome"]
+      "formatter": {
+        "language_server": {
+          "name": "oxfmt"
+        }
+      },
+      "language_servers": [
+        "!tsgo",
+        "vtsls",
+        "oxlint",
+        "oxfmt",
+        "biome"
+      ]
     },
     "JSON": {
-      "language_servers": ["biome", "json-language-server"]
+      "language_servers": [
+        "biome",
+        "json-language-server"
+      ]
     },
     "JSONC": {
-      "language_servers": ["biome", "json-language-server"]
+      "language_servers": [
+        "biome",
+        "json-language-server"
+      ]
     }
   }
 }

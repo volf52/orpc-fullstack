@@ -43,7 +43,7 @@ export class GroceryListAppService {
 
   async findGroceryListsForUser(
     user: UserEntity,
-  ): Promise<Result<{ lists: GroceryListEncoded[] }, ValidationError>> {
+  ): Promise<Result<{ lists: GroceryListListEncoded[] }, ValidationError>> {
     const lists = await this.groceryListRepo.findByUserId(user.id)
 
     const listsEncoded = Result.all(...lists.map(serialized))
@@ -109,7 +109,7 @@ export class CreateGroceryListDto implements GroceryListCreateData {
   }
 
   static create(data: unknown): Result<CreateGroceryListDto, ValidationError> {
-    return validateWithEffect(GroceryListCreateSchema, data).map(
+    return validateWithZod(GroceryListCreateSchema, data).map(
       (validatedData) => new CreateGroceryListDto(validatedData),
     )
   }

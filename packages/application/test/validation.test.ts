@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test"
-import { validateWithEffect } from "@application/utils/validation.utils"
-import { Schema as S } from "effect"
+import { validateWithZod } from "@application/utils/validation.utils"
+import { z } from "zod/v4"
 
 describe("Validation Utils", () => {
-  const testSchema = S.Struct({
-    name: S.NonEmptyString,
-    age: S.Number.pipe(S.greaterThanOrEqualTo(0)),
-    email: S.String.pipe(S.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)),
+  const testSchema = z.object({
+    name: z.string().min(1),
+    age: z.number().min(0),
+    email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
   })
 
   test("should validate correct data", () => {
@@ -16,7 +16,7 @@ describe("Validation Utils", () => {
       email: "john@example.com",
     }
 
-    const result = validateWithEffect(testSchema, validData)
+    const result = validateWithZod(testSchema, validData)
 
     expect(result.isOk()).toBe(true)
     expect(result.unwrap()).toEqual(validData)
@@ -29,12 +29,12 @@ describe("Validation Utils", () => {
       email: "not-an-email",
     }
 
-    const result = validateWithEffect(testSchema, invalidData)
+    const result = validateWithZod(testSchema, invalidData)
 
     expect(result.isErr()).toBe(true)
     const error = result.unwrapErr()
     expect(error.name).toBe("ValidationError")
-    expect(error.message).toContain("non empty string")
+    expect(error.message.length).toBeGreaterThan(0)
   })
 
   test("should handle missing fields", () => {
@@ -43,7 +43,7 @@ describe("Validation Utils", () => {
       // missing age and email
     }
 
-    const result = validateWithEffect(testSchema, incompleteData)
+    const result = validateWithZod(testSchema, incompleteData)
 
     expect(result.isErr()).toBe(true)
     const error = result.unwrapErr()
@@ -51,8 +51,8 @@ describe("Validation Utils", () => {
   })
 
   test("should handle null/undefined input", () => {
-    const result1 = validateWithEffect(testSchema, null)
-    const result2 = validateWithEffect(testSchema, undefined)
+    const result1 = validateWithZod(testSchema, null)
+    const result2 = validateWithZod(testSchema, undefined)
 
     expect(result1.isErr()).toBe(true)
     expect(result2.isErr()).toBe(true)

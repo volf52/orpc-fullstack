@@ -1,67 +1,52 @@
 import {
   GroceryListCreateSchema,
   GroceryListSchema,
-} from "@domain/grocery-list/grocery-list.entity"
+} from '@domain/grocery-list/grocery-list.entity'
 import {
   ItemCreateSchema,
   ItemSchema,
-} from "@domain/grocery-list-item/item.entity"
-import { UserSchema } from "@domain/user/user.entity"
+} from '@domain/grocery-list-item/item.entity'
+import { UserSchema } from '@domain/user/user.entity'
 import {
   PaginatedResultSchema,
   PaginationParamsSchema,
-} from "@domain/utils/pagination.utils"
-import { Schema as S } from "effect"
+} from '@domain/utils/pagination.utils'
+import { z } from 'zod/v4'
 
-const list = GroceryListSchema.pipe(S.omit("ownerId"))
-const encodedList = S.encodedBoundSchema(list)
+const list = GroceryListSchema.omit({ ownerId: true })
 
-export type GroceryListEncoded = S.Schema.Encoded<typeof list>
+export type GroceryListListEncoded = z.input<typeof list>
 
-export const NewGroceryListSchema = GroceryListCreateSchema.pipe(
-  S.extend(
-    S.Struct({
-      items: S.Array(ItemCreateSchema),
-    }),
-  ),
-)
-export type NewGroceryListData = S.Schema.Type<typeof NewGroceryListSchema>
-export type NewGroceryListEncoded = S.Schema.Encoded<
-  typeof NewGroceryListSchema
->
+export const NewGroceryListSchema = GroceryListCreateSchema.extend({
+  items: z.array(ItemCreateSchema),
+})
+export type NewGroceryListData = z.output<typeof NewGroceryListSchema>
+export type NewGroceryListEncoded = z.input<typeof NewGroceryListSchema>
 
-export const GroceryListFiltersSchema = S.Struct({
-  search: S.optional(S.String),
-  status: S.optional(S.Literal("active", "inactive")),
-  sinceMs: S.optional(S.Number.pipe(S.int(), S.positive())),
+export const GroceryListFiltersSchema = z.object({
+  search: z.string().optional(),
+  status: z.enum(['active', 'inactive']).optional(),
+  sinceMs: z.number().int().positive().optional(),
 })
 
-export const GetListsParamsSchema = S.Struct({
+export const GetListsParamsSchema = z.object({
   filters: GroceryListFiltersSchema,
   pagination: PaginationParamsSchema,
 })
 
-export const GetListsResultSchema = PaginatedResultSchema(S.encodedSchema(list))
+export const GetListsResultSchema = PaginatedResultSchema(list)
 
-export const GroceryListDetailsSchema = S.mutable(
-  encodedList.pipe(
-    S.extend(
-      S.Struct({
-        owner: S.encodedBoundSchema(UserSchema),
-        items: S.Array(S.encodedBoundSchema(ItemSchema)),
-        stats: S.Struct({
-          totalItems: S.Number,
-          pendingItems: S.Number,
-          completedItems: S.Number,
-          completionPercentage: S.Number,
-        }),
-      }),
-    ),
-  ),
-)
-export type GroceryListDetails = S.Schema.Encoded<
-  typeof GroceryListDetailsSchema
->
+export const GroceryListDetailsSchema = list.extend({
+  owner: UserSchema,
+  items: z.array(ItemSchema),
+  stats: z.object({
+    totalItems: z.number(),
+    pendingItems: z.number(),
+    completedItems: z.number(),
+    completionPercentage: z.number(),
+  }),
+})
+export type GroceryListDetails = z.input<typeof GroceryListDetailsSchema>
 
-export type GetListsParams = S.Schema.Encoded<typeof GetListsParamsSchema>
-export type GetListsResult = S.Schema.Encoded<typeof GetListsResultSchema>
+export type GetListsParams = z.input<typeof GetListsParamsSchema>
+export type GetListsResult = z.input<typeof GetListsResultSchema>

@@ -1,38 +1,38 @@
 import { describe, expect, test } from "bun:test"
-import { parseErrorToValidationError } from "@domain/utils/validation.utils"
-import { Schema as S } from "effect"
+import { zodErrorToValidationError } from "@domain/utils/zod/error-mapper"
+import { z } from "zod/v4"
 
 describe("ParseError to ValidationError Conversion", () => {
   // Test schema with various validation scenarios
-  const testSchema = S.Struct({
+  const testSchema = z.object({
     // String with length validation
-    name: S.String.pipe(S.minLength(3), S.maxLength(20)),
+    name: z.string().min(3).max(20),
 
     // Number with range validation
-    age: S.Number.pipe(S.int(), S.between(0, 150)),
+    age: z.number().int().min(0).max(150),
 
     // Required boolean
-    isActive: S.Boolean,
+    isActive: z.boolean(),
 
     // Optional string with pattern
-    email: S.optional(S.String.pipe(S.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))),
+    email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).optional(),
 
     // Nested object
-    address: S.Struct({
-      street: S.String.pipe(S.minLength(1)),
-      city: S.String.pipe(S.minLength(2)),
-      zipCode: S.String.pipe(S.pattern(/^\d{5}$/)),
-      country: S.String.pipe(S.minLength(2)),
+    address: z.object({
+      street: z.string().min(1),
+      city: z.string().min(2),
+      zipCode: z.string().regex(/^\d{5}$/),
+      country: z.string().min(2),
     }),
 
     // Array validation
-    tags: S.Array(S.String.pipe(S.minLength(1))),
+    tags: z.array(z.string().min(1)),
 
     // Date validation
-    birthDate: S.Date,
+    birthDate: z.date(),
 
     // Union type
-    role: S.Union(S.Literal("admin"), S.Literal("user"), S.Literal("guest")),
+    role: z.enum(["admin", "user", "guest"]),
   })
 
   test("Multiple validation errors", () => {
@@ -66,15 +66,12 @@ describe("ParseError to ValidationError Conversion", () => {
       "role",
     ]
 
-    const result = S.decodeUnknownEither(testSchema, {
-      errors: "all",
-      exact: true,
-    })(data)
+    const result = testSchema.safeParse(data)
 
-    expect(result._tag).toBe("Left")
+    expect(result.success).toBe(false)
 
-    if (result._tag === "Left") {
-      const validationError = parseErrorToValidationError(result.left)
+    if (!result.success) {
+      const validationError = zodErrorToValidationError(result.error)
 
       expect(validationError.issues.length).toBeGreaterThan(1)
 
@@ -117,15 +114,12 @@ describe("ParseError to ValidationError Conversion", () => {
       "role",
     ]
 
-    const result = S.decodeUnknownEither(testSchema, {
-      errors: "all",
-      exact: true,
-    })(data)
+    const result = testSchema.safeParse(data)
 
-    expect(result._tag).toBe("Left")
+    expect(result.success).toBe(false)
 
-    if (result._tag === "Left") {
-      const validationError = parseErrorToValidationError(result.left)
+    if (!result.success) {
+      const validationError = zodErrorToValidationError(result.error)
 
       expect(validationError.issues.length).toBeGreaterThan(1)
 
@@ -159,15 +153,12 @@ describe("ParseError to ValidationError Conversion", () => {
       "address.country",
     ]
 
-    const result = S.decodeUnknownEither(testSchema, {
-      errors: "all",
-      exact: true,
-    })(data)
+    const result = testSchema.safeParse(data)
 
-    expect(result._tag).toBe("Left")
+    expect(result.success).toBe(false)
 
-    if (result._tag === "Left") {
-      const validationError = parseErrorToValidationError(result.left)
+    if (!result.success) {
+      const validationError = zodErrorToValidationError(result.error)
 
       const actualFields = validationError.issues
         .map((issue) => issue.field)
@@ -200,15 +191,12 @@ describe("ParseError to ValidationError Conversion", () => {
       "role",
     ]
 
-    const result = S.decodeUnknownEither(testSchema, {
-      errors: "all",
-      exact: true,
-    })(data)
+    const result = testSchema.safeParse(data)
 
-    expect(result._tag).toBe("Left")
+    expect(result.success).toBe(false)
 
-    if (result._tag === "Left") {
-      const validationError = parseErrorToValidationError(result.left)
+    if (!result.success) {
+      const validationError = zodErrorToValidationError(result.error)
 
       const actualFields = validationError.issues
         .map((issue) => issue.field)
@@ -238,15 +226,12 @@ describe("ParseError to ValidationError Conversion", () => {
 
     const expectedFields = ["tags.0", "tags.2"]
 
-    const result = S.decodeUnknownEither(testSchema, {
-      errors: "all",
-      exact: true,
-    })(data)
+    const result = testSchema.safeParse(data)
 
-    expect(result._tag).toBe("Left")
+    expect(result.success).toBe(false)
 
-    if (result._tag === "Left") {
-      const validationError = parseErrorToValidationError(result.left)
+    if (!result.success) {
+      const validationError = zodErrorToValidationError(result.error)
 
       const actualFields = validationError.issues
         .map((issue) => issue.field)
@@ -260,38 +245,32 @@ describe("ParseError to ValidationError Conversion", () => {
 
   describe("Edge Cases", () => {
     test("Simple string validation", () => {
-      const simpleSchema = S.String.pipe(S.minLength(5))
-      const result = S.decodeUnknownEither(simpleSchema, { errors: "all" })(
-        "hi",
-      )
+      const simpleSchema = z.string().min(5)
+      const result = simpleSchema.safeParse("hi")
 
-      expect(result._tag).toBe("Left")
+      expect(result.success).toBe(false)
 
-      if (result._tag === "Left") {
-        const validationError = parseErrorToValidationError(result.left)
+      if (!result.success) {
+        const validationError = zodErrorToValidationError(result.error)
 
         expect(validationError.issues.length).toBeGreaterThan(0)
         const issue = validationError.issues[0]
         expect(issue?.message).toBeDefined()
-        expect(issue?.message).toBe(
-          "Expected a string at least 5 character(s) long, got 'hi'",
-        )
+        expect(issue?.message).toContain("5")
       }
     })
 
     test("Nested array validation", () => {
-      const nestedArraySchema = S.Struct({
-        users: S.Array(
-          S.Struct({
-            name: S.String.pipe(S.minLength(2)),
-            email: S.String.pipe(S.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)),
+      const nestedArraySchema = z.object({
+        users: z.array(
+          z.object({
+            name: z.string().min(2),
+            email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
           }),
         ),
       })
 
-      const result = S.decodeUnknownEither(nestedArraySchema, {
-        errors: "all",
-      })({
+      const result = nestedArraySchema.safeParse({
         users: [
           { name: "A", email: "invalid" },
           { name: "Valid Name", email: "valid@email.com" },
@@ -299,10 +278,10 @@ describe("ParseError to ValidationError Conversion", () => {
         ],
       })
 
-      expect(result._tag).toBe("Left")
+      expect(result.success).toBe(false)
 
-      if (result._tag === "Left") {
-        const validationError = parseErrorToValidationError(result.left)
+      if (!result.success) {
+        const validationError = zodErrorToValidationError(result.error)
 
         expect(validationError.issues.length).toBeGreaterThan(0)
 
@@ -321,15 +300,13 @@ describe("ParseError to ValidationError Conversion", () => {
     })
 
     test("Refinement validation", () => {
-      const refinementSchema = S.String.pipe(S.minLength(3), S.maxLength(10))
-      const result = S.decodeUnknownEither(refinementSchema, {
-        errors: "all",
-      })("ab")
+      const refinementSchema = z.string().min(3).max(10)
+      const result = refinementSchema.safeParse("ab")
 
-      expect(result._tag).toBe("Left")
+      expect(result.success).toBe(false)
 
-      if (result._tag === "Left") {
-        const validationError = parseErrorToValidationError(result.left)
+      if (!result.success) {
+        const validationError = zodErrorToValidationError(result.error)
 
         expect(validationError.issues.length).toBeGreaterThan(0)
         expect(validationError.issues[0]?.message).toBeDefined()
@@ -338,17 +315,13 @@ describe("ParseError to ValidationError Conversion", () => {
     })
 
     test("Union validation", () => {
-      const unionSchema = S.Union(
-        S.Literal("A"),
-        S.Literal("B"),
-        S.Literal("C"),
-      )
-      const result = S.decodeUnknownEither(unionSchema, { errors: "all" })("D")
+      const unionSchema = z.enum(["A", "B", "C"])
+      const result = unionSchema.safeParse("D")
 
-      expect(result._tag).toBe("Left")
+      expect(result.success).toBe(false)
 
-      if (result._tag === "Left") {
-        const validationError = parseErrorToValidationError(result.left)
+      if (!result.success) {
+        const validationError = zodErrorToValidationError(result.error)
 
         expect(validationError.issues.length).toBeGreaterThan(0)
         expect(validationError.issues[0]?.message).toBeDefined()

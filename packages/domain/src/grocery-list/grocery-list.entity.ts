@@ -1,46 +1,53 @@
-import type { Result } from "@carbonteq/fp"
-import { Result as R } from "@carbonteq/fp"
-import { UserEntity, UserSchema, type UserType } from "@domain/user/user.entity"
-import { BaseEntity, defineEntityStruct } from "@domain/utils/base.entity"
-import { FpUtils } from "@domain/utils/fp-utils"
-import { createEncoderDecoderBridge } from "@domain/utils/schema-utils"
-import { Schema as S } from "effect"
-import { GroceryListOwnershipError } from "./grocery-list.errors"
+import type { Result } from '@carbonteq/fp'
+import { Result as R } from '@carbonteq/fp'
+import { UserEntity, UserIdSchema } from '@domain/user/user.entity'
+import { BaseEntity } from '@domain/utils/base.entity'
+import { FpUtils } from '@domain/utils/fp-utils'
+import { makeCodecBridge } from '@domain/utils/zod/codec-bridge'
+import { defineEntitySchema } from '@domain/utils/zod/entity-schema'
+import { z } from 'zod/v4'
+import { GroceryListOwnershipError } from './grocery-list.errors'
 
-export const GroceryListSchema = defineEntityStruct("GroceryListId", {
-  name: S.String.pipe(S.minLength(3)),
-  description: S.String,
-  active: S.Boolean,
-  ownerId: UserSchema.id,
+export const GroceryListSchema = defineEntitySchema('GroceryListId', {
+  name: z.string().min(3),
+  description: z.string(),
+  active: z.boolean(),
+  ownerId: UserIdSchema,
 })
 export const GroceryListId = GroceryListSchema.id
 
-export const GroceryListCreateSchema = GroceryListSchema.pipe(
-  S.pick("name", "description"),
-)
+export const GroceryListCreateSchema = GroceryListSchema.pick({
+  name: true,
+  description: true,
+})
 
-export const GroceryListUpdateSchema = S.partialWith(
-  GroceryListSchema.pipe(S.pick("name", "description", "active")),
-  { exact: true },
-)
+export const GroceryListUpdateSchema = GroceryListSchema.pick({
+  name: true,
+  description: true,
+  active: true,
+}).partial()
 
-export type GroceryListType = S.Schema.Type<typeof GroceryListSchema>
-export type GroceryListUpdateData = S.Schema.Type<
-  typeof GroceryListUpdateSchema
->
-export type GroceryListCreateData = S.Schema.Type<
-  typeof GroceryListCreateSchema
->
+export type GroceryListType = z.output<typeof GroceryListSchema>
+export type GroceryListEncoded = z.input<typeof GroceryListSchema>
+export type GroceryListUpdateData = z.output<typeof GroceryListUpdateSchema>
+export type GroceryListCreateData = z.output<typeof GroceryListCreateSchema>
 
-const bridge = createEncoderDecoderBridge(GroceryListSchema)
+const bridge = makeCodecBridge(GroceryListSchema)
 
-export class GroceryListEntity extends BaseEntity implements GroceryListType {
-  override readonly id: GroceryListType["id"]
+export class GroceryListEntity
+  extends BaseEntity<
+    GroceryListType['id'],
+    GroceryListType['createdAt'],
+    GroceryListType['updatedAt']
+  >
+  implements GroceryListType
+{
+  override readonly id: GroceryListType['id']
 
   readonly name: string
   readonly active: boolean
-  readonly description: GroceryListType["description"]
-  readonly ownerId: GroceryListType["ownerId"]
+  readonly description: GroceryListType['description']
+  readonly ownerId: GroceryListType['ownerId']
 
   private constructor(data: GroceryListType) {
     super(data)
@@ -69,11 +76,11 @@ export class GroceryListEntity extends BaseEntity implements GroceryListType {
     return new GroceryListEntity(data)
   }
 
-  static fromEncoded(data: S.Schema.Encoded<typeof GroceryListSchema>) {
+  static fromEncoded(data: GroceryListEncoded) {
     return bridge.deserialize(data).map((d) => new GroceryListEntity(d))
   }
 
-  isOwner(userId: UserType["id"]): boolean {
+  isOwner(userId: GroceryListType['ownerId']): boolean {
     return this.ownerId === userId
   }
 
@@ -89,6 +96,6 @@ export class GroceryListEntity extends BaseEntity implements GroceryListType {
   }
 
   updateData() {
-    return this.serialize().map(FpUtils.omit("id", "createdAt", "ownerId"))
+    return FpUtils.omitFrom(this.serialize(), ['id', 'createdAt', 'ownerId'])
   }
 }

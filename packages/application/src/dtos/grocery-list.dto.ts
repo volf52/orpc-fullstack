@@ -4,15 +4,15 @@ import {
   GroceryListUpdateSchema,
 } from "@domain/grocery-list/grocery-list.entity"
 import { NewGroceryListSchema } from "@domain/grocery-list/grocery-list.schemas"
-import { Schema as S } from "effect"
+import { z } from "zod/v4"
 
 export class CreateGroceryListDto extends simpleSchemaDto(
   "CreateGroceryListDto",
   NewGroceryListSchema,
 ) {}
 
-const UpdateGroceryListDtoSchema = S.Struct({
-  params: S.Struct({
+const UpdateGroceryListDtoSchema = z.object({
+  params: z.object({
     id: GroceryListSchema.id,
   }),
   body: GroceryListUpdateSchema,

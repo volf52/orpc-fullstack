@@ -1,39 +1,45 @@
-import { BaseEntity, defineEntityStruct } from "@domain/utils/base.entity"
-import { Opt } from "@domain/utils/refined-types"
-import { createEncoderDecoderBridge } from "@domain/utils/schema-utils"
-import { Schema as S } from "effect"
+import { BaseEntity } from '@domain/utils/base.entity'
+import { makeCodecBridge } from '@domain/utils/zod/codec-bridge'
+import { defineEntitySchema } from '@domain/utils/zod/entity-schema'
+import { Opt } from '@domain/utils/zod/refined-types'
+import { z } from 'zod/v4'
 
-export const UserSchema = defineEntityStruct("UserId", {
-  name: S.String.pipe(S.minLength(1)),
-  email: S.String.pipe(S.minLength(1), S.brand("Email")),
-  emailVerified: S.Boolean,
-  image: Opt(S.String),
+export const UserSchema = defineEntitySchema('UserId', {
+  name: z.string().min(1),
+  email: z.string().min(1).email().brand<'Email'>(),
+  emailVerified: z.boolean(),
+  image: Opt(z.string()),
 })
 export const UserIdSchema = UserSchema.id
 
-export type UserType = S.Schema.Type<typeof UserSchema>
-export type UserEncoded = S.Schema.Encoded<typeof UserSchema>
+export type UserType = z.output<typeof UserSchema>
+export type UserEncoded = z.input<typeof UserSchema>
 
-export const NewUserSchema = UserSchema.pipe(
-  S.pick("email", "name"),
-  S.extend(
-    S.Struct({
-      password: S.String.pipe(S.minLength(6)),
-    }),
-  ),
-)
-export type NewUserType = S.Schema.Type<typeof NewUserSchema>
-export type NewUserEncoded = S.Schema.Encoded<typeof NewUserSchema>
+export const NewUserSchema = UserSchema.pick({
+  email: true,
+  name: true,
+}).extend({
+  password: z.string().min(6),
+})
+export type NewUserType = z.output<typeof NewUserSchema>
+export type NewUserEncoded = z.input<typeof NewUserSchema>
 
-const bridge = createEncoderDecoderBridge(UserSchema)
+const bridge = makeCodecBridge(UserSchema)
 
-export class UserEntity extends BaseEntity implements UserType {
-  override readonly id: UserType["id"]
+export class UserEntity
+  extends BaseEntity<
+    UserType['id'],
+    UserType['createdAt'],
+    UserType['updatedAt']
+  >
+  implements UserType
+{
+  override readonly id: UserType['id']
 
   readonly name: string
-  readonly email: UserType["email"]
+  readonly email: UserType['email']
   readonly emailVerified: boolean
-  readonly image: UserType["image"]
+  readonly image: UserType['image']
 
   private constructor(data: UserType) {
     super(data)

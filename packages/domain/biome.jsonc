@@ -11,5 +11,10 @@
       ".oxlintrc.json"
     ]
   },
+  "javascript": {
+    "formatter": {
+      "enabled": false // using oxfmt
+    }
+  },
   "extends": "//"
 }

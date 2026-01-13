@@ -1,39 +1,43 @@
-import type { UnitResult } from "@carbonteq/fp"
-import { Result as R } from "@carbonteq/fp"
-import {
-  GroceryListId,
-  type GroceryListType,
-} from "@domain/grocery-list/grocery-list.entity"
-import { InviteExpiredError } from "@domain/invite/invite.errors"
-import { BaseEntity, defineEntityStruct } from "@domain/utils/base.entity"
-import { DateTime, UUID } from "@domain/utils/refined-types"
-import { createEncoderDecoderBridge } from "@domain/utils/schema-utils"
-import { DateTime as DT, Schema as S } from "effect"
+import type { UnitResult } from '@carbonteq/fp'
+import { Result as R } from '@carbonteq/fp'
+import type { GroceryListType } from '@domain/grocery-list/grocery-list.entity'
+import { GroceryListId } from '@domain/grocery-list/grocery-list.entity'
+import { InviteExpiredError } from '@domain/invite/invite.errors'
+import { BaseEntity } from '@domain/utils/base.entity'
+import { makeCodecBridge } from '@domain/utils/zod/codec-bridge'
+import { defineEntitySchema } from '@domain/utils/zod/entity-schema'
+import { DateTime } from '@domain/utils/zod/refined-types'
+import { z } from 'zod/v4'
 
-export const InviteRoleSchema = S.Literal("editor")
-const InviteId = UUID.pipe(S.brand("InviteId"))
+export const InviteRoleSchema = z.literal('editor')
 
-export const InviteSchema = defineEntityStruct("InviteId", {
-  id: InviteId,
+export const InviteSchema = defineEntitySchema('InviteId', {
   listId: GroceryListId,
-  token: S.String.pipe(S.minLength(1)),
+  token: z.string().min(1),
   role: InviteRoleSchema,
   expiresAt: DateTime,
 })
 
-export type InviteType = S.Schema.Type<typeof InviteSchema>
-export type InviteEncoded = S.Schema.Encoded<typeof InviteSchema>
-export type InviteRole = S.Schema.Type<typeof InviteRoleSchema>
+export type InviteType = z.output<typeof InviteSchema>
+export type InviteEncoded = z.input<typeof InviteSchema>
+export type InviteRole = z.output<typeof InviteRoleSchema>
 
-const bridge = createEncoderDecoderBridge(InviteSchema)
+const bridge = makeCodecBridge(InviteSchema)
 
-export class InviteEntity extends BaseEntity implements InviteType {
-  override readonly id: InviteType["id"]
+export class InviteEntity
+  extends BaseEntity<
+    InviteType['id'],
+    InviteType['createdAt'],
+    InviteType['updatedAt']
+  >
+  implements InviteType
+{
+  override readonly id: InviteType['id']
 
-  readonly listId: InviteType["listId"]
-  readonly token: InviteType["token"]
+  readonly listId: InviteType['listId']
+  readonly token: InviteType['token']
   readonly role: InviteRole
-  readonly expiresAt: InviteType["expiresAt"]
+  readonly expiresAt: InviteType['expiresAt']
 
   private constructor(data: InviteType) {
     super(data)
@@ -67,23 +71,15 @@ export class InviteEntity extends BaseEntity implements InviteType {
   }
 
   isExpired(): boolean {
-    return DT.unsafeIsPast(this.expiresAt)
+    return this.expiresAt.getTime() < Date.now()
   }
 
-  belongsToList(listId: GroceryListType["id"]): boolean {
+  belongsToList(listId: GroceryListType['id']): boolean {
     return this.listId === listId
   }
 
   serialize() {
-    return bridge.serialize({
-      id: this.id,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      listId: this.listId,
-      token: this.token,
-      role: this.role,
-      expiresAt: this.expiresAt,
-    })
+    return bridge.serialize(this)
   }
 
   ensureIsValid(): UnitResult<InviteExpiredError> {
@@ -94,21 +90,12 @@ export class InviteEntity extends BaseEntity implements InviteType {
     return R.UNIT_RESULT
   }
 
-  // static validateTokenFormat(
-  //   token: string,
-  // ): Result<void, InvalidInviteTokenError> {
-  //   const tokenRegex = /^[A-Za-z0-9]{32}$/
-  //   if (!tokenRegex.test(token)) {
-  //     return R.Err(new InvalidInviteTokenError())
-  //   }
-  //   return R.Ok(undefined)
-  // }
-
-  static calculateExpirationDate(daysFromNow = 7): DT.Utc {
-    return DT.unsafeNow().pipe(DT.add({ days: daysFromNow }))
+  static calculateExpirationDate(daysFromNow = 7): Date {
+    const msPerDay = 24 * 60 * 60 * 1000
+    return new Date(Date.now() + daysFromNow * msPerDay)
   }
 
   static getDefaultRole(): InviteRole {
-    return "editor"
+    return 'editor'
   }
 }

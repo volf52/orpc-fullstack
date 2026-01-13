@@ -1,79 +1,32 @@
-import { Result } from "@carbonteq/fp/result"
-import { Cause, Effect, Either, Option } from "effect"
-import type { ParseError } from "effect/ParseResult"
-import { ValidationError } from "./base.errors"
-import type { Paginated } from "./pagination.utils"
-import {
-  parseErrorsToValidationError,
-  validationErrorsToSingle,
-} from "./validation.utils"
+import { Result } from '@carbonteq/fp/result'
+import { ValidationError } from './base.errors'
+import type { Paginated } from './pagination.utils'
+import { validationErrorsToSingle } from './validation.utils'
 
-export const eitherToResult = <R, L>(e: Either.Either<R, L>): Result<R, L> =>
-  Either.match(e, {
-    onLeft: Result.Err,
-    onRight: Result.Ok,
-  })
+// Effect FP conversion functions removed - only used in tests
+// Use @carbonteq/fp Result directly instead of Effect types
 
-export const resultToEither = <T, E>(r: Result<T, E>): Either.Either<T, E> =>
-  r.isOk() ? Either.right(r.unwrap()) : Either.left(r.unwrapErr())
-
-export const effectToResult = <A, E>(
-  effect: Effect.Effect<A, E, never>,
-): Result<A, E> => {
-  try {
-    const exit = Effect.runSyncExit(effect)
-
-    if (exit._tag === "Success") {
-      return Result.Ok(exit.value)
-    } else {
-      if (Cause.isInterrupted(exit.cause)) {
-        throw new Error(
-          "Cannot run effect synchronously - it contains async operations",
-        )
-      } else {
-        const failureOption = Cause.failureOption(exit.cause)
-        if (Option.isSome(failureOption)) {
-          return Result.Err(failureOption.value)
-        }
-
-        throw Cause.squash(exit.cause)
-      }
-    }
-  } catch (error: unknown) {
-    if (
-      error &&
-      typeof error === "object" &&
-      "_tag" in error &&
-      error._tag === "AsyncFiberException"
-    ) {
-      throw new Error(
-        "Cannot run effect synchronously - it contains async operations",
-      )
-    }
-    throw error
-  }
-}
-
-export const effectToResultAsync = async <A, E>(
-  effect: Effect.Effect<A, E, never>,
-): Promise<Result<A, E>> => {
-  const either = await Effect.runPromise(Effect.either(effect))
-  return eitherToResult(either)
-}
-
-export const resultToEffect = <T, E>(
-  r: Result<T, E>,
-): Effect.Effect<T, E, never> =>
-  r.isOk() ? Effect.succeed(r.unwrap()) : Effect.fail(r.unwrapErr())
-
-function mapParseErrors<T>(results: Result<Promise<T>, ParseError>[]): never
 function mapParseErrors<T>(
-  results: Result<T, ParseError>[],
-): Result<T[], ValidationError>
-function mapParseErrors<T>(results: Result<T, ParseError>[]) {
-  const seq = Result.all(...results)
+  results: Result<T, ValidationError>[],
+): Result<T[], ValidationError> {
+  const values: T[] = []
+  const errors: ValidationError[] = []
 
-  return seq.mapErr(parseErrorsToValidationError)
+  // const t =  Result.all(...results)
+
+  for (const result of results) {
+    if (result.isOk()) {
+      values.push(result.unwrap())
+    } else {
+      errors.push(result.unwrapErr())
+    }
+  }
+
+  if (errors.length > 0) {
+    return Result.Err(validationErrorsToSingle(errors))
+  }
+
+  return Result.Ok(values)
 }
 
 type WithSerialize<T> = {
@@ -95,16 +48,27 @@ function collectValidationErrors<T>(results: Result<T, ValidationError>[]) {
   return Result.all(...results).mapErr(validationErrorsToSingle)
 }
 
+const omitFrom = <T extends Record<string, unknown>, K extends (keyof T)[]>(
+  data: T,
+  keys: K,
+): Omit<T, K[number]> => {
+  const picked: Partial<T> = {}
+  for (const key of Object.keys(data) as K) {
+    if (keys.includes(key)) {
+      continue
+    }
+
+    picked[key] = data[key]
+  }
+
+  return picked as Omit<T, K[number]>
+}
+
 export const FpUtils = {
-  resultToEither,
-  eitherToResult,
-  resultToEffect,
-  effectToResult,
-  effectToResultAsync,
   serialized: <T>(obj: WithSerialize<T>): T => obj.serialize(),
   serializedPreserveId: <T, Id>(
     obj: WithSerializeAndId<T, Id>,
-  ): Result<Omit<T, "id"> & { id: Id }, ValidationError> =>
+  ): Result<Omit<T, 'id'> & { id: Id }, ValidationError> =>
     obj.serialize().map((data) => ({ ...data, id: obj.id })),
 
   pick:
@@ -122,20 +86,11 @@ export const FpUtils = {
     (obj: T): T[K] =>
       obj[key],
 
+  omitFrom,
   omit:
     <T extends Record<string, unknown>, K extends (keyof T)[]>(...keys: K) =>
-    (obj: T): Omit<T, K[number]> => {
-      const picked: Partial<T> = {}
-      for (const key of Object.keys(obj) as K) {
-        if (keys.includes(key)) {
-          continue
-        }
-
-        picked[key] = obj[key]
-      }
-
-      return picked as Omit<T, K[number]>
-    },
+    (obj: T): Omit<T, K[number]> =>
+      omitFrom(obj, keys),
 
   collectSuccessful: <T, E>(results: Result<T, E>[]): Result<T[], E[]> => {
     const successes: T[] = []
@@ -160,7 +115,7 @@ export const FpUtils = {
     return results.filter((r) => r.isErr()).map((r) => r.unwrapErr())
   },
 
-  log: <T, E>(result: Result<T, E>, prefix: string = "") => {
+  log: <T, E>(result: Result<T, E>, prefix: string = '') => {
     if (result.isOk()) {
       console.log(`${prefix} Success:`, result.unwrap())
     } else {
